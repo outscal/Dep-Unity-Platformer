@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PlayerScriptableObject
   m_EditorClassIdentifier: 
   prefab: {fileID: 4231813749555353494, guid: e467824ec1b4beb47b86935c85910b74, type: 3}
-  spawnPosition: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 0.7, y: 1.5, z: 0}
   spawnRotation: {x: 0, y: 0, z: 0}
   movementSpeed: 0
