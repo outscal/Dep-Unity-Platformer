@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Player{
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerView : MonoBehaviour
+    public class PlayerView : MonoBehaviour, ICustomGravity
     {
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer characterSprite;
@@ -22,6 +23,7 @@ namespace Platformer.Player{
         }
         [HideInInspector] public bool IsRunning { get; private set; }
         [HideInInspector] public bool IsSliding { get; private set; }
+
         private float translateSpeed = 0;
 
         public void SetController(PlayerController controllerToSet){
@@ -38,6 +40,11 @@ namespace Platformer.Player{
                 translateSpeed = playerMovementSpeed;
             var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
             transform.Translate(translateSpeed * Time.deltaTime * movementVector);
+        }
+
+        private void Update(){
+            if(!IsGrounded)
+                ApplyGravity();
         }
 
         #region JUMP
@@ -69,6 +76,10 @@ namespace Platformer.Player{
             translateSpeed = temp;
             IsSliding = false;
         }
+        #endregion
+
+        #region GRAVITY
+        public void ApplyGravity() => playerRigidBody.AddForce(Vector2.down * 0.09f, ForceMode2D.Impulse);
         #endregion
     }
 }
