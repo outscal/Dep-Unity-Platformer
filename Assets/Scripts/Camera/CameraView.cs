@@ -11,10 +11,14 @@ namespace Platformer.Cameras{
 
         public void SetController(CameraController cameraController) => this.cameraController = cameraController;
 
+        #region Public Functions
         public void ShakeCamera(float magnitude, float duration){
             originalPosition = transform.localPosition;
             StartCoroutine(Shake(magnitude, duration));
         }
+
+        public void FollowPlayer(Vector3 playerPosition) => transform.position = new Vector3(playerPosition.x, playerPosition.y, transform.position.z);
+        #endregion
 
         private IEnumerator Shake(float magnitude, float duration)
         {
