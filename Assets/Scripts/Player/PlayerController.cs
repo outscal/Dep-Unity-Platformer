@@ -11,7 +11,7 @@ namespace Platformer.Player
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
-        private PlayerView playerView;
+        public PlayerView playerView { get; private set; }
 
         public PlayerController(PlayerScriptableObject playerScriptableObject){
             this.playerScriptableObject = playerScriptableObject;
@@ -29,10 +29,10 @@ namespace Platformer.Player
             if(movementDirection != Vector3.zero)
             {
                 // physically move the player
-                playerView.Move(horizontalInput);
-                playerService.PlayMovementAnimation(playerView.PlayerAnimator, true);
+                playerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
+                playerService.MovePlayer(playerView.PlayerAnimator, true, playerView.Position);
             }else{
-                playerService.PlayMovementAnimation(playerView.PlayerAnimator, false);
+                playerService.MovePlayer(playerView.PlayerAnimator, false, playerView.Position);
             }
         }
 
@@ -41,16 +41,19 @@ namespace Platformer.Player
             switch (playerInputTriggers)
             {
                 case PlayerInputTriggers.JUMP:
-                    playerService.PlayJumpAnimation(playerView.PlayerAnimator);
+                    if(playerView.CanJump()){
+                        playerView.Jump(playerScriptableObject.jumpForce);
+                        playerService.PlayJumpAnimation(playerView.PlayerAnimator);
+                    }
                     break;
                 case PlayerInputTriggers.ATTACK:
                     playerService.PlayAttackAnimation(playerView.PlayerAnimator);
                     break;
-                case PlayerInputTriggers.DEATH:
-                    playerService.PlayDeathAnimation(playerView.PlayerAnimator);
-                    break;
                 case PlayerInputTriggers.SLIDE:
-                    playerService.PlaySlideAnimation(playerView.PlayerAnimator);
+                    if(playerView.CanSlide()){
+                        playerView.Slide(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime);
+                        playerService.PlaySlideAnimation(playerView.PlayerAnimator);
+                    }
                     break;
                 case PlayerInputTriggers.TAKE_DAMAGE:
                     playerService.PlayDamageAnimation(playerView.PlayerAnimator);
@@ -58,6 +61,6 @@ namespace Platformer.Player
             }
         }
 
-        public float GetPlayerMovementSpeed() => playerScriptableObject.movementSpeed;
+        public void Die() => playerService.PlayDeathAnimation(playerView.PlayerAnimator);
     }
 }

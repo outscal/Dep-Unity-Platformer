@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
 using Platformer.AnimationSystem;
 using Platformer.Events;
 using Platformer.Main;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Platformer.Player
 {
@@ -13,7 +15,7 @@ namespace Platformer.Player
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
-        private PlayerController playerController;
+        public PlayerController playerController { get; private set; }
 
         
         public PlayerService(PlayerScriptableObject playerScriptableObject){
@@ -26,13 +28,30 @@ namespace Platformer.Player
             EventService.OnHorizontalAxisInputReceived.AddListener(playerController.HandleHorizontalMovementAxisInput);
             EventService.OnPlayerTriggerInputReceived.AddListener(playerController.HandleTriggerInput);
         }
+
+        private void UnsubscribeToEvents(){
+            EventService.OnHorizontalAxisInputReceived.RemoveListener(playerController.HandleHorizontalMovementAxisInput);
+            EventService.OnPlayerTriggerInputReceived.RemoveListener(playerController.HandleTriggerInput);
+        }
         
         private void SpawnPlayer(){
             playerController = new PlayerController(playerScriptableObject);
         }
 
+        public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
+            PlayMovementAnimation(animator, isRunning);
+            EventService.OnPlayerMoved.InvokeEvent(playerPosition);
+        }
+
+        public async void Die(){
+            UnsubscribeToEvents();
+            playerController.Die();
+            await Task.Delay(2000);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         #region Player Animations
-        public void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
+        private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
         public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerJumpAnimation(animator);
         public void PlayDamageAnimation(Animator animator) => AnimationService.PlayPlayerDamageAnimation(animator);
         public void PlayDeathAnimation(Animator animator) => AnimationService.PlayPlayerDeathAnimation(animator);
