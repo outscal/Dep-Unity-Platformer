@@ -9,7 +9,6 @@ namespace Platformer.InputSystem{
         public void HandleInput()
         {
             float horizontalInput = Input.GetAxisRaw("Horizontal");
-            float verticalInput = Input.GetAxisRaw("Vertical");
             if(Input.GetKeyDown(KeyCode.C)){
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
             }else if(Input.GetKeyDown(KeyCode.X)){
@@ -22,7 +21,6 @@ namespace Platformer.InputSystem{
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
             }
             inputService.HandleHorizontalAxisInput(horizontalInput);
-            inputService.HandleVerticalAxisInput(verticalInput);
         }
     }
 
