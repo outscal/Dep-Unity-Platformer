@@ -18,15 +18,5 @@ namespace Platformer.Cameras
             CameraView.transform.SetPositionAndRotation(new Vector3(0, 0, -10f), Quaternion.identity);
             CameraView.SetController(this);
         }
-
-        #region Camera Effects
-        public void ShakeCamera() => CameraView.ShakeCamera(cameraScriptableObject.shakeMagnitude, cameraScriptableObject.shakeDuration);
-        public void OnVerticalAxisInputReceived(float verticalInput){
-            // look up or down depending on the input
-            var movementDirection = new Vector3(0, verticalInput, 0).normalized;    
-        }
-
-        public void OnPlayerMoved(Vector3 playerPosition) => CameraView.FollowPlayer(playerPosition);
-        #endregion
     }
 }

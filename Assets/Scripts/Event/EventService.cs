@@ -11,7 +11,6 @@ namespace Platformer.Events
     public class EventService
     {
         public EventController<float> OnHorizontalAxisInputReceived { get; private set; }
-        public EventController<float> OnVerticalAxisInputReceived { get; private set; }
         public EventController<PlayerInputTriggers> OnPlayerTriggerInputReceived { get; private set; }
         public EventController<Vector3> OnPlayerMoved { get; private set; }
         // public EventController<int> OnLevelSelected { get; private set; }
@@ -20,7 +19,6 @@ namespace Platformer.Events
         {
             // OnLevelSelected = new EventController<int>();
             OnHorizontalAxisInputReceived = new EventController<float>();
-            OnVerticalAxisInputReceived = new EventController<float>();
             OnPlayerTriggerInputReceived = new EventController<PlayerInputTriggers>();
             OnPlayerMoved = new EventController<Vector3>();
         }
