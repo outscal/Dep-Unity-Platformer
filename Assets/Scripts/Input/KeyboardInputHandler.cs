@@ -14,8 +14,6 @@ namespace Platformer.InputSystem{
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
             }else if(Input.GetKeyDown(KeyCode.X)){
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.D)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.DEATH);
             }else if(Input.GetKeyDown(KeyCode.S)){
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
             }else if(Input.GetKeyDown(KeyCode.A)){
@@ -29,7 +27,6 @@ namespace Platformer.InputSystem{
     public enum PlayerInputTriggers{
         JUMP, // C
         ATTACK, // X
-        DEATH, // D
         SLIDE, // S
         TAKE_DAMAGE // A
     }
