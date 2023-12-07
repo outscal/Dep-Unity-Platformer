@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Platformer.Main;
+using TMPro;
 using UnityEngine;
 
 namespace Platformer.Level
@@ -24,5 +25,7 @@ namespace Platformer.Level
             Object.Instantiate(levelData.LevelPrefab);
             UnsubscribeToEvents();
         }
+
+        public void BackgroundParallaxEffect(Transform[] sprites) => GameService.Instance.CameraService.BackgroundParallax(sprites);
     }
 }

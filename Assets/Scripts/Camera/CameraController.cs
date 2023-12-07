@@ -32,6 +32,12 @@ namespace Platformer.Cameras
         public void OnCameraZoomInputReceived(bool zoom) => CameraView.Zoom(zoom, cameraScriptableObject.cameraSizeIncrement, cameraScriptableObject.minSize, cameraScriptableObject.maxSize);
 
         public void OnPlayerMoved(Vector3 playerPosition) => CameraView.FollowPlayer(playerPosition);
+
+        public void BackgroundParallax(Transform[] sprites){
+            foreach(var sprite in sprites){
+                CameraView.ParallaxEffect(sprite);
+            }
+        }
         #endregion
     }
 }

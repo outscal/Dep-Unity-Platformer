@@ -1,4 +1,5 @@
 using System.Collections;
+using Platformer.Main;
 using UnityEngine;
 
 namespace Platformer.Cameras{
@@ -7,6 +8,8 @@ namespace Platformer.Cameras{
     {
         private CameraController cameraController;
         private Camera cameraComponent;
+
+        private Transform playerTransform => GameService.Instance.PlayerService.playerController.playerView.transform;
 
         private Vector3 originalPosition;
 
@@ -50,6 +53,19 @@ namespace Platformer.Cameras{
 
         #region Follow Player
         public void FollowPlayer(Vector3 playerPosition) => transform.position = new Vector3(playerPosition.x, playerPosition.y, transform.position.z);
+        #endregion
+
+        #region Background Parallax Effect
+        public void ParallaxEffect(Transform sprite){
+            var zPosition = sprite.position.z;
+            Vector3 deltaMovement = transform.position - originalPosition;
+            var distanceFromPlayer = sprite.position.z - playerTransform.position.z;
+            var clippingPlane = transform.position.z + (distanceFromPlayer > 0 ? cameraComponent.farClipPlane : cameraComponent.nearClipPlane);
+            var parallaxFactor = Mathf.Abs(distanceFromPlayer) / clippingPlane;
+            sprite.position += deltaMovement * parallaxFactor;
+            sprite.position = new Vector3(sprite.position.x, sprite.position.y, zPosition);
+            originalPosition = transform.position;
+        }
         #endregion
     }   
 }

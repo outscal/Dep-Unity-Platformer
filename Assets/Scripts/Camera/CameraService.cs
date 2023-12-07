@@ -1,5 +1,6 @@
 using Platformer.Events;
 using Platformer.Main;
+using UnityEngine;
 
 namespace Platformer.Cameras{
     public class CameraService{
@@ -22,6 +23,7 @@ namespace Platformer.Cameras{
 
         #region Camera Effects
         public void ShakeCamera() => mainCameraController.ShakeCamera();
+        public void BackgroundParallax(Transform[] startPosition) => mainCameraController.BackgroundParallax(startPosition);
         #endregion
     }
 }

@@ -15,3 +15,6 @@ MonoBehaviour:
   Prefab: {fileID: 4634372182911415543, guid: a7eb3db55fcc35848a6e292e01a2e5c5, type: 3}
   shakeDuration: 0.4
   shakeMagnitude: 0.2
+  cameraSizeIncrement: 0.012
+  maxSize: 10
+  minSize: 2.5

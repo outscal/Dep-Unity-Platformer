@@ -6,6 +6,6 @@ namespace Platformer.Level
     public class LevelScriptableObject : ScriptableObject
     {
         public int ID;
-        public GameObject LevelPrefab;
+        public LevelView LevelPrefab;
     }
 }
