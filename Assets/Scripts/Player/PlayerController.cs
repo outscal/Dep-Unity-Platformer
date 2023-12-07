@@ -1,5 +1,6 @@
 using Platformer.InputSystem;
 using Platformer.Main;
+using Platformer.UI;
 using UnityEngine;
 
 namespace Platformer.Player
@@ -8,14 +9,37 @@ namespace Platformer.Player
     {
         #region Service References
         private PlayerService playerService => GameService.Instance.PlayerService;
+        private UIService UIService => GameService.Instance.UIService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
         public PlayerView playerView { get; private set; }
 
+        #region Health
+        private int currentHealth;
+        public int CurrentHealth {
+            get => currentHealth;
+            private set {
+                currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
+                UIService.UpdatePlayerHealth((float)currentHealth / playerScriptableObject.maxHealth);
+            }
+        }
+        #endregion
+
+        #region coins/Score
+        private int currentCoins = 0;
+        public int CurrentCoins { get => currentCoins; 
+            private set{
+                currentCoins = value;
+                UIService.UpdateCoinsCount(currentCoins);
+            }
+        }
+        #endregion
+
         public PlayerController(PlayerScriptableObject playerScriptableObject){
             this.playerScriptableObject = playerScriptableObject;
             InitializeView();
+            InitializeVariables();
         }
 
         private void InitializeView(){
@@ -24,11 +48,16 @@ namespace Platformer.Player
             playerView.SetController(this);
         }
 
+        private void InitializeVariables()
+        {
+            CurrentCoins = 0;
+            CurrentHealth = playerScriptableObject.maxHealth;
+        }
+
         public void HandleHorizontalMovementAxisInput(float horizontalInput){
             var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
             if(movementDirection != Vector3.zero)
             {
-                // physically move the player
                 playerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
                 playerService.MovePlayer(playerView.PlayerAnimator, true, playerView.Position);
             }else{
@@ -37,7 +66,6 @@ namespace Platformer.Player
         }
 
         public void HandleTriggerInput(PlayerInputTriggers playerInputTriggers){
-            // every case can have custom logic for movement or something else
             switch (playerInputTriggers)
             {
                 case PlayerInputTriggers.JUMP:
@@ -55,12 +83,21 @@ namespace Platformer.Player
                         playerService.PlaySlideAnimation(playerView.PlayerAnimator);
                     }
                     break;
-                case PlayerInputTriggers.TAKE_DAMAGE:
-                    playerService.PlayDamageAnimation(playerView.PlayerAnimator);
-                    break;
             }
         }
 
-        public void Die() => playerService.PlayDeathAnimation(playerView.PlayerAnimator);
+        public void TakeDamage(int damageToInflict)
+        {
+            CurrentHealth -= damageToInflict;
+            if(CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                PlayerDied();
+            }else{
+                playerService.PlayTakeDamageAnimation(playerView.PlayerAnimator);
+            }
+        }
+
+        private void PlayerDied() => playerService.PlayerDied(playerView.PlayerAnimator);
     }
 }

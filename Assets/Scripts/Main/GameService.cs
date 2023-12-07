@@ -13,6 +13,7 @@ using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
 using System.Collections.Generic;
+using Platformer.UI;
 
 namespace Platformer.Main
 {
@@ -25,12 +26,17 @@ namespace Platformer.Main
         public InputService InputService { get; private set; }
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
+        public UIService UIService => uiService;
         #endregion
 
         #region ScriptableObjestsReferences
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
         [SerializeField] private CameraScriptableObject cameraScriptableObject;
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        #endregion
+
+        #region Scene Refrences
+        [SerializeField] private UIService uiService;
         #endregion
 
         protected override void Awake()
@@ -45,5 +51,7 @@ namespace Platformer.Main
         }
 
         private void Update() => InputService.UpdateInputService();
+
+        private void Start() => UIService.ShowLevelSelectionUI(levelScriptableObjects.Count);
     }
 }

@@ -12,5 +12,7 @@ namespace Platformer.Player
         public float slidingSpeed;
         public float slidingTime;
         public float jumpForce;
+        public int maxHealth;
+        public int delayAfterDeath;
     }
 }

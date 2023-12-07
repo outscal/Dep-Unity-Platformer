@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Platformer.Main;
 using UnityEngine;
 
 namespace Platformer.Level
@@ -10,13 +11,18 @@ namespace Platformer.Level
         public LevelService(List<LevelScriptableObject> levelScriptableObjects)
         {
             this.levelScriptableObjects = levelScriptableObjects;
-            LoadLevel();
-        } 
+            SubscribeToEvents();
+        }
 
-        public void LoadLevel(int levelID = 1)
+        private void SubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.AddListener(LoadLevel);
+
+        private void UnsubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.RemoveListener(LoadLevel);
+
+        private void LoadLevel(int levelID = 1)
         {
             var levelData = levelScriptableObjects.Find(levelSO => levelSO.ID == levelID);
             Object.Instantiate(levelData.LevelPrefab);
+            UnsubscribeToEvents();
         }
     }
 }

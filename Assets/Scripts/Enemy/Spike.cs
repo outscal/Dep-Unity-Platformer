@@ -6,7 +6,7 @@ public class Spike : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other){
         if(other.GetComponent<PlayerView>() != null){
-            GameService.Instance.PlayerService.Die();
+            GameService.Instance.PlayerService.TakeDamage(10);
         }
     }
 }

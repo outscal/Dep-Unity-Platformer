@@ -15,8 +15,6 @@ namespace Platformer.InputSystem{
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
             }else if(Input.GetKeyDown(KeyCode.S)){
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
-            }else if(Input.GetKeyDown(KeyCode.A)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
             }
             inputService.HandleHorizontalAxisInput(horizontalInput);
         }
@@ -26,6 +24,5 @@ namespace Platformer.InputSystem{
         JUMP, // C
         ATTACK, // X
         SLIDE, // S
-        TAKE_DAMAGE // A
     }
 }
