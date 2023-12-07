@@ -12,6 +12,8 @@ namespace Platformer.Events
     {
         #region Input events
         public EventController<float> OnHorizontalAxisInputReceived { get; private set; }
+        public EventController<float> OnVerticalAxisInputReceived { get; private set; }
+        public EventController<bool> OnCameraZoomInputReceived { get; private set;}
         public EventController<PlayerInputTriggers> OnPlayerTriggerInputReceived { get; private set; }
         #endregion
 
@@ -28,6 +30,8 @@ namespace Platformer.Events
         {
             OnLevelSelected = new EventController<int>();
             OnHorizontalAxisInputReceived = new EventController<float>();
+            OnCameraZoomInputReceived = new EventController<bool>();
+            OnVerticalAxisInputReceived = new EventController<float>();
             OnPlayerTriggerInputReceived = new EventController<PlayerInputTriggers>();
             OnPlayerMoved = new EventController<Vector3>();
             OnPlayerDied = new EventController();

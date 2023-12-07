@@ -6,9 +6,50 @@ namespace Platformer.Cameras{
     public class CameraView : MonoBehaviour
     {
         private CameraController cameraController;
+        private Camera cameraComponent;
 
         private Vector3 originalPosition;
 
-        public void SetController(CameraController cameraController) => this.cameraController = cameraController;
+        public void SetController(CameraController cameraController){
+            this.cameraController = cameraController;
+            InitilizeVariables();
+        }
+
+        private void InitilizeVariables() => cameraComponent = GetComponent<Camera>();
+
+        #region Camera Shake Effect
+        public void ShakeCamera(float magnitude, float duration){
+            originalPosition = transform.localPosition;
+            StartCoroutine(Shake(magnitude, duration));
+        }
+
+        private IEnumerator Shake(float magnitude, float duration)
+        {
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                Vector3 randomPos = originalPosition + Random.insideUnitSphere * magnitude;
+                transform.localPosition = randomPos;
+
+                elapsed += Time.deltaTime;
+
+                yield return null;
+            }
+
+            transform.localPosition = originalPosition;
+        }
+        #endregion
+
+        #region Camera Zoom
+        public void Zoom(bool isZoomIn, float sizeIncrement, float minSize, float maxSize){
+            cameraComponent.orthographicSize += isZoomIn ? -sizeIncrement : sizeIncrement;
+            cameraComponent.orthographicSize = Mathf.Clamp(cameraComponent.orthographicSize, minSize, maxSize);
+        }
+        #endregion
+
+        #region Follow Player
+        public void FollowPlayer(Vector3 playerPosition) => transform.position = new Vector3(playerPosition.x, playerPosition.y, transform.position.z);
+        #endregion
     }   
 }
