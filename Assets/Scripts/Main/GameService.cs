@@ -14,6 +14,7 @@ using Platformer.AnimationSystem;
 using Platformer.Level;
 using System.Collections.Generic;
 using Platformer.UI;
+using Platformer.Enemy;
 
 namespace Platformer.Main
 {
@@ -26,6 +27,8 @@ namespace Platformer.Main
         public InputService InputService { get; private set; }
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
+        public EnemyService EnemyService { get; private set; }
+
         public UIService UIService => uiService;
         #endregion
 
@@ -45,6 +48,7 @@ namespace Platformer.Main
             EventService = new EventService();
             CameraService = new CameraService(cameraScriptableObject);
             LevelService = new LevelService(levelScriptableObjects);
+            EnemyService = new EnemyService();
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
             AnimationService = new AnimationService();

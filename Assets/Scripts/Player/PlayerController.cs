@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Platformer.Enemy;
 using Platformer.InputSystem;
 using Platformer.Main;
 using Platformer.UI;
@@ -75,7 +77,10 @@ namespace Platformer.Player
                     }
                     break;
                 case PlayerInputTriggers.ATTACK:
-                    playerService.PlayAttackAnimation(playerView.PlayerAnimator);
+                    if(CurrentHealth > 0){
+                        Attack();
+                        playerService.PlayAttackAnimation(playerView.PlayerAnimator);
+                    }
                     break;
                 case PlayerInputTriggers.SLIDE:
                     if(playerView.CanSlide()){
@@ -85,6 +90,8 @@ namespace Platformer.Player
                     break;
             }
         }
+
+        private void Attack() => _ = new MeleeController(playerScriptableObject.meleeSO, playerView.MeleeContainer);
 
         public void TakeDamage(int damageToInflict)
         {

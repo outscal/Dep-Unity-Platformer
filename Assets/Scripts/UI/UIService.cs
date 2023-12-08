@@ -1,3 +1,5 @@
+using Platformer.Enemy;
+using Platformer.Events;
 using Platformer.Main;
 using UnityEngine;
 
@@ -5,6 +7,12 @@ namespace Platformer.UI
 {
     public class UIService : MonoBehaviour
     {
+
+        #region Service References
+        private EventService EventService => GameService.Instance.EventService;
+        private EnemyService EnemyService => GameService.Instance.EnemyService;
+        #endregion
+
         [Header("Level Selection UI")]
         private LevelSelectionUIController levelSelectionController;
         [SerializeField] private LevelSelectionUIView levelSelectionView;
@@ -26,9 +34,17 @@ namespace Platformer.UI
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.AddListener(ShowGameplayUI);
+        private void SubscribeToEvents(){
+            EventService.OnLevelSelected.AddListener(ShowGameplayUI);
+            EventService.OnAllEnemiesDied.AddListener(OnAllEnemiesDied);
+            EventService.OnEnemyDied.AddListener(OnEnemyDied);
+        }
 
-        private void UnsubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.RemoveListener(ShowGameplayUI);
+        private void UnsubscribeToEvents(){
+            EventService.OnLevelSelected.RemoveListener(ShowGameplayUI);
+            EventService.OnAllEnemiesDied.RemoveListener(OnAllEnemiesDied);
+            EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
+        }
 
         public void ShowLevelSelectionUI(int levelCount) => levelSelectionController.Show(levelCount);
 
@@ -42,6 +58,10 @@ namespace Platformer.UI
         }
 
         public void UpdatePlayerHealth(float healthRatio) => gameplayController.SetPlayerHealthUI(healthRatio);
+
+        private void OnEnemyDied() => gameplayController.SetEnemyCount(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
+
+        private void OnAllEnemiesDied() => EndGame(true);
 
         public void UpdateEnemyCount(int activeEnemies, int totalEnemies) => gameplayController.SetEnemyCount(activeEnemies, totalEnemies);
 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Platformer.Enemy;
 using UnityEngine;
 
 namespace Platformer.Level
@@ -7,5 +9,6 @@ namespace Platformer.Level
     {
         public int ID;
         public LevelView LevelPrefab;
+        public List<EnemyScriptableObject> EnemyScriptableObjects;
     }
 }

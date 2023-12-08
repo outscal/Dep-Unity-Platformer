@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Platformer.Enemy;
 using Platformer.Main;
-using TMPro;
 using UnityEngine;
 
 namespace Platformer.Level
@@ -27,5 +27,6 @@ namespace Platformer.Level
         }
 
         public void BackgroundParallaxEffect(Transform[] sprites) => GameService.Instance.CameraService.BackgroundParallax(sprites);
+        public List<EnemyScriptableObject> GetEnemyDataForLevel(int levelId) => levelScriptableObjects.Find(level => level.ID == levelId).EnemyScriptableObjects;
     }
 }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Platformer.Enemy;
 using Platformer.Utilities;
 using UnityEngine;
 
@@ -7,13 +8,15 @@ namespace Platformer.Player{
     public class PlayerView : MonoBehaviour, ICustomGravity
     {
         [SerializeField] private Animator animator;
-        [SerializeField] private SpriteRenderer characterSprite;
-        private Rigidbody2D playerRigidBody;
-        public Animator PlayerAnimator => animator;
-        public PlayerController Controller { get; private set; }
-        public LayerMask groundLayer;
         [SerializeField] private Transform groundCheckPoint; // at the feet of the player
         [SerializeField] private Vector2 groundCheckSize = new(0.49f, 0.03f);
+        [SerializeField] private Transform meleeContainer;
+        private bool isFacingRight = true;
+        private Rigidbody2D playerRigidBody;
+        public Animator PlayerAnimator => animator;
+        public Transform MeleeContainer => meleeContainer;
+        public PlayerController Controller { get; private set; }
+        public LayerMask groundLayer;
 
         [HideInInspector] public Vector3 Position => transform.position;
         [HideInInspector] public bool IsGrounded
@@ -35,11 +38,20 @@ namespace Platformer.Player{
         public void Move(float horizontalInput, float playerMovementSpeed){
             if(horizontalInput != 0) IsRunning = true;
             else IsRunning = false;
-            characterSprite.flipX = horizontalInput < 0;
+            if ((horizontalInput > 0 && !isFacingRight) || (horizontalInput < 0 && isFacingRight))
+            {
+                Flip();
+            }
             if(!IsSliding)
                 translateSpeed = playerMovementSpeed;
             var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
             transform.Translate(translateSpeed * Time.deltaTime * movementVector);
+        }
+
+        private void Flip()
+        {
+            isFacingRight = !isFacingRight;
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }
 
         private void Update(){

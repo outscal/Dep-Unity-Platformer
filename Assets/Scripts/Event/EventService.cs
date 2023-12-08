@@ -3,6 +3,7 @@
 *  you can find a dedicated course on Outscal's website.
 *  Link: https://outscal.com/courses
 **/
+using Platformer.Enemy;
 using Platformer.InputSystem;
 using UnityEngine;
 
@@ -26,6 +27,11 @@ namespace Platformer.Events
         public EventController OnPlayerDied { get; private set ;}
         #endregion
 
+        #region Enemy Events
+        public EventController OnAllEnemiesDied { get; private set; }
+        public EventController OnEnemyDied { get; private set; }
+        #endregion
+
         public EventService()
         {
             OnLevelSelected = new EventController<int>();
@@ -35,6 +41,8 @@ namespace Platformer.Events
             OnPlayerTriggerInputReceived = new EventController<PlayerInputTriggers>();
             OnPlayerMoved = new EventController<Vector3>();
             OnPlayerDied = new EventController();
+            OnAllEnemiesDied = new EventController();
+            OnEnemyDied = new EventController();
         }
     }
 }
