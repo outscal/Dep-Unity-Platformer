@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e84066b1e2d8046acda926130ae2c3, type: 3}
+  m_Name: MeleeScriptableObject
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 1354984841532806221, guid: bf4ea7c44af40f3408ef15e3d3982133, type: 3}
+  Damage: 100
+  MeleeDuration: 0.25
