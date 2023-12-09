@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 3618783052712796055, guid: 87c712bd643494e44bbaeba61c1086bf, type: 3}
   Type: 0
-  SpawnPosition: {x: 9, y: -1.78, z: 0}
-  MovementSpeed: 0
+  SpawnPosition: {x: 15, y: -1.78, z: 0}
+  PatrollingSpeed: 0
+  ChasingSpeed: 0
+  JumpForce: 0
   MaximumHealth: 0
   RangeRadius: 0
   RangeAngle: 0
