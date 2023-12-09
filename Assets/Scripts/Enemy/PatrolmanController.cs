@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Platformer.Enemy{
     public class PatrolmanController : EnemyController
     {

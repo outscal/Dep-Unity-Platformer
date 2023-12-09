@@ -49,6 +49,7 @@ namespace Platformer.Player
             UnsubscribeToEvents();
             PlayDeathAnimation(animator); // functionality which can be called in the PlayerDied event
             await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
+            GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.GAME_LOST);
             UIService.EndGame(false); // functionality which can be called in the PlayerDied event
         }
 
