@@ -1,4 +1,5 @@
 using System;
+using Platformer.Enemy;
 using Platformer.Events;
 using Platformer.Main;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace Platformer.Sound
 
         private void OnAllEnemiesDied() => PlaySoundEffects(SoundType.GAME_WON);
 
-        private void OnEnemyDied() => PlaySoundEffects(SoundType.ENEMY_DEATH);
+        private void OnEnemyDied(EnemyController deadEnemy) => PlaySoundEffects(SoundType.ENEMY_DEATH);
         
         private void PlaybackgroundMusic(SoundType soundType, bool loopSound = false)
         {

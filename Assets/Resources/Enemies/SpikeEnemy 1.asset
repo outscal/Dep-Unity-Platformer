@@ -24,3 +24,5 @@ MonoBehaviour:
   PatrollingPoints: []
   PlayerAttackingDistance: 0
   DelayAfterGameEnd: 1.5
+  DropScriptableObjects:
+  - {fileID: 11400000, guid: 2248c709afb6d2f429cb6409739807eb, type: 2}

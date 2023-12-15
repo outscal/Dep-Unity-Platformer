@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1822ce2a6bb844c4f9081b6b9d7b32f1, type: 3}
+  m_Name: CoinScriptableObject
+  m_EditorClassIdentifier: 
+  dropType: 0
+  dropView: {fileID: 2472139200100787516, guid: 578e97efa3c9c0048ad3b5226c7b809b, type: 3}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  dropRadius: 1
+  coinValue: 10

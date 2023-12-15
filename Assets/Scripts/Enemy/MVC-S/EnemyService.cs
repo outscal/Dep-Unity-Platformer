@@ -71,12 +71,10 @@ namespace Platformer.Enemy
         public async void EnemyDied(EnemyController deadEnemy)
         {
             activeEnemies.Remove(deadEnemy);
-            // sound effect -- event 
-            EventService.OnEnemyDied.InvokeEvent();
+            EventService.OnEnemyDied.InvokeEvent(deadEnemy);
             if (AllEnemiesDied()) 
             {
                 await Task.Delay((int)deadEnemy.Data.DelayAfterGameEnd * 1000); //converting seconds to milliseconds 
-                // sound effect // event -- player won condition met
                 EventService.OnAllEnemiesDied.InvokeEvent();
             }
         }

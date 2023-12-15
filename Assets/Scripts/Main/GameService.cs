@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Platformer.UI;
 using Platformer.Enemy;
 using Platformer.Sound;
+using Platformer.Drop;
 
 namespace Platformer.Main
 {
@@ -30,6 +31,7 @@ namespace Platformer.Main
         public LevelService LevelService { get; private set; }
         public EnemyService EnemyService { get; private set; }
         public SoundService SoundService { get; private set; }
+        public DropsService DropsService { get; private set; }
 
         public UIService UIService => uiService;
         #endregion
@@ -55,6 +57,7 @@ namespace Platformer.Main
             CameraService = new CameraService(cameraScriptableObject);
             LevelService = new LevelService(levelScriptableObjects);
             EnemyService = new EnemyService();
+            DropsService = new DropsService();
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
             AnimationService = new AnimationService();

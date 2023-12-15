@@ -11,6 +11,7 @@ namespace Platformer.Enemy
 
         #region Getters
         public EnemyScriptableObject Data => enemyScriptableObject;
+        public EnemyView EnemyView => enemyView;
         #endregion
 
         public EnemyController(EnemyScriptableObject enemyScriptableObject)

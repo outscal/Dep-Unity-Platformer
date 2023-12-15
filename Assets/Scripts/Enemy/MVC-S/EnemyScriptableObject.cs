@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Platformer.Drop;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -18,5 +19,6 @@ namespace Platformer.Enemy
         public List<Vector3> PatrollingPoints;
         public float PlayerAttackingDistance;
         public float DelayAfterGameEnd;
+        public List<DropScriptableObject> DropScriptableObjects;
     }
 }

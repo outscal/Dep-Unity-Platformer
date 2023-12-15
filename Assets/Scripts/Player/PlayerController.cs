@@ -106,5 +106,7 @@ namespace Platformer.Player
         }
 
         private void PlayerDied() => playerService.PlayerDied(playerView.PlayerAnimator);
+
+        public void CollectCoin(int coinValue) => CurrentCoins += coinValue;
     }
 }

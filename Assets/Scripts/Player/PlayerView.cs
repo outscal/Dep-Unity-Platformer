@@ -92,5 +92,7 @@ namespace Platformer.Player{
         #region GRAVITY
         public void ApplyGravity() => playerRigidBody.AddForce(Vector2.down * 0.09f, ForceMode2D.Impulse);
         #endregion
+
+        public void CollectCoin(int coinValue) => Controller?.CollectCoin(coinValue);
     }
 }

@@ -59,7 +59,7 @@ namespace Platformer.UI
 
         public void UpdatePlayerHealth(float healthRatio) => gameplayController.SetPlayerHealthUI(healthRatio);
 
-        private void OnEnemyDied() => gameplayController.SetEnemyCount(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
+        private void OnEnemyDied(EnemyController deadEnemy) => gameplayController.SetEnemyCount(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
 
         private void OnAllEnemiesDied() => EndGame(true);
 

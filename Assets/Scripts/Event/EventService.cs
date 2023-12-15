@@ -29,7 +29,7 @@ namespace Platformer.Events
 
         #region Enemy Events
         public EventController OnAllEnemiesDied { get; private set; }
-        public EventController OnEnemyDied { get; private set; }
+        public EventController<EnemyController> OnEnemyDied { get; private set; }
         #endregion
 
         public EventService()
@@ -42,7 +42,7 @@ namespace Platformer.Events
             OnPlayerMoved = new EventController<Vector3>();
             OnPlayerDied = new EventController();
             OnAllEnemiesDied = new EventController();
-            OnEnemyDied = new EventController();
+            OnEnemyDied = new EventController<EnemyController>();
         }
     }
 }
