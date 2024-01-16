@@ -11,11 +11,11 @@ namespace Platformer.Events
     {
         public EventController<float> OnHorizontalAxisInputReceived { get; private set; }
         public EventController<PlayerInputTriggers> OnPlayerTriggerInputReceived { get; private set; }
-        public EventController<int> OnLevelSelected { get; private set; }
+        // public EventController<int> OnLevelSelected { get; private set; }
 
         public EventService()
         {
-            OnLevelSelected = new EventController<int>();
+            // OnLevelSelected = new EventController<int>();
             OnHorizontalAxisInputReceived = new EventController<float>();
             OnPlayerTriggerInputReceived = new EventController<PlayerInputTriggers>();
         }
