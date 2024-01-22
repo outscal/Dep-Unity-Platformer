@@ -4,31 +4,31 @@ using UnityEngine;
 namespace Platformer.InputSystem{
     public class KeyboardInputHandler : IInputHandler
     {
-        private InputService inputService => GameService.Instance.InputService;
+        private InputService InputService => GameService.Instance.InputService;
 
         public void HandleInput()
         {
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            if(Input.GetKeyDown(KeyCode.C)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
+            var horizontalInput = Input.GetAxisRaw("Horizontal");
+            if(Input.GetKeyDown(KeyCode.Space)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
             }else if(Input.GetKeyDown(KeyCode.X)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.D)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.DEATH);
-            }else if(Input.GetKeyDown(KeyCode.S)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
-            }else if(Input.GetKeyDown(KeyCode.A)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
+            }else if(Input.GetKeyDown(KeyCode.K)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.DEATH);
+            }else if(Input.GetKeyDown(KeyCode.C)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
+            }else if(Input.GetKeyDown(KeyCode.J)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
             }
-            inputService.HandleHorizontalAxisInput(horizontalInput);
+            InputService.HandleHorizontalAxisInput(horizontalInput);
         }
     }
 
     public enum PlayerInputTriggers{
-        JUMP, // C
+        JUMP, // SPACE
         ATTACK, // X
-        DEATH, // D
-        SLIDE, // S
-        TAKE_DAMAGE // A
+        SLIDE, // C
+        DEATH, // K // temporary
+        TAKE_DAMAGE // J // temporary
     }
 }
