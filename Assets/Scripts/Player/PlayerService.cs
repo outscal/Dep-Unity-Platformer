@@ -50,6 +50,13 @@ namespace Platformer.Player
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+        public async void PlayerDied(Animator animator){
+            UnsubscribeToEvents();
+            PlayDeathAnimation(animator);
+            await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         #region Player Animations
         private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
         public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerJumpAnimation(animator);
