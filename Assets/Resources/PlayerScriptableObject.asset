@@ -18,4 +18,9 @@ MonoBehaviour:
   movementSpeed: 4
   slidingSpeed: 6
   slidingTime: 1
-  jumpForce: 5
+  jumpForce: 10
+  gravityDownForceMultiplier: 0.09
+  fallMultiplier: 3
+  lowJumpMultiplier: 2.5
+  maxHealth: 30
+  delayAfterDeath: 2
