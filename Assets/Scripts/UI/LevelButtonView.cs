@@ -19,7 +19,7 @@ namespace Platformer.UI
         public void SetLevelID(int levelId)
         {
             this.levelId = levelId;
-            buttonText.SetText("Level " + levelId);
+            buttonText.SetText($"Level {levelId}");
         }
     }
 }
