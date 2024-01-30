@@ -8,30 +8,35 @@ namespace Platformer.InputSystem{
 
         public void HandleInput()
         {
+            HandlePlayerMovementInput();
+            HandlePlayerTriggerInput();
+            HandleCameraControlInput();
+        }
+
+        private void HandlePlayerMovementInput()
+        {
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput = Input.GetAxisRaw("Vertical");
-
-            #region Player Trigger Controls
-            if(Input.GetKeyDown(KeyCode.Space)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
-            }else if(Input.GetKeyDown(KeyCode.X)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.C)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
-            }
-            #endregion
-
-            #region Camera Controls
-            if(Input.GetKey(KeyCode.Z)){
-                InputService.HandleCameraZoomInput(false);
-
-            }else if(Input.GetKey(KeyCode.A)){
-                InputService.HandleCameraZoomInput(true);
-            }
-            #endregion
-
             InputService.HandleHorizontalAxisInput(horizontalInput);
             InputService.HandleVerticalAxisInput(verticalInput);
+        }
+
+        private void HandlePlayerTriggerInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
+            else if (Input.GetKeyDown(KeyCode.X))
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
+            else if (Input.GetKeyDown(KeyCode.C))
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
+        }
+
+        private void HandleCameraControlInput()
+        {
+            if (Input.GetKey(KeyCode.Q))
+                InputService.HandleCameraZoomInput(false);
+            else if (Input.GetKey(KeyCode.E))
+                InputService.HandleCameraZoomInput(true);
         }
     }
 
