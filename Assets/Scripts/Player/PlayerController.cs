@@ -8,12 +8,12 @@ namespace Platformer.Player
     public class PlayerController
     {
         #region Service References
-        private PlayerService playerService => GameService.Instance.PlayerService;
+        private PlayerService PlayerService => GameService.Instance.PlayerService;
         private UIService UIService => GameService.Instance.UIService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
-        public PlayerView playerView { get; private set; }
+        public PlayerView PlayerView { get; private set; }
 
         #region Health
         private int currentHealth;
@@ -43,9 +43,9 @@ namespace Platformer.Player
         }
 
         private void InitializeView(){
-            playerView = Object.Instantiate(playerScriptableObject.prefab);
-            playerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
-            playerView.SetController(this);
+            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
+            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
+            PlayerView.SetController(this);
         }
 
         private void InitializeVariables()
@@ -54,14 +54,17 @@ namespace Platformer.Player
             CurrentHealth = playerScriptableObject.maxHealth;
         }
 
+        #region Player Input Handling
+
         public void HandleHorizontalMovementAxisInput(float horizontalInput){
             var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
             if(movementDirection != Vector3.zero)
             {
-                playerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
-                playerService.MovePlayer(playerView.PlayerAnimator, true, playerView.Position);
+                // physically move the player
+                PlayerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
+                PlayerService.MovePlayer(PlayerView.PlayerAnimator, true, PlayerView.Position);
             }else{
-                playerService.MovePlayer(playerView.PlayerAnimator, false, playerView.Position);
+                PlayerService.MovePlayer(PlayerView.PlayerAnimator, false, PlayerView.Position);
             }
         }
 
@@ -69,22 +72,41 @@ namespace Platformer.Player
             switch (playerInputTriggers)
             {
                 case PlayerInputTriggers.JUMP:
-                    if(playerView.CanJump()){
-                        playerView.Jump(playerScriptableObject.jumpForce);
-                        playerService.PlayJumpAnimation(playerView.PlayerAnimator);
-                    }
+                    ProcessJumpInput();
                     break;
                 case PlayerInputTriggers.ATTACK:
-                    playerService.PlayAttackAnimation(playerView.PlayerAnimator);
+                    ProcessAttackInput();
                     break;
                 case PlayerInputTriggers.SLIDE:
-                    if(playerView.CanSlide()){
-                        playerView.Slide(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime);
-                        playerService.PlaySlideAnimation(playerView.PlayerAnimator);
-                    }
+                    ProcessSlideInput();
                     break;
             }
         }
+
+        private void ProcessJumpInput(){
+            if(PlayerView.CanJump()){
+                PlayerView.Jump(playerScriptableObject.jumpForce);
+                PlayerService.PlayJumpAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private void ProcessAttackInput(){
+            if(PlayerView.CanAttack()){
+                PlayerView.Attack();
+                PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private void ProcessSlideInput(){
+            if(PlayerView.CanSlide()){
+                PlayerView.Slide(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime);
+                PlayerService.PlaySlideAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        #endregion
+
+        public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
 
         public void TakeDamage(int damageToInflict)
         {
@@ -94,10 +116,16 @@ namespace Platformer.Player
                 CurrentHealth = 0;
                 PlayerDied();
             }else{
-                playerService.PlayTakeDamageAnimation(playerView.PlayerAnimator);
+                PlayerService.PlayTakeDamageAnimation(PlayerView.PlayerAnimator);
             }
         }
 
-        private void PlayerDied() => playerService.PlayerDied(playerView.PlayerAnimator);
+        private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
+
+        public float GetGravityDownForce() => playerScriptableObject.gravityDownForceMultiplier;
+
+        public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;
+
+        public float GetLowJumpMultiplier() => playerScriptableObject.lowJumpMultiplier;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Platformer.InputSystem{
     public class KeyboardInputHandler : IInputHandler
     {
-        private InputService inputService => GameService.Instance.InputService;
+        private InputService InputService => GameService.Instance.InputService;
 
         public void HandleInput()
         {
@@ -15,9 +15,9 @@ namespace Platformer.InputSystem{
             if(Input.GetKeyDown(KeyCode.C)){
                 inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
             }else if(Input.GetKeyDown(KeyCode.X)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.S)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
+            }else if(Input.GetKeyDown(KeyCode.C)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
             }
             #endregion
 
@@ -36,8 +36,8 @@ namespace Platformer.InputSystem{
     }
 
     public enum PlayerInputTriggers{
-        JUMP, // C
+        JUMP, // SPACE
         ATTACK, // X
-        SLIDE, // S
+        SLIDE // C
     }
 }

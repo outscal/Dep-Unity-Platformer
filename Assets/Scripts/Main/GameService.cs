@@ -8,7 +8,6 @@ using UnityEngine;
 using Platformer.Utilities;
 using Platformer.Events;
 using Platformer.Player;
-using Platformer.Cameras;
 using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
@@ -20,7 +19,6 @@ namespace Platformer.Main
     public class GameService : GenericMonoSingleton<GameService>
     {
         #region Services
-        public CameraService CameraService { get; private set; }
         public EventService EventService { get; private set; }
         public PlayerService PlayerService { get; private set; }
         public InputService InputService { get; private set; }
@@ -31,7 +29,6 @@ namespace Platformer.Main
 
         #region ScriptableObjestsReferences
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        [SerializeField] private CameraScriptableObject cameraScriptableObject;
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
         #endregion
 
@@ -43,7 +40,6 @@ namespace Platformer.Main
         {
             base.Awake();
             EventService = new EventService();
-            CameraService = new CameraService(cameraScriptableObject);
             LevelService = new LevelService(levelScriptableObjects);
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
