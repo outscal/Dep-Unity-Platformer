@@ -12,8 +12,8 @@ namespace Platformer.InputSystem{
             float verticalInput = Input.GetAxisRaw("Vertical");
 
             #region Player Trigger Controls
-            if(Input.GetKeyDown(KeyCode.C)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
+            if(Input.GetKeyDown(KeyCode.Space)){
+                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
             }else if(Input.GetKeyDown(KeyCode.X)){
                 InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
             }else if(Input.GetKeyDown(KeyCode.C)){
@@ -23,15 +23,15 @@ namespace Platformer.InputSystem{
 
             #region Camera Controls
             if(Input.GetKey(KeyCode.Z)){
-                inputService.HandleCameraZoomInput(false);
+                InputService.HandleCameraZoomInput(false);
 
             }else if(Input.GetKey(KeyCode.A)){
-                inputService.HandleCameraZoomInput(true);
+                InputService.HandleCameraZoomInput(true);
             }
             #endregion
 
-            inputService.HandleHorizontalAxisInput(horizontalInput);
-            inputService.HandleVerticalAxisInput(verticalInput);
+            InputService.HandleHorizontalAxisInput(horizontalInput);
+            InputService.HandleVerticalAxisInput(verticalInput);
         }
     }
 

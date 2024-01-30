@@ -9,7 +9,7 @@ namespace Platformer.Cameras{
         private CameraController cameraController;
         private Camera cameraComponent;
 
-        private Transform playerTransform => GameService.Instance.PlayerService.playerController.playerView.transform;
+        private Transform playerTransform => GameService.Instance.PlayerService.playerController.PlayerView.transform;
 
         private Vector3 originalPosition;
 

@@ -13,6 +13,7 @@ using Platformer.AnimationSystem;
 using Platformer.Level;
 using System.Collections.Generic;
 using Platformer.UI;
+using Platformer.Cameras;
 
 namespace Platformer.Main
 {
@@ -24,12 +25,14 @@ namespace Platformer.Main
         public InputService InputService { get; private set; }
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
+        public CameraService CameraService { get; private set; }
         public UIService UIService => uiService;
         #endregion
 
         #region ScriptableObjestsReferences
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        [SerializeField] private CameraScriptableObject cameraScriptableObject;
         #endregion
 
         #region Scene Refrences
@@ -40,6 +43,7 @@ namespace Platformer.Main
         {
             base.Awake();
             EventService = new EventService();
+            CameraService = new CameraService(cameraScriptableObject);
             LevelService = new LevelService(levelScriptableObjects);
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
