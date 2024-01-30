@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Platformer.AnimationSystem;
+using Platformer.Cameras;
 using Platformer.Events;
 using Platformer.Main;
 using Platformer.UI;
@@ -13,10 +14,11 @@ namespace Platformer.Player
         private AnimationService AnimationService => GameService.Instance.AnimationService;
         private EventService EventService => GameService.Instance.EventService;
         private UIService UIService => GameService.Instance.UIService;
+        private CameraService CameraService => GameService.Instance.CameraService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
-        public PlayerController playerController { get; private set; }
+        public PlayerController PlayerController { get; private set; }
 
         
         public PlayerService(PlayerScriptableObject playerScriptableObject){
@@ -28,14 +30,14 @@ namespace Platformer.Player
 
         private void UnsubscribeToEvents(){
             EventService.OnLevelSelected.RemoveListener(SpawnPlayer);
-            EventService.OnHorizontalAxisInputReceived.RemoveListener(playerController.HandleHorizontalMovementAxisInput);
-            EventService.OnPlayerTriggerInputReceived.RemoveListener(playerController.HandleTriggerInput);
+            EventService.OnHorizontalAxisInputReceived.RemoveListener(PlayerController.HandleHorizontalMovementAxisInput);
+            EventService.OnPlayerTriggerInputReceived.RemoveListener(PlayerController.HandleTriggerInput);
         }
 
         private void SpawnPlayer(int levelId){
-            playerController = new PlayerController(playerScriptableObject);
-            EventService.OnHorizontalAxisInputReceived.AddListener(playerController.HandleHorizontalMovementAxisInput);
-            EventService.OnPlayerTriggerInputReceived.AddListener(playerController.HandleTriggerInput);
+            PlayerController = new PlayerController(playerScriptableObject);
+            EventService.OnHorizontalAxisInputReceived.AddListener(PlayerController.HandleHorizontalMovementAxisInput);
+            EventService.OnPlayerTriggerInputReceived.AddListener(PlayerController.HandleTriggerInput);
         }
 
         public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
@@ -43,21 +45,19 @@ namespace Platformer.Player
             EventService.OnPlayerMoved.InvokeEvent(playerPosition);
         }
 
-        public void TakeDamage(int damageToInflict) => playerController.TakeDamage(damageToInflict);
-
-        public async void PlayerDied(Animator animator){ // can be an event 
-            UnsubscribeToEvents();
-            PlayDeathAnimation(animator); // functionality which can be called in the PlayerDied event
-            await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
-            UIService.EndGame(false); // functionality which can be called in the PlayerDied event
+        public void TakeDamage(Animator animator){
+            // use the camera shake effect
+            CameraService.ShakeCamera();
+            PlayTakeDamageAnimation(animator);
         }
 
-        // public async void PlayerDied(Animator animator){
-        //     UnsubscribeToEvents();
-        //     PlayDeathAnimation(animator);
-        //     await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
+        public async void PlayerDied(Animator animator){
+            UnsubscribeToEvents();
+            CameraService.ShakeCamera();
+            PlayDeathAnimation(animator);
+            await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
+            UIService.EndGame(false);
+        }
 
         #region Player Animations
         private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);

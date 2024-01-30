@@ -116,7 +116,7 @@ namespace Platformer.Player
                 CurrentHealth = 0;
                 PlayerDied();
             }else{
-                PlayerService.PlayTakeDamageAnimation(PlayerView.PlayerAnimator);
+                PlayerService.TakeDamage(PlayerView.PlayerAnimator);
             }
         }
 
