@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Platformer.Main;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Platformer.Cameras{
         private CameraController cameraController;
         private Camera cameraComponent;
 
-        private Transform playerTransform => GameService.Instance.PlayerService.playerController.playerView.transform;
+        private Transform playerTransform => GameService.Instance.PlayerService.PlayerController.PlayerView.transform;
 
         private Vector3 originalPosition;
 
@@ -23,10 +24,10 @@ namespace Platformer.Cameras{
         #region Camera Shake Effect
         public void ShakeCamera(float magnitude, float duration){
             originalPosition = transform.localPosition;
-            StartCoroutine(Shake(magnitude, duration));
+            Shake(magnitude, duration);
         }
 
-        private IEnumerator Shake(float magnitude, float duration)
+        private async void Shake(float magnitude, float duration)
         {
             float elapsed = 0f;
 
@@ -36,12 +37,12 @@ namespace Platformer.Cameras{
                 transform.localPosition = randomPos;
 
                 elapsed += Time.deltaTime;
-
-                yield return null;
+                await Task.Delay((int)(Time.deltaTime * 1000));
             }
 
             transform.localPosition = originalPosition;
         }
+
         #endregion
 
         #region Camera Zoom

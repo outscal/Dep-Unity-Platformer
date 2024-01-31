@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Platformer.Player{
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerView : MonoBehaviour, ICustomGravity
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class PlayerView : MonoBehaviour, IDamagable
     {
+        public PlayerController Controller { get; private set; }
+
+        #region Editor properties
         [SerializeField] private Animator animator;
         [SerializeField] private Transform groundCheckPoint; // at the feet of the player
         [SerializeField] private Vector2 groundCheckSize = new(0.49f, 0.03f);
@@ -16,23 +20,44 @@ namespace Platformer.Player{
         public Transform MeleeContainer => meleeContainer;
         public PlayerController Controller { get; private set; }
         public LayerMask groundLayer;
+        [SerializeField] private SpriteRenderer characterSprite;
+        public LayerMask groundLayer;
+        #endregion
 
+        #region Private variables
+        private BoxCollider2D playerBoxCollider;
+        private Rigidbody2D playerRigidBody;
+        private float translateSpeed = 0;
+        #endregion
+
+        #region Getters
+        public Animator PlayerAnimator => animator;
         [HideInInspector] public Vector3 Position => transform.position;
-        [HideInInspector] public bool IsGrounded
+        #endregion
+
+        #region Properties
+        [HideInInspector] public bool IsGrounded // grounded check is performed using Raycast
         {
-            get => Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer);
+            get {
+                var offset = 0.3f;
+                RaycastHit2D raycastHit = Physics2D.Raycast(playerBoxCollider.bounds.center, Vector2.down, playerBoxCollider.bounds.extents.y + offset, groundLayer);
+                return raycastHit.collider != null;
+            }
             private set => IsGrounded = value;
         }
-        [HideInInspector] public bool IsRunning { get; private set; }
-        [HideInInspector] public bool IsSliding { get; private set; }
+        [HideInInspector] public PlayerStates PlayerState { get; private set; }
+        #endregion
 
-        private float translateSpeed = 0;
 
         public void SetController(PlayerController controllerToSet){
             Controller = controllerToSet;
             InitializeVariables();
         }
-        private void InitializeVariables() => playerRigidBody = GetComponent<Rigidbody2D>();
+
+        private void InitializeVariables(){
+            playerRigidBody = GetComponent<Rigidbody2D>();
+            playerBoxCollider = GetComponent<BoxCollider2D>();
+        }
 
         public void Move(float horizontalInput, float playerMovementSpeed){
             if(horizontalInput != 0) IsRunning = true;
@@ -46,6 +71,7 @@ namespace Platformer.Player{
             var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
             transform.Translate(translateSpeed * Time.deltaTime * movementVector);
         }
+        
 
         private void Flip()
         {
@@ -54,20 +80,37 @@ namespace Platformer.Player{
         }
 
         private void Update(){
-            if(!IsGrounded)
-                ApplyGravity();
+            var check = IsGrounded;
+            if(playerRigidBody.velocity.y < 0){
+                playerRigidBody.velocity += (Controller.GetFallMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
+            }else if(playerRigidBody.velocity.y > 0){
+                playerRigidBody.velocity += (Controller.GetLowJumpMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
+            }
         }
 
+        #region Movement Functions
+        public void Move(float horizontalInput, float playerMovementSpeed){
+            UpdateRunningStatus(horizontalInput);
+            SetCharacterSpriteDirection(horizontalInput < 0);
+            if (PlayerState != PlayerStates.SLIDE) translateSpeed = playerMovementSpeed;
+            TranslatePlayer(horizontalInput);
+        }
+
+        private void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
+        private void UpdateRunningStatus(float horizontalInput) => PlayerState = horizontalInput != 0 ? PlayerStates.RUNNING : PlayerStates.IDLE;
+        private void TranslatePlayer(float horizontalInput){
+            var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
+            transform.Translate(translateSpeed * Time.deltaTime * movementVector);
+        }
+        #endregion
+
         #region JUMP
-        public bool CanJump() => IsGrounded;
+        public bool CanJump() => IsGrounded && (PlayerState == PlayerStates.IDLE || PlayerState == PlayerStates.RUNNING);
 
-        public void Jump(float jumpForce) => playerRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        // public void Jump(float jumpForce) => playerRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        // private void Jump() // velocity change method for jump
-        // {
-        //     var force = Controller.GetJumpForce();
-        //     playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, force);
-        // }
+        public void Jump(float jumpForce) => playerRigidBody.velocity = Vector2.up * jumpForce;
+
         // private void Jump() // direct changing the position through translate method
         // {
         //     var force = Controller.GetJumpForce();
@@ -77,20 +120,33 @@ namespace Platformer.Player{
         #endregion
 
         #region SLIDE
-        public bool CanSlide() => IsGrounded && IsRunning && !IsSliding;
+        public bool CanSlide() => IsGrounded && PlayerState == PlayerStates.RUNNING;
 
-        public async void Slide(float slidingSpeed, float slidingTime){
+        public async void Slide(float slidingSpeed, float slidingTime)
+        {
             var temp = translateSpeed;
-            translateSpeed = slidingSpeed;
-            IsSliding = true;
+            SetSlidingState(slidingSpeed, true);
             await Task.Delay((int)(slidingTime * 1000));
-            translateSpeed = temp;
-            IsSliding = false;
+            SetSlidingState(temp, false);
         }
+
+        private void SetSlidingState(float speed, bool isSliding)
+        {
+            translateSpeed = speed;
+            PlayerState = isSliding ? PlayerStates.SLIDE : PlayerStates.IDLE;
+        }
+
         #endregion
 
-        #region GRAVITY
-        public void ApplyGravity() => playerRigidBody.AddForce(Vector2.down * 0.09f, ForceMode2D.Impulse);
+        #region ATTACK
+        public bool CanAttack() => IsGrounded && (PlayerState == PlayerStates.IDLE || PlayerState == PlayerStates.RUNNING);
+
+        public void Attack() => PlayerState = PlayerStates.ATTACK;
+
+        #endregion
+
+        #region Take Damage Function
+        public void TakeDamage(int damage) => Controller.TakeDamage(damage);
         #endregion
     }
 }

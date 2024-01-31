@@ -8,34 +8,33 @@ using UnityEngine;
 using Platformer.Utilities;
 using Platformer.Events;
 using Platformer.Player;
-using Platformer.Cameras;
 using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
 using System.Collections.Generic;
 using Platformer.UI;
 using Platformer.Enemy;
+using Platformer.Cameras;
 
 namespace Platformer.Main
 {
     public class GameService : GenericMonoSingleton<GameService>
     {
         #region Services
-        public CameraService CameraService { get; private set; }
         public EventService EventService { get; private set; }
         public PlayerService PlayerService { get; private set; }
         public InputService InputService { get; private set; }
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
         public EnemyService EnemyService { get; private set; }
-
+        public CameraService CameraService { get; private set; }
         public UIService UIService => uiService;
         #endregion
 
         #region ScriptableObjestsReferences
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        [SerializeField] private CameraScriptableObject cameraScriptableObject;
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        [SerializeField] private CameraScriptableObject cameraScriptableObject;
         #endregion
 
         #region Scene Refrences
