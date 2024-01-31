@@ -41,7 +41,8 @@ namespace Platformer.Enemy{
 
         private void OnTriggerEnter2D(Collider2D other){
             if(other.GetComponent<PlayerView>() != null){
-                GameService.Instance.PlayerService.TakeDamage(10);
+                //GameService.Instance.PlayerService.TakeDamage(10);
+                Debug.Log("Damage to be given to player here");
             }
         }
 

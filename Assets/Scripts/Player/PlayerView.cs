@@ -11,23 +11,17 @@ namespace Platformer.Player{
 
         #region Editor properties
         [SerializeField] private Animator animator;
-        [SerializeField] private Transform groundCheckPoint; // at the feet of the player
-        [SerializeField] private Vector2 groundCheckSize = new(0.49f, 0.03f);
         [SerializeField] private Transform meleeContainer;
-        private bool isFacingRight = true;
-        private Rigidbody2D playerRigidBody;
-        public Animator PlayerAnimator => animator;
         public Transform MeleeContainer => meleeContainer;
-        public PlayerController Controller { get; private set; }
-        public LayerMask groundLayer;
         [SerializeField] private SpriteRenderer characterSprite;
-        public LayerMask groundLayer;
+        [SerializeField] private LayerMask groundLayer;
         #endregion
 
         #region Private variables
         private BoxCollider2D playerBoxCollider;
         private Rigidbody2D playerRigidBody;
         private float translateSpeed = 0;
+        private bool isFacingRight = true;
         #endregion
 
         #region Getters
@@ -48,7 +42,6 @@ namespace Platformer.Player{
         [HideInInspector] public PlayerStates PlayerState { get; private set; }
         #endregion
 
-
         public void SetController(PlayerController controllerToSet){
             Controller = controllerToSet;
             InitializeVariables();
@@ -59,25 +52,25 @@ namespace Platformer.Player{
             playerBoxCollider = GetComponent<BoxCollider2D>();
         }
 
-        public void Move(float horizontalInput, float playerMovementSpeed){
-            if(horizontalInput != 0) IsRunning = true;
-            else IsRunning = false;
-            if ((horizontalInput > 0 && !isFacingRight) || (horizontalInput < 0 && isFacingRight))
-            {
-                Flip();
-            }
-            if(!IsSliding)
-                translateSpeed = playerMovementSpeed;
-            var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
-            transform.Translate(translateSpeed * Time.deltaTime * movementVector);
-        }
+        // public void Move(float horizontalInput, float playerMovementSpeed){
+        //     if(horizontalInput != 0) IsRunning = true;
+        //     else IsRunning = false;
+        //     if ((horizontalInput > 0 && !isFacingRight) || (horizontalInput < 0 && isFacingRight))
+        //     {
+        //         Flip();
+        //     }
+        //     if(!IsSliding)
+        //         translateSpeed = playerMovementSpeed;
+        //     var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
+        //     transform.Translate(translateSpeed * Time.deltaTime * movementVector);
+        // }
         
 
-        private void Flip()
-        {
-            isFacingRight = !isFacingRight;
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
+        // private void Flip()
+        // {
+        //     isFacingRight = !isFacingRight;
+        //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        // }
 
         private void Update(){
             var check = IsGrounded;

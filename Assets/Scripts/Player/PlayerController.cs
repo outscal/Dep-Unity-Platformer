@@ -85,7 +85,7 @@ namespace Platformer.Player
             }
         }
 
-        private void Attack() => _ = new MeleeController(playerScriptableObject.meleeSO, playerView.MeleeContainer);
+        private void Attack() => _ = new MeleeController(playerScriptableObject.meleeSO, PlayerView.MeleeContainer);
         private void ProcessJumpInput(){
             if(PlayerView.CanJump()){
                 PlayerView.Jump(playerScriptableObject.jumpForce);
