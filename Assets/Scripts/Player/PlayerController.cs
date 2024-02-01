@@ -58,14 +58,8 @@ namespace Platformer.Player
 
         public void HandleHorizontalMovementAxisInput(float horizontalInput){
             var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
-            if(movementDirection != Vector3.zero)
-            {
-                // physically move the player
-                PlayerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
-                PlayerService.MovePlayer(PlayerView.PlayerAnimator, true, PlayerView.Position);
-            }else{
-                PlayerService.MovePlayer(PlayerView.PlayerAnimator, false, PlayerView.Position);
-            }
+            PlayerView.Move(horizontalInput, playerScriptableObject.movementSpeed);
+            PlayerService.MovePlayer(PlayerView.PlayerAnimator, movementDirection != Vector3.zero, PlayerView.Position);
         }
 
         public void HandleTriggerInput(PlayerInputTriggers playerInputTriggers){
