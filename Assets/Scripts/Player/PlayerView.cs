@@ -84,7 +84,8 @@ namespace Platformer.Player{
         #region Movement Functions
         public void Move(float horizontalInput, float playerMovementSpeed){
             UpdateRunningStatus(horizontalInput);
-            SetCharacterSpriteDirection(horizontalInput < 0);
+            if(horizontalInput != 0)
+                SetCharacterSpriteDirection(horizontalInput < 0);
             if (PlayerState != PlayerStates.SLIDE) translateSpeed = playerMovementSpeed;
             TranslatePlayer(horizontalInput);
         }
