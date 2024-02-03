@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Platformer.Enemy{
     public class SpikeController : EnemyController
     {

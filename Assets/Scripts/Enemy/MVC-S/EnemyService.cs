@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Platformer.AnimationSystem;
 using Platformer.Events;
 using Platformer.Level;
 using Platformer.Main;
 using Platformer.UI;
+using UnityEngine;
 
 namespace Platformer.Enemy
 {
@@ -13,6 +15,7 @@ namespace Platformer.Enemy
         private EventService EventService => GameService.Instance.EventService;
         private LevelService LevelService => GameService.Instance.LevelService;
         private UIService UIService => GameService.Instance.UIService;
+        private AnimationService AnimationService => GameService.Instance.AnimationService;
         #endregion
 
         #region Getters
@@ -48,7 +51,8 @@ namespace Platformer.Enemy
             foreach(var enemySO in enemyDataForLevel)
             {
                 var enemy = CreateEnemy(enemySO);
-                AddEnemy(enemy);
+                if(enemy is not SpikeController)
+                    AddEnemy(enemy);
             }
 
             SpawnedEnemies = activeEnemies.Count;
@@ -60,7 +64,8 @@ namespace Platformer.Enemy
             EnemyController enemy = enemyScriptableObject.Type switch
             {
                 EnemyType.Spike => new SpikeController(enemyScriptableObject),
-                EnemyType.PatrolMan => new PatrolmanController(enemyScriptableObject),
+                EnemyType.Slime => new SlimeController(enemyScriptableObject),
+                EnemyType.MushroomHead => new MushroomHeadController(enemyScriptableObject),
                 _ => new EnemyController(enemyScriptableObject),
             };
             return enemy;
@@ -71,16 +76,20 @@ namespace Platformer.Enemy
         public async void EnemyDied(EnemyController deadEnemy)
         {
             activeEnemies.Remove(deadEnemy);
-            // sound effect -- event 
-            EventService.OnEnemyDied.InvokeEvent();
+            EventService.OnEnemyDied.InvokeEvent(deadEnemy);
             if (AllEnemiesDied()) 
             {
-                await Task.Delay((int)deadEnemy.Data.DelayAfterGameEnd * 1000); //converting seconds to milliseconds 
-                // sound effect // event -- player won condition met
+                await Task.Delay((int)deadEnemy.Data.DelayAfterGameEnd * 1000);
                 EventService.OnAllEnemiesDied.InvokeEvent();
             }
         }
 
+        public void UpdateEnemyHealth(EnemyController enemy, float healthRatio) => UIService.UpdateEnemyHealth(enemy, healthRatio);
+
+        public void EnemyMoved(EnemyController enemyController) => EventService.OnEnemyMoved.InvokeEvent(enemyController);
+
         private bool AllEnemiesDied() => activeEnemies.Count == 0;
+
+        public void PlayAttackAnimation(Animator animator) => AnimationService.PlayMushroomHeadAttackAnimation(animator);
     }
 }

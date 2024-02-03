@@ -13,7 +13,6 @@ namespace Platformer.Player{
         [SerializeField] private Animator animator;
         [SerializeField] private Transform meleeContainer;
         public Transform MeleeContainer => meleeContainer;
-        [SerializeField] private SpriteRenderer characterSprite;
         [SerializeField] private LayerMask groundLayer;
         #endregion
 
@@ -21,7 +20,6 @@ namespace Platformer.Player{
         private BoxCollider2D playerBoxCollider;
         private Rigidbody2D playerRigidBody;
         private float translateSpeed = 0;
-        private bool isFacingRight = true;
         #endregion
 
         #region Getters
@@ -52,26 +50,6 @@ namespace Platformer.Player{
             playerBoxCollider = GetComponent<BoxCollider2D>();
         }
 
-        // public void Move(float horizontalInput, float playerMovementSpeed){
-        //     if(horizontalInput != 0) IsRunning = true;
-        //     else IsRunning = false;
-        //     if ((horizontalInput > 0 && !isFacingRight) || (horizontalInput < 0 && isFacingRight))
-        //     {
-        //         Flip();
-        //     }
-        //     if(!IsSliding)
-        //         translateSpeed = playerMovementSpeed;
-        //     var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
-        //     transform.Translate(translateSpeed * Time.deltaTime * movementVector);
-        // }
-        
-
-        // private void Flip()
-        // {
-        //     isFacingRight = !isFacingRight;
-        //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        // }
-
         private void Update(){
             var check = IsGrounded;
             if(playerRigidBody.velocity.y < 0){
@@ -90,7 +68,7 @@ namespace Platformer.Player{
             TranslatePlayer(horizontalInput);
         }
 
-        private void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
+        private void SetCharacterSpriteDirection(bool flipX) => transform.localScale = new Vector3(flipX ? -1 : 1, 1, 1);
         private void UpdateRunningStatus(float horizontalInput) => PlayerState = horizontalInput != 0 ? PlayerStates.RUNNING : PlayerStates.IDLE;
         private void TranslatePlayer(float horizontalInput){
             var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MeleeScriptableObject
   m_EditorClassIdentifier: 
   Prefab: {fileID: 1354984841532806221, guid: bf4ea7c44af40f3408ef15e3d3982133, type: 3}
-  Damage: 100
+  DamageToInflict: 10
   MeleeDuration: 0.25

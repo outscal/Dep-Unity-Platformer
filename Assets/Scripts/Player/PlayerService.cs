@@ -55,6 +55,7 @@ namespace Platformer.Player
             UnsubscribeToEvents();
             CameraService.ShakeCamera();
             PlayDeathAnimation(animator);
+            EventService.OnPlayerDied.InvokeEvent();
             await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
             UIService.EndGame(false);
         }

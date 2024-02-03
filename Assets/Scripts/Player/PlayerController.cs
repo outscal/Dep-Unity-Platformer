@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Platformer.Enemy;
 using Platformer.InputSystem;
 using Platformer.Main;
+using Platformer.Melee;
 using Platformer.UI;
 using UnityEngine;
 
@@ -89,6 +90,7 @@ namespace Platformer.Player
 
         private void ProcessAttackInput(){
             if(PlayerView.CanAttack()){
+                Attack();
                 PlayerView.Attack();
                 PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
             }
