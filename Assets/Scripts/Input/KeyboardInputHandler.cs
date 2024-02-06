@@ -1,12 +1,25 @@
+using System.Collections.Generic;
 using Platformer.Main;
 using UnityEngine;
 
-namespace Platformer.InputSystem{
+namespace Platformer.InputSystem
+{
     public class KeyboardInputHandler : IInputHandler
     {
         private InputService InputService => GameService.Instance.InputService;
 
-        public void HandleInput()
+        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+
+        public KeyboardInputHandler()
+        {
+            keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
+                { KeyCode.Space, PlayerInputTriggers.JUMP },
+                { KeyCode.X, PlayerInputTriggers.ATTACK },
+                { KeyCode.C, PlayerInputTriggers.SLIDE }
+            };
+        }
+
+        public void HandleInput() 
         {
             HandlePlayerMovementInput();
             HandlePlayerTriggerInput();
@@ -23,12 +36,11 @@ namespace Platformer.InputSystem{
 
         private void HandlePlayerTriggerInput()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
-            else if (Input.GetKeyDown(KeyCode.X))
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            else if (Input.GetKeyDown(KeyCode.C))
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
+            foreach (var mapping in keyMappings) {
+                if (Input.GetKeyDown(mapping.Key)) {
+                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                }
+            }
         }
 
         private void HandleCameraControlInput()
@@ -40,7 +52,8 @@ namespace Platformer.InputSystem{
         }
     }
 
-    public enum PlayerInputTriggers{
+    public enum PlayerInputTriggers
+    {
         JUMP, // SPACE
         ATTACK, // X
         SLIDE // C
