@@ -18,12 +18,12 @@ namespace Platformer.UI
         [Header("Screen Space Overlay Canvas")]
         [SerializeField] private ScreenSpaceOverlayCanvasController screenSpaceOverlayCanvasController;
 
-
-        private void Start(){
+        private void Awake(){
             screenSpaceOverlayCanvasController.Initialise();
             worldSpaceCanvasController.Initialise();
-            SubscribeToEvents();
         }
+
+        private void Start() => SubscribeToEvents();
 
         private void SubscribeToEvents(){
             EventService.OnLevelSelected.AddListener(ShowGameplayUI);

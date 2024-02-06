@@ -21,7 +21,6 @@ namespace Platformer.UI{
         private GameplayUIController gameplayController;
         [SerializeField] private GameplayUIView gameplayView;
 
-
         public void Initialise(){
             levelSelectionController = new LevelSelectionUIController(levelSelectionView, levelButtonPrefab);
             levelEndController = new LevelEndUIController(levelEndView);
@@ -29,7 +28,7 @@ namespace Platformer.UI{
         }
 
         public void ShowLevelSelectionUI(int levelCount) => levelSelectionController.Show(levelCount);
-        public void ShowGameplayUI(int levelId) => gameplayController.Show();
+        public void ShowGameplayUI(int levelId) => gameplayController.ShowLevel(levelId);
         public void ToggleKillOverlay(bool value) => gameplayController.ToggleKillOverlay(value);
 
         public void EndGame(bool playerWon){
