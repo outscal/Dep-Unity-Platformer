@@ -13,6 +13,11 @@ namespace Platformer.UI
             Hide();
         }
 
+        public void ShowLevel(int levelId){
+            gameplayView.SetLevelText(levelId);
+            Show();
+        }
+
         public void Show() => gameplayView.EnableView(); 
 
         public void Hide() => gameplayView.DisableView();
