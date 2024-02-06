@@ -182,7 +182,8 @@ namespace Platformer.Player
             }
         }
 
-        private void PlayerDied() => playerService.PlayerDied(playerView.PlayerAnimator);
+        private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
+        #endregion
 
         public void CollectCoin(int coinValue) => CurrentCoins += coinValue;
 

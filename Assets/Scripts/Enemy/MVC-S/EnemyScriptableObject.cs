@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Platformer.Melee;
+using Platformer.Drop;
 
 namespace Platformer.Enemy
 {
