@@ -6,6 +6,8 @@ namespace Platformer.Enemy{
     {
         private readonly SlimeView slimeView;
 
+        public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;
+
         #region Patrolling variables
         private Vector3 nextPosition;
         #endregion
@@ -16,17 +18,19 @@ namespace Platformer.Enemy{
             nextPosition = Data.PatrollingPoints[0];
         }
 
-        public void Update() {
-            PatrolBehavior();
-        }
+        public void Update() => PatrolBehavior();
 
         #region Patrol Behaviour
         private void PatrolBehavior() {
             var patrollingPoints = enemyScriptableObject.PatrollingPoints;
-            if (Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f) {
-                ToggleNextPatrolPoint(patrollingPoints);
-            }
+            if(CanToggleMovementDirection()) ToggleNextPatrolPoint(patrollingPoints);
             UpdateMovementTowardsNextPosition();
+        }
+
+        private bool CanToggleMovementDirection(){
+            var reachedNextPatrolPoint = Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f;
+            var wallCheck = slimeView.WallCheck;
+            return reachedNextPatrolPoint || wallCheck;
         }
 
         private void ToggleNextPatrolPoint(List<Vector3> patrollingPoints) {
@@ -34,8 +38,7 @@ namespace Platformer.Enemy{
         }
 
         private void UpdateMovementTowardsNextPosition() {
-            var isMovingRight = nextPosition.x > enemyView.transform.position.x;
-            slimeView.Move(nextPosition, Data.PatrollingSpeed, isMovingRight);
+            slimeView.Move(nextPosition, Data.PatrollingSpeed, IsMovingRight);
             EnemyMoved();
         }
         #endregion

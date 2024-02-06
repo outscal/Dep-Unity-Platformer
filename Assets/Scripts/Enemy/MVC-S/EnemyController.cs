@@ -47,8 +47,6 @@ namespace Platformer.Enemy
 
 
         #region Damage
-
-        //spike does not take damage, what to do here????
         public virtual void TakeDamage(int damageToInflict){
             CurrentHealth -= damageToInflict;
             if(CurrentHealth <= 0)
@@ -58,15 +56,11 @@ namespace Platformer.Enemy
             }
         }
 
-        // all enemies inflict damage, so this function belongs in the base enemy controller class
         public virtual void InflictDamage(Collider2D other) => other.GetComponent<IDamagable>()?.TakeDamage(enemyScriptableObject.DamageToInflict);
         #endregion
 
-        // what to do about this function?????
         public void EnemyMoved() => EnemyService.EnemyMoved(this);
 
-
-        // belongs here
         protected virtual void Die() 
         {
             GameService.Instance.EnemyService.EnemyDied(this);

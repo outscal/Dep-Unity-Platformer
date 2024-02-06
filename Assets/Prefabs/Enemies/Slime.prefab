@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 6293099713857923212}
   - component: {fileID: 3738019520128718361}
   - component: {fileID: 4434763010371326}
-  - component: {fileID: 4382203948783424941}
   - component: {fileID: 2233408193191899455}
-  m_Layer: 0
-  m_Name: PatrolMan
+  - component: {fileID: 4382203948783424941}
+  - component: {fileID: 3055625062541944518}
+  m_Layer: 7
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,18 +114,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6025436, y: 0.3216697}
   m_EdgeRadius: 0
---- !u!114 &4382203948783424941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6606441315159465579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fce9fcbf53447474a8ef1ae00d6ce001, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &2233408193191899455
 Animator:
   serializedVersion: 5
@@ -146,3 +135,39 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4382203948783424941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6606441315159465579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fce9fcbf53447474a8ef1ae00d6ce001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!50 &3055625062541944518
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6606441315159465579}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

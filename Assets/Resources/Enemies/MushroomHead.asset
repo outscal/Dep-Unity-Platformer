@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 2814245402117734481, guid: 6464e387df824224b9872178dd0adc98, type: 3}
   Type: 2
-  SpawnPosition: {x: -20, y: -0.8, z: 0}
+  SpawnPosition: {x: -14, y: -0.8, z: 0}
   PatrollingSpeed: 1.5
   MaximumHealth: 20
   RangeRadius: 1
@@ -26,3 +26,4 @@ MonoBehaviour:
   HealthbarOffset: 1.2
   DamageToInflict: 10
   MeleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
+  DelayAfterAttack: 1.5
