@@ -43,7 +43,7 @@ namespace Platformer.Player{
         private void Update() => Controller?.Update();
 
         #region Movement Functions
-        private void SetCharacterSpriteDirection(bool flipX) => transform.localScale = new Vector3(flipX ? -1 : 1, 1, 1);
+        public void SetCharacterSpriteDirection(bool flipX) => transform.localScale = new Vector3(flipX ? -1 : 1, 1, 1);
 
         public void TranslatePlayer(Vector3 translateVector) => transform.Translate(translateVector);
         #endregion
