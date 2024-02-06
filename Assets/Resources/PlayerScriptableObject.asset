@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: PlayerScriptableObject
   m_EditorClassIdentifier: 
   prefab: {fileID: 4231813749555353494, guid: e467824ec1b4beb47b86935c85910b74, type: 3}
-  spawnPosition: {x: -4, y: -0.7, z: 0}
+  spawnPosition: {x: -22, y: -0.7, z: 0}
   spawnRotation: {x: 0, y: 0, z: 0}
   meleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
   movementSpeed: 4
   slidingSpeed: 6
   slidingTime: 1
-  jumpForce: 9
-  maxHealth: 10
+  jumpForce: 10
+  gravityDownForceMultiplier: 0.09
+  fallMultiplier: 7
+  lowJumpMultiplier: 2.5
+  maxHealth: 30
   delayAfterDeath: 2

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0828eb33ab78f794488030ce31ab3291, type: 3}
   m_Name: CameraScriptableObject
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 4634372182911415543, guid: a7eb3db55fcc35848a6e292e01a2e5c5, type: 3}
-  shakeDuration: 0.4
-  shakeMagnitude: 0.2
+  Prefab: {fileID: 8019677801428785714, guid: a7eb3db55fcc35848a6e292e01a2e5c5, type: 3}
+  shakeDuration: 0.3
+  shakeMagnitude: 0.06
   cameraSizeIncrement: 0.012
   maxSize: 10
   minSize: 2.5

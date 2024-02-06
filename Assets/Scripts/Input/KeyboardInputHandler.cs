@@ -1,43 +1,61 @@
+using System.Collections.Generic;
 using Platformer.Main;
 using UnityEngine;
 
-namespace Platformer.InputSystem{
+namespace Platformer.InputSystem
+{
     public class KeyboardInputHandler : IInputHandler
     {
-        private InputService inputService => GameService.Instance.InputService;
+        private InputService InputService => GameService.Instance.InputService;
 
-        public void HandleInput()
+        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+
+        public KeyboardInputHandler()
+        {
+            keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
+                { KeyCode.Space, PlayerInputTriggers.JUMP },
+                { KeyCode.X, PlayerInputTriggers.ATTACK },
+                { KeyCode.C, PlayerInputTriggers.SLIDE }
+            };
+        }
+
+        public void HandleInput() 
+        {
+            HandlePlayerMovementInput();
+            HandlePlayerTriggerInput();
+            HandleCameraControlInput();
+        }
+
+        private void HandlePlayerMovementInput()
         {
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput = Input.GetAxisRaw("Vertical");
+            InputService.HandleHorizontalAxisInput(horizontalInput);
+            InputService.HandleVerticalAxisInput(verticalInput);
+        }
 
-            #region Player Trigger Controls
-            if(Input.GetKeyDown(KeyCode.C)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
-            }else if(Input.GetKeyDown(KeyCode.X)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.S)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
+        private void HandlePlayerTriggerInput()
+        {
+            foreach (var mapping in keyMappings) {
+                if (Input.GetKeyDown(mapping.Key)) {
+                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                }
             }
-            #endregion
+        }
 
-            #region Camera Controls
-            if(Input.GetKey(KeyCode.Z)){
-                inputService.HandleCameraZoomInput(false);
-
-            }else if(Input.GetKey(KeyCode.A)){
-                inputService.HandleCameraZoomInput(true);
-            }
-            #endregion
-
-            inputService.HandleHorizontalAxisInput(horizontalInput);
-            inputService.HandleVerticalAxisInput(verticalInput);
+        private void HandleCameraControlInput()
+        {
+            if (Input.GetKey(KeyCode.Q))
+                InputService.HandleCameraZoomInput(false);
+            else if (Input.GetKey(KeyCode.E))
+                InputService.HandleCameraZoomInput(true);
         }
     }
 
-    public enum PlayerInputTriggers{
-        JUMP, // C
+    public enum PlayerInputTriggers
+    {
+        JUMP, // SPACE
         ATTACK, // X
-        SLIDE, // S
+        SLIDE // C
     }
 }

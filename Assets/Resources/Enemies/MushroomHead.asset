@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00d29fc70e7fd624b890c46c1be6ce6b, type: 3}
+  m_Name: MushroomHead
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 2814245402117734481, guid: 6464e387df824224b9872178dd0adc98, type: 3}
+  Type: 2
+  SpawnPosition: {x: -14, y: -0.8, z: 0}
+  PatrollingSpeed: 1.5
+  MaximumHealth: 20
+  RangeRadius: 1
+  PatrollingPoints:
+  - {x: -14, y: -0.8, z: 0}
+  - {x: -10, y: -0.8, z: 0}
+  PlayerAttackingDistance: 0
+  DelayAfterGameEnd: 3
+  HealthbarOffset: 1.2
+  DamageToInflict: 10
+  MeleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
+  DelayAfterAttack: 1.5

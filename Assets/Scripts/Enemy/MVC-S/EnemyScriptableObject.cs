@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Platformer.Drop;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -11,14 +10,15 @@ namespace Platformer.Enemy
         public EnemyType Type;
         public Vector3 SpawnPosition;
         public float PatrollingSpeed;
-        public float ChasingSpeed;
-        public float JumpForce;
         public int MaximumHealth;
         public float RangeRadius;
-        public float RangeAngle;
         public List<Vector3> PatrollingPoints;
-        public float PlayerAttackingDistance;
+        public float PlayerAttackingDistance; // not in use as of now
         public float DelayAfterGameEnd;
+        public float HealthbarOffset;
+        public int DamageToInflict;
+        public MeleeScriptableObject MeleeSO;
+        public float DelayAfterAttack;
         public List<DropScriptableObject> DropScriptableObjects;
     }
 }

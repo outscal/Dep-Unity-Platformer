@@ -7,65 +7,59 @@ namespace Platformer.UI
 {
     public class UIService : MonoBehaviour
     {
-
         #region Service References
         private EventService EventService => GameService.Instance.EventService;
         private EnemyService EnemyService => GameService.Instance.EnemyService;
         #endregion
 
-        [Header("Level Selection UI")]
-        private LevelSelectionUIController levelSelectionController;
-        [SerializeField] private LevelSelectionUIView levelSelectionView;
-        [SerializeField] private LevelButtonView levelButtonPrefab;
+        [Header("World Space Canvas")]
+        [SerializeField] private WorldSpaceCanvasController worldSpaceCanvasController;
 
-        [Header("Level ENd UI")]
-        private LevelEndUIController levelEndController;
-        [SerializeField] private LevelEndUIView levelEndView;
+        [Header("Screen Space Overlay Canvas")]
+        [SerializeField] private ScreenSpaceOverlayCanvasController screenSpaceOverlayCanvasController;
 
-        [Header("Gameplay UI")]
-        private GameplayUIController gameplayController;
-        [SerializeField] private GameplayUIView gameplayView;
-
-        private void Start()
-        {
-            levelSelectionController = new LevelSelectionUIController(levelSelectionView, levelButtonPrefab);
-            levelEndController = new LevelEndUIController(levelEndView);
-            gameplayController = new GameplayUIController(gameplayView);
-            SubscribeToEvents();
+        private void Awake(){
+            screenSpaceOverlayCanvasController.Initialise();
+            worldSpaceCanvasController.Initialise();
         }
+
+        private void Start() => SubscribeToEvents();
 
         private void SubscribeToEvents(){
             EventService.OnLevelSelected.AddListener(ShowGameplayUI);
             EventService.OnAllEnemiesDied.AddListener(OnAllEnemiesDied);
             EventService.OnEnemyDied.AddListener(OnEnemyDied);
+            EventService.OnEnemyMoved.AddListener(OnEnemyMoved);
         }
 
         private void UnsubscribeToEvents(){
             EventService.OnLevelSelected.RemoveListener(ShowGameplayUI);
             EventService.OnAllEnemiesDied.RemoveListener(OnAllEnemiesDied);
             EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
+            EventService.OnEnemyMoved.RemoveListener(OnEnemyMoved);
         }
 
-        public void ShowLevelSelectionUI(int levelCount) => levelSelectionController.Show(levelCount);
+        #region Screen Space overlay
+        public void ShowLevelSelectionUI(int levelCount) => screenSpaceOverlayCanvasController.ShowLevelSelectionUI(levelCount);
+        private void ShowGameplayUI(int levelId) => screenSpaceOverlayCanvasController.ShowGameplayUI(levelId);
+        public void ToggleKillOverlay(bool value) => screenSpaceOverlayCanvasController.ToggleKillOverlay(value);
+        public void EndGame(bool playerWon) => screenSpaceOverlayCanvasController.EndGame(playerWon);
+        public void UpdatePlayerHealth(float healthRatio) => screenSpaceOverlayCanvasController.UpdatePlayerHealth(healthRatio);
+        public void UpdateEnemyCount(int activeEnemies, int totalEnemies) => screenSpaceOverlayCanvasController.UpdateEnemyCount(activeEnemies, totalEnemies);
+        public void UpdateCoinsCount(int coinsCount) => screenSpaceOverlayCanvasController.UpdateCoinsCount(coinsCount);
+        #endregion
 
-        private void ShowGameplayUI(int levelId) => gameplayController.Show();
+        #region World Space
+        public void UpdateEnemyHealth(EnemyController enemy, float healthRatio) => worldSpaceCanvasController.UpdateEnemyHealth(enemy, healthRatio);
+        public void OnEnemyMoved(EnemyController enemyController) => worldSpaceCanvasController.OnEnemyMoved(enemyController);
+        #endregion
 
-        public void ToggleKillOverlay(bool value) => gameplayController.ToggleKillOverlay(value);
-
-        public void EndGame(bool playerWon){
-            gameplayController.Hide();
-            levelEndController.EndGame(playerWon);
+        private void OnEnemyDied(EnemyController enemyController){
+            screenSpaceOverlayCanvasController.EnemyDied(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
+            worldSpaceCanvasController.OnEnemyDied(enemyController);
         }
-
-        public void UpdatePlayerHealth(float healthRatio) => gameplayController.SetPlayerHealthUI(healthRatio);
-
-        private void OnEnemyDied(EnemyController deadEnemy) => gameplayController.SetEnemyCount(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
 
         private void OnAllEnemiesDied() => EndGame(true);
-
-        public void UpdateEnemyCount(int activeEnemies, int totalEnemies) => gameplayController.SetEnemyCount(activeEnemies, totalEnemies);
-
-        public void UpdateCoinsCount(int coinsCount) => gameplayController.SetCoinsCount(coinsCount);
 
         private void OnDestroy() => UnsubscribeToEvents();
     }
