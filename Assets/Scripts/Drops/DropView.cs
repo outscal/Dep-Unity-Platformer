@@ -22,10 +22,11 @@ namespace Platformer.Drop{
             {
                 if (other.isTrigger)
                     return;
-                else 
+                else{
                     dropController.PlayerHit(other.GetComponent<PlayerView>());
+                    Destroy(gameObject);
+                }
             }
-            Destroy(gameObject);
         }
 
         private bool HasHitPlayer(Collider2D other) => other.GetComponent<PlayerView>() != null;

@@ -3,6 +3,7 @@
 *  you can find a dedicated course on Outscal's website.
 *  Link: https://outscal.com/courses
 **/
+using Platformer.Drop;
 using Platformer.Enemy;
 using Platformer.InputSystem;
 using UnityEngine;
@@ -33,6 +34,10 @@ namespace Platformer.Events
         public EventController<EnemyController> OnEnemyMoved { get; private set; }
         #endregion
 
+        #region Drop Events
+        public EventController<DropType, int> OnDropCollected { get; private set; }
+        #endregion
+
         public EventService()
         {
             OnLevelSelected = new EventController<int>();
@@ -45,6 +50,7 @@ namespace Platformer.Events
             OnAllEnemiesDied = new EventController();
             OnEnemyDied = new EventController<EnemyController>();
             OnEnemyMoved = new EventController<EnemyController>();
+            OnDropCollected = new EventController<DropType, int>();
         }
     }
 }

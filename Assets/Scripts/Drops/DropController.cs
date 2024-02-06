@@ -48,6 +48,9 @@ namespace Platformer.Drop{
                 case DropType.Coin:
                     playerHit.CollectCoin(dropScriptableObject.coinValue);
                     break;
+                case DropType.LevelKey:
+                    playerHit.CollectLevelKey();
+                    break;
             }
         }
     }

@@ -26,3 +26,6 @@ MonoBehaviour:
   HealthbarOffset: 1.2
   DamageToInflict: 10
   MeleeSO: {fileID: 0}
+  DelayAfterAttack: 0
+  DropScriptableObjects:
+  - {fileID: 11400000, guid: 2248c709afb6d2f429cb6409739807eb, type: 2}

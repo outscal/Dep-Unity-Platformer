@@ -27,3 +27,6 @@ MonoBehaviour:
   DamageToInflict: 10
   MeleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
   DelayAfterAttack: 1.5
+  DropScriptableObjects:
+  - {fileID: 11400000, guid: 2248c709afb6d2f429cb6409739807eb, type: 2}
+  - {fileID: 11400000, guid: 2248c709afb6d2f429cb6409739807eb, type: 2}

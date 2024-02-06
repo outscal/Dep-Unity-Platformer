@@ -12,5 +12,6 @@ namespace Platformer.Level
         public LevelView LevelPrefab;
         public List<EnemyScriptableObject> EnemyScriptableObjects;
         public List<DropScriptableObject> DropScriptableObjects;
+        public LevelProgression LevelProgression;
     }
 }

@@ -1,8 +1,9 @@
+using System;
+
 namespace Platformer.Drop{
+    [Serializable]
     public enum DropType{
-        Coin
-        // FreezeBomb,
-        // TeleportationPads, 
-        // HealthPacks
+        Coin,
+        LevelKey
     }
 }

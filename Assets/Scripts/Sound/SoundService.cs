@@ -27,15 +27,9 @@ namespace Platformer.Sound
 
         #region Private Functions
 
-        private void SubscribeToEvents(){
-            EventService.OnAllEnemiesDied.AddListener(OnAllEnemiesDied);
-            EventService.OnEnemyDied.AddListener(OnEnemyDied);
-        }
+        private void SubscribeToEvents() => EventService.OnEnemyDied.AddListener(OnEnemyDied);
 
-        private void UnsubscribeToEvents(){
-            EventService.OnAllEnemiesDied.RemoveListener(OnAllEnemiesDied);
-            EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
-        }
+        private void UnsubscribeToEvents() => EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
 
         private void OnAllEnemiesDied() => PlaySoundEffects(SoundType.GAME_WON);
 

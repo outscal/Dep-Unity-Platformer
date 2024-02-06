@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Platformer.Enemy;
 using Platformer.InputSystem;
 using Platformer.Main;
 using Platformer.Melee;
 using Platformer.UI;
 using UnityEngine;
+using Platformer.Drop;
 
 namespace Platformer.Player
 {
@@ -39,6 +38,18 @@ namespace Platformer.Player
             private set{
                 currentCoins = value;
                 UIService.UpdateCoinsCount(currentCoins);
+                PlayerService.DropCollected(DropType.Coin, currentCoins);
+            }
+        }
+        #endregion
+
+        #region Keys
+        private int currentKeys = 0;
+        public int CurrentKeys {
+            get => currentKeys;
+            private set {
+                currentKeys = value;
+                PlayerService.DropCollected(DropType.LevelKey, currentKeys);
             }
         }
         #endregion
@@ -186,6 +197,7 @@ namespace Platformer.Player
         #endregion
 
         public void CollectCoin(int coinValue) => CurrentCoins += coinValue;
+        public void CollectLevelKey() => ++CurrentKeys;
 
         #region Getter Functions
         public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;

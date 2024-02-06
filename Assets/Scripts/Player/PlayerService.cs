@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Platformer.AnimationSystem;
 using Platformer.Cameras;
+using Platformer.Drop;
 using Platformer.Events;
 using Platformer.Main;
 using Platformer.UI;
@@ -60,6 +61,8 @@ namespace Platformer.Player
             GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.GAME_LOST);
             UIService.EndGame(false);
         }
+
+        public void DropCollected(DropType dropType, int numberOfDrops) => EventService.OnDropCollected?.InvokeEvent(dropType, numberOfDrops);
 
         #region Player Animations
         private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
