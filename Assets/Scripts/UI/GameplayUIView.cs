@@ -9,6 +9,7 @@ namespace Platformer.UI
         private GameplayUIController controller;
         [SerializeField] private TextMeshProUGUI enemyCounterText;
         [SerializeField] private TextMeshProUGUI coinsCollectedText;
+        [SerializeField] private TextMeshProUGUI levelNumberText;
         [SerializeField] private Slider playerHealthSlider;
         [SerializeField] private GameObject EnemyKillOverlay;
 
@@ -17,6 +18,8 @@ namespace Platformer.UI
         public void DisableView() => gameObject.SetActive(false);
 
         public void EnableView() => gameObject.SetActive(true);
+
+        public void SetLevelText(int levelId) => levelNumberText.text = $"Level: {levelId}";
 
         public void UpdateEnemyCounterText(string enemyCounter) => enemyCounterText.SetText(enemyCounter);
 

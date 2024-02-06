@@ -32,7 +32,7 @@ namespace Platformer.UI
 
         public void ShowLevelSelectionUI(int levelCount) => levelSelectionController.Show(levelCount);
 
-        private void ShowGameplayUI(int levelId) => gameplayController.Show();
+        private void ShowGameplayUI(int levelId) => gameplayController.ShowLevel(levelId);
 
         public void ToggleKillOverlay(bool value) => gameplayController.ToggleKillOverlay(value);
 
