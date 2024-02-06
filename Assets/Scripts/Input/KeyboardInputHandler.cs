@@ -1,30 +1,50 @@
+using System.Collections.Generic;
 using Platformer.Main;
 using UnityEngine;
 
-namespace Platformer.InputSystem{
+namespace Platformer.InputSystem
+{
     public class KeyboardInputHandler : IInputHandler
     {
         private InputService InputService => GameService.Instance.InputService;
 
-        public void HandleInput()
+        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+
+        public KeyboardInputHandler()
+        {
+            keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
+                { KeyCode.Space, PlayerInputTriggers.JUMP },
+                { KeyCode.X, PlayerInputTriggers.ATTACK },
+                { KeyCode.C, PlayerInputTriggers.SLIDE },
+                { KeyCode.K, PlayerInputTriggers.DEATH }, // temporary
+                { KeyCode.J, PlayerInputTriggers.TAKE_DAMAGE } // temporary
+            };
+        }
+
+        public void HandleInput() 
+        {
+            HandlePlayerMoevementInput();
+            HandlePlayerTriggerInput();
+        }
+
+        private void HandlePlayerMoevementInput()
         {
             var horizontalInput = Input.GetAxisRaw("Horizontal");
-            if(Input.GetKeyDown(KeyCode.Space)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
-            }else if(Input.GetKeyDown(KeyCode.X)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.K)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.DEATH);
-            }else if(Input.GetKeyDown(KeyCode.C)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
-            }else if(Input.GetKeyDown(KeyCode.J)){
-                InputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
-            }
             InputService.HandleHorizontalAxisInput(horizontalInput);
+        }
+
+        private void HandlePlayerTriggerInput()
+        {
+            foreach (var mapping in keyMappings) {
+                if (Input.GetKeyDown(mapping.Key)) {
+                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                }
+            }
         }
     }
 
-    public enum PlayerInputTriggers{
+    public enum PlayerInputTriggers
+    {
         JUMP, // SPACE
         ATTACK, // X
         SLIDE, // C
