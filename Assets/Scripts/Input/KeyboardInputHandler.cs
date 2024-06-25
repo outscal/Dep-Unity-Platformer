@@ -1,34 +1,54 @@
+using System.Collections.Generic;
 using Platformer.Main;
 using UnityEngine;
 
-namespace Platformer.InputSystem{
+namespace Platformer.InputSystem
+{
     public class KeyboardInputHandler : IInputHandler
     {
-        private InputService inputService => GameService.Instance.InputService;
+        private InputService InputService => GameService.Instance.InputService;
 
-        public void HandleInput()
+        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+
+        public KeyboardInputHandler()
         {
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            if(Input.GetKeyDown(KeyCode.C)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.JUMP);
-            }else if(Input.GetKeyDown(KeyCode.X)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.ATTACK);
-            }else if(Input.GetKeyDown(KeyCode.D)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.DEATH);
-            }else if(Input.GetKeyDown(KeyCode.S)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.SLIDE);
-            }else if(Input.GetKeyDown(KeyCode.A)){
-                inputService.HandlePlayerTriggerInput(PlayerInputTriggers.TAKE_DAMAGE);
+            keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
+                { KeyCode.Space, PlayerInputTriggers.JUMP },
+                { KeyCode.X, PlayerInputTriggers.ATTACK },
+                { KeyCode.C, PlayerInputTriggers.SLIDE },
+                { KeyCode.K, PlayerInputTriggers.DEATH }, // temporary
+                { KeyCode.J, PlayerInputTriggers.TAKE_DAMAGE } // temporary
+            };
+        }
+
+        public void HandleInput() 
+        {
+            HandlePlayerMoevementInput();
+            HandlePlayerTriggerInput();
+        }
+
+        private void HandlePlayerMoevementInput()
+        {
+            var horizontalInput = Input.GetAxisRaw("Horizontal");
+            InputService.HandleHorizontalAxisInput(horizontalInput);
+        }
+
+        private void HandlePlayerTriggerInput()
+        {
+            foreach (var mapping in keyMappings) {
+                if (Input.GetKeyDown(mapping.Key)) {
+                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                }
             }
-            inputService.HandleHorizontalAxisInput(horizontalInput);
         }
     }
 
-    public enum PlayerInputTriggers{
-        JUMP, // C
+    public enum PlayerInputTriggers
+    {
+        JUMP, // SPACE
         ATTACK, // X
-        DEATH, // D
-        SLIDE, // S
-        TAKE_DAMAGE // A
+        SLIDE, // C
+        DEATH, // K // temporary
+        TAKE_DAMAGE // J // temporary
     }
 }
