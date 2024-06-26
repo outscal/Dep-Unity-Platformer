@@ -61,5 +61,71 @@ namespace Platformer.Player
             if (Input.GetKeyDown(KeyCode.K))
                 animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
         }
+
+        private void ProcessJumpInput(){
+            if(CanJump()){
+                PlayerView.Jump(playerScriptableObject.jumpForce);
+                PlayerService.PlayJumpAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private bool CanJump() => IsGrounded && (playerState == PlayerStates.IDLE || playerState == PlayerStates.RUNNING);
+
+        private void ProcessAttackInput(){
+            if(CanAttack()){
+                playerState = PlayerStates.ATTACK;
+                PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private bool CanAttack() => IsGrounded && (playerState == PlayerStates.IDLE || playerState == PlayerStates.RUNNING);
+
+        private void ProcessSlideInput(){
+            if(CanSlide()){
+                Slide(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime);
+                PlayerService.PlaySlideAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private bool CanSlide() => IsGrounded && playerState == PlayerStates.RUNNING;
+
+        private async void Slide(float slidingSpeed, float slidingTime){
+            var temp = playerTranslateSpeed;
+            SetSlidingState(slidingSpeed, true);
+            await Task.Delay((int)(slidingTime * 1000));
+            SetSlidingState(temp, false);
+        }
+
+        private void SetSlidingState(float speed, bool isSliding)
+        {
+            playerTranslateSpeed = speed;
+            playerState = isSliding ? PlayerStates.SLIDE : PlayerStates.IDLE;
+        }
+        #endregion
+        #endregion
+
+        #region Damage/Death
+        public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
+
+        public void TakeDamage(int damageToInflict)
+        {
+            CurrentHealth -= damageToInflict;
+            if(CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                PlayerDied();
+            }else{
+                PlayerService.PlayDamageAnimation(PlayerView.PlayerAnimator);
+            }
+        }
+
+        private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
+        #endregion
+
+        #region Getter Functions
+        public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;
+
+        public float GetLowJumpMultiplier() => playerScriptableObject.lowJumpMultiplier;
+        #endregion
     }
 }
