@@ -1,65 +1,103 @@
-using Platformer.AnimationSystem;
+using System.Threading.Tasks;
+using Platformer.InputSystem;
+using Platformer.Main;
 using UnityEngine;
 
 namespace Platformer.Player
 {
-    public class PlayerController: MonoBehaviour
+    public class PlayerController
     {
-        [SerializeField] private Animator animator;
-        private AnimationService animation_service;
+        #region Service References
+        private PlayerService PlayerService => GameService.Instance.PlayerService;
+        #endregion
 
-        private void Awake()
-        {
-            animation_service = new AnimationService(animator);
+        private PlayerScriptableObject playerScriptableObject;
+        public PlayerView PlayerView { get; private set; }
+
+        private PlayerStates playerState;
+        private float playerTranslateSpeed;
+
+        #region Health
+        private int currentHealth;
+        public int CurrentHealth {
+            get => currentHealth;
+            private set => currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
+        }
+        #endregion
+
+        #region Grounded
+        private bool IsGrounded {
+            get {
+                var offset = 0.3f;
+                var raycastHit = Physics2D.Raycast(PlayerView.PlayerBoxCollider.bounds.center, Vector2.down, PlayerView.PlayerBoxCollider.bounds.extents.y + offset, PlayerView.GroundLayer);
+                return raycastHit.collider != null;
+            }
+        }
+        #endregion
+
+        public PlayerController(PlayerScriptableObject playerScriptableObject){
+            this.playerScriptableObject = playerScriptableObject;
+            InitializeView();
+            InitializeVariables();
         }
 
-        private void Update()
-        {
-            HandleInput();
+        private void InitializeView(){
+            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
+            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
+            PlayerView.SetController(this);
         }
 
-        private void HandleInput()
-        {
-            HandleMovementInput();
-            HandleTriggerInput();
-        }
+        private void InitializeVariables() => CurrentHealth = playerScriptableObject.maxHealth;
 
-        private void HandleMovementInput()
-        {
-            // Check for movement
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            bool isRunning = Mathf.Abs(horizontalInput) > 0.1f;
-            PlayPlayerMovementAnimation(isRunning);
-
-            if (isRunning)
-            {
-                FlipSpriteIfNeeded(horizontalInput);
+        public void Update(){
+            var check = IsGrounded;
+            if(PlayerView.PlayerRigidBody.velocity.y < 0){
+                PlayerView.PlayerRigidBody.velocity += (GetFallMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
+            }else if(PlayerView.PlayerRigidBody.velocity.y > 0){
+                PlayerView.PlayerRigidBody.velocity += (GetLowJumpMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
             }
         }
 
-        private void FlipSpriteIfNeeded(float horizontalInput)
-        {
-            transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
+
+        #region Handle Player Input
+
+        #region Player movement
+        public void HandleHorizontalMovementAxisInput(float horizontalInput){
+            var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
+            MovePlayer(horizontalInput);
+            PlayerService.MovePlayer(PlayerView.PlayerAnimator, movementDirection != Vector3.zero, PlayerView.Position);
         }
 
-        private void PlayPlayerMovementAnimation(bool isRunning)
-        {
-            animation_service.PlayPlayerMovementAnimation(isRunning);
+        private void MovePlayer(float horizontalInput){
+            UpdateRunningStatus(horizontalInput);
+            if(horizontalInput != 0)
+                PlayerView.SetCharacterSpriteDirection(horizontalInput < 0);
+            if (playerState != PlayerStates.SLIDE) playerTranslateSpeed = playerScriptableObject.movementSpeed;
+            var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
+            PlayerView.TranslatePlayer(playerTranslateSpeed * Time.deltaTime * movementVector);
         }
 
-        private void HandleTriggerInput()
-        {
+        private void UpdateRunningStatus(float horizontalInput) => playerState = horizontalInput != 0 ? PlayerStates.RUNNING : PlayerStates.IDLE;
+        #endregion
 
-            if (Input.GetKeyDown(KeyCode.Space))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
-            if (Input.GetKeyDown(KeyCode.C))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.SLIDE);
-            if (Input.GetKeyDown(KeyCode.X))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.ATTACK);
-            if (Input.GetKeyDown(KeyCode.J))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.TAKE_DAMAGE);
-            if (Input.GetKeyDown(KeyCode.K))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
+        #region trigger input
+        public void HandleTriggerInput(PlayerInputTriggers playerInputTriggers){
+            // every case can have custom logic for movement or something else
+            switch (playerInputTriggers)
+            {
+                case PlayerInputTriggers.JUMP:
+                    ProcessJumpInput();
+                    break;
+                case PlayerInputTriggers.ATTACK:
+                    ProcessAttackInput();
+                    break;
+                case PlayerInputTriggers.SLIDE:
+                    ProcessSlideInput();
+                    break;
+                case PlayerInputTriggers.TAKE_DAMAGE: // temporary switch case (just for testing animation)
+                    PlayerService.PlayDamageAnimation(PlayerView.PlayerAnimator);
+                    break;
+            }
         }
 
         private void ProcessJumpInput(){
