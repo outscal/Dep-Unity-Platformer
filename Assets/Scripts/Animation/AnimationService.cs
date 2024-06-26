@@ -1,26 +1,49 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Platformer.AnimationSystem{
-    public class AnimationService{
-
+namespace Platformer.AnimationSystem
+{
+    public class AnimationService
+    {
         #region Player Animations
+        private Animator player_animator;
 
-        #region Player Animator Parameters
-        private const string IS_RUNNING = "Running";
-        private const string JUMP = "Jump";
-        private const string TAKE_DAMAGE = "TakeDamage";
-        private const string DEATH = "Death";
-        private const string ATTACK = "Attack";
-        private const string SLIDE = "Slide";
+        public AnimationService(Animator player_animator) 
+        { 
+            this.player_animator = player_animator;
+        }
+
+        private static readonly Dictionary<PlayerTriggerAnimation, string> AnimationParameters = new Dictionary<PlayerTriggerAnimation, string>
+        {
+            { PlayerTriggerAnimation.JUMP, "Jump" },
+            { PlayerTriggerAnimation.SLIDE, "Slide" },
+            { PlayerTriggerAnimation.ATTACK, "Attack" },
+            { PlayerTriggerAnimation.TAKE_DAMAGE, "TakeDamage" },
+            { PlayerTriggerAnimation.DEATH, "Death" }
+        };
+
+        public void PlayPlayerMovementAnimation(bool isRunning) => player_animator.SetBool("Running", isRunning);
+
+        public void PlayPlayerTriggerAnimation(PlayerTriggerAnimation animationToPlay)
+        {
+            if (AnimationParameters.TryGetValue(animationToPlay, out string animationParameter))
+            {
+                player_animator.SetTrigger(animationParameter);
+            }
+            else
+            {
+                Debug.LogWarning($"No animation parameter found for {animationToPlay}");
+            }
+        }
         #endregion
+    }
 
-        public void PlayPlayerMovementAnimation(Animator playerAnimator, bool isRunning) => playerAnimator.SetBool(IS_RUNNING, isRunning);
-        public void PlayPlayerJumpAnimation(Animator playerAnimator) => playerAnimator.SetTrigger(JUMP);
-        public void PlayPlayerDamageAnimation(Animator playerAnimator) => playerAnimator.SetTrigger(TAKE_DAMAGE);
-        public void PlayPlayerDeathAnimation(Animator playerAnimator) => playerAnimator.SetTrigger(DEATH);
-        public void PlayPlayerAttackAnimation(Animator playerAnimator) => playerAnimator.SetTrigger(ATTACK);
-        public void PlayPlayerSlideAnimation(Animator playerAnimator) => playerAnimator.SetTrigger(SLIDE);
-
-        #endregion
+    public enum PlayerTriggerAnimation
+    {
+        JUMP,
+        SLIDE,
+        ATTACK,
+        TAKE_DAMAGE,
+        DEATH,
     }
 }

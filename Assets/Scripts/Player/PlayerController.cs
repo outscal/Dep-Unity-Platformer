@@ -1,61 +1,65 @@
-using Platformer.InputSystem;
-using Platformer.Main;
+using Platformer.AnimationSystem;
 using UnityEngine;
 
 namespace Platformer.Player
 {
-    public class PlayerController
+    public class PlayerController: MonoBehaviour
     {
-        #region Service References
-        private PlayerService playerService => GameService.Instance.PlayerService;
-        #endregion
+        [SerializeField] private Animator animator;
+        private AnimationService animation_service;
 
-        private PlayerScriptableObject playerScriptableObject;
-        private PlayerView playerView;
-
-        public PlayerController(PlayerScriptableObject playerScriptableObject){
-            this.playerScriptableObject = playerScriptableObject;
-            InitializeView();
+        private void Awake()
+        {
+            animation_service = new AnimationService(animator);
         }
 
-        private void InitializeView(){
-            playerView = Object.Instantiate(playerScriptableObject.prefab);
-            playerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
-            playerView.SetController(this);
+        private void Update()
+        {
+            HandleInput();
         }
 
-        public void HandleHorizontalMovementAxisInput(float horizontalInput){
-            var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
-            if(movementDirection != Vector3.zero)
+        private void HandleInput()
+        {
+            HandleMovementInput();
+            HandleTriggerInput();
+        }
+
+        private void HandleMovementInput()
+        {
+            // Check for movement
+            float horizontalInput = Input.GetAxisRaw("Horizontal");
+            bool isRunning = Mathf.Abs(horizontalInput) > 0.1f;
+            PlayPlayerMovementAnimation(isRunning);
+
+            if (isRunning)
             {
-                // physically move the player
-                playerView.Move(horizontalInput);
-                playerService.PlayMovementAnimation(playerView.playerAnimator, true);
-            }else{
-                playerService.PlayMovementAnimation(playerView.playerAnimator, false);
+                FlipSpriteIfNeeded(horizontalInput);
             }
         }
 
-        public void HandleTriggerInput(PlayerInputTriggers playerInputTriggers){
-            // every case can have custom logic for movement or something else
-            switch (playerInputTriggers)
-            {
-                case PlayerInputTriggers.JUMP:
-                    playerService.PlayJumpAnimation(playerView.playerAnimator);
-                    break;
-                case PlayerInputTriggers.ATTACK:
-                    playerService.PlayAttackAnimation(playerView.playerAnimator);
-                    break;
-                case PlayerInputTriggers.DEATH:
-                    playerService.PlayDeathAnimation(playerView.playerAnimator);
-                    break;
-                case PlayerInputTriggers.SLIDE:
-                    playerService.PlaySlideAnimation(playerView.playerAnimator);
-                    break;
-                case PlayerInputTriggers.TAKE_DAMAGE:
-                    playerService.PlayDamageAnimation(playerView.playerAnimator);
-                    break;
-            }
+        private void FlipSpriteIfNeeded(float horizontalInput)
+        {
+            transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
+        }
+
+        private void PlayPlayerMovementAnimation(bool isRunning)
+        {
+            animation_service.PlayPlayerMovementAnimation(isRunning);
+        }
+
+        private void HandleTriggerInput()
+        {
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
+            if (Input.GetKeyDown(KeyCode.C))
+                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.SLIDE);
+            if (Input.GetKeyDown(KeyCode.X))
+                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.ATTACK);
+            if (Input.GetKeyDown(KeyCode.J))
+                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.TAKE_DAMAGE);
+            if (Input.GetKeyDown(KeyCode.K))
+                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
         }
     }
 }
