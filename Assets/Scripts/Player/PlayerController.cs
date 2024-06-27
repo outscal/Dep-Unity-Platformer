@@ -62,22 +62,45 @@ namespace Platformer.Player
         #region Handle Player Input
 
         #region Player movement
-        public void HandleHorizontalMovementAxisInput(float horizontalInput){
-            var movementDirection = new Vector3(horizontalInput, 0f, 0f).normalized;
-            MovePlayer(horizontalInput);
-            PlayerService.MovePlayer(PlayerView.PlayerAnimator, movementDirection != Vector3.zero, PlayerView.Position);
+        public void HandleHorizontalMovementAxisInput(float horizontalInput) => MovePlayer(horizontalInput);
+
+        private void MovePlayer(float horizontalInput)
+        {
+            UpdateRunningStatus(horizontalInput);
+            SetPlayerSpriteDirection(horizontalInput);
+            SetMovementSpeed();
+            TranslatePlayer(horizontalInput);
+            PlayerService.MovePlayer(PlayerView.PlayerAnimator, getIsRunning(horizontalInput), PlayerView.Position);
         }
 
-        private void MovePlayer(float horizontalInput){
-            UpdateRunningStatus(horizontalInput);
-            if(horizontalInput != 0)
+        private bool getIsRunning(float horizontalInput) => horizontalInput != 0;
+        private void UpdateRunningStatus(float horizontalInput) => playerState = getIsRunning(horizontalInput) ? PlayerStates.RUNNING : PlayerStates.IDLE;
+        private void SetMovementSpeed()
+        {
+            switch(playerState)
+            {
+                case PlayerStates.RUNNING:
+                    playerTranslateSpeed = playerScriptableObject.movementSpeed;
+                    break;
+                case PlayerStates.SLIDE:
+                    playerTranslateSpeed = playerScriptableObject.slidingSpeed;
+                    break;
+                default:
+                    playerTranslateSpeed = playerScriptableObject.movementSpeed;
+                    break;
+            }
+        }
+        private void SetPlayerSpriteDirection(float horizontalInput)
+        {
+            if (horizontalInput != 0)
                 PlayerView.SetCharacterSpriteDirection(horizontalInput < 0);
-            if (playerState != PlayerStates.SLIDE) playerTranslateSpeed = playerScriptableObject.movementSpeed;
+        }
+        private void TranslatePlayer(float horizontalInput)
+        {
             var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
             PlayerView.TranslatePlayer(playerTranslateSpeed * Time.deltaTime * movementVector);
         }
 
-        private void UpdateRunningStatus(float horizontalInput) => playerState = horizontalInput != 0 ? PlayerStates.RUNNING : PlayerStates.IDLE;
         #endregion
 
         #region trigger input
