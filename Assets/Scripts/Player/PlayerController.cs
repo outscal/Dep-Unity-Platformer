@@ -7,10 +7,12 @@ namespace Platformer.Player
     {
         [SerializeField] private Animator animator;
         private AnimationService animation_service;
+        private PlayerState current_state;
 
         private void Awake()
         {
             animation_service = new AnimationService(animator);
+            current_state = PlayerState.IDLE;
         }
 
         private void Update()
@@ -26,30 +28,32 @@ namespace Platformer.Player
 
         private void HandleMovementInput()
         {
-            // Check for movement
+            // Check for movement input
             float horizontalInput = Input.GetAxisRaw("Horizontal");
-            bool isRunning = Mathf.Abs(horizontalInput) > 0.1f;
-            PlayPlayerMovementAnimation(isRunning);
+            
+            // Set Current Player State
+            current_state = (Mathf.Abs(horizontalInput) > 0.1f) ? PlayerState.RUNNING : PlayerState.IDLE;
 
-            if (isRunning)
-            {
-                FlipSpriteIfNeeded(horizontalInput);
-            }
+            // PLay Movement Animations
+            PlayMovementAnimation();
+            
+            // Flip Player Sprite if needed
+            FlipSpriteIfNeeded(horizontalInput);
         }
 
         private void FlipSpriteIfNeeded(float horizontalInput)
         {
-            transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
+            if (current_state == PlayerState.RUNNING)
+                transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
         }
 
-        private void PlayPlayerMovementAnimation(bool isRunning)
+        private void PlayMovementAnimation()
         {
-            animation_service.PlayPlayerMovementAnimation(isRunning);
+            animation_service.PlayPlayerMovementAnimation(current_state);
         }
 
         private void HandleTriggerInput()
         {
-
             if (Input.GetKeyDown(KeyCode.Space))
                 animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
             if (Input.GetKeyDown(KeyCode.C))
