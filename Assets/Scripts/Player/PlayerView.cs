@@ -23,8 +23,6 @@ namespace Platformer.Player{
         #region Getters
         public Animator PlayerAnimator => animator;
         public LayerMask GroundLayer => groundLayer;
-        public BoxCollider2D PlayerBoxCollider => playerBoxCollider;
-        public Rigidbody2D PlayerRigidBody => playerRigidBody;
         [HideInInspector] public Vector3 Position => transform.position;
         #endregion
 
@@ -46,21 +44,15 @@ namespace Platformer.Player{
         public void TranslatePlayer(Vector3 translateVector) => transform.Translate(translateVector);
         #endregion
 
-        #region JUMP
-        // public void Jump(float jumpForce) => playerRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-        public void Jump(float jumpForce) => playerRigidBody.velocity = Vector2.up * jumpForce;
-
-        // private void Jump() // direct changing the position through translate method
-        // {
-        //     var force = Controller.GetJumpForce();
-        //     float jumpHeight = force * Time.deltaTime; // Convert force to a height
-        //     transform.Translate(Vector2.up * jumpHeight);
-        // }
-        #endregion
-
         #region Take Damage Function
         public void TakeDamage(int damage) => Controller.TakeDamage(damage);
         #endregion
+
+        public void SetVelocity(Vector2 newVelocity) => playerRigidBody.velocity = newVelocity; 
+        public void AddVelocity(Vector2 additionalVelocity) => playerRigidBody.velocity += additionalVelocity; 
+        public Vector2 GetVelocity() => playerRigidBody.velocity;
+        public void AddForce(Vector2 forceToAdd, ForceMode2D forceMode2D) => playerRigidBody.AddForce(forceToAdd, forceMode2D);
+        public void SetPositionAndRotation(Vector3 position, Quaternion rotation) => transform.SetLocalPositionAndRotation(position, rotation);
+        public Bounds GetColliderBounds() => playerBoxCollider.bounds;
     }
 }

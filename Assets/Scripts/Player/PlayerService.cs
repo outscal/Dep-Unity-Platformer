@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Platformer.AnimationSystem;
-using Platformer.Events;
+using Platformer.InputSystem;
 using Platformer.Main;
+using Platformer.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +13,6 @@ namespace Platformer.Player
     {
         #region Service References
         private AnimationService AnimationService => GameService.Instance.AnimationService;
-        private EventService EventService => GameService.Instance.EventService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
@@ -25,13 +26,13 @@ namespace Platformer.Player
         }
 
         private void SubscribeToEvents(){
-            EventService.OnHorizontalAxisInputReceived.AddListener(playerController.HandleHorizontalMovementAxisInput);
-            EventService.OnPlayerTriggerInputReceived.AddListener(playerController.HandleTriggerInput);
+            InputService.OnHorizontalAxisInputReceived += playerController.HandleHorizontalMovementAxisInput;
+            InputService.OnPlayerTriggerInputReceived += playerController.HandleTriggerInput;
         }
 
         private void UnsubscribeToEvents(){
-            EventService.OnHorizontalAxisInputReceived.RemoveListener(playerController.HandleHorizontalMovementAxisInput);
-            EventService.OnPlayerTriggerInputReceived.RemoveListener(playerController.HandleTriggerInput);
+            InputService.OnHorizontalAxisInputReceived -= playerController.HandleHorizontalMovementAxisInput;
+            InputService.OnPlayerTriggerInputReceived -= playerController.HandleTriggerInput;
         }
         
         private void SpawnPlayer(){
@@ -40,20 +41,18 @@ namespace Platformer.Player
 
         public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
             PlayMovementAnimation(animator, isRunning);
-            EventService.OnPlayerMoved.InvokeEvent(playerPosition);
         }
 
-        public async void Die(){
-            UnsubscribeToEvents();
-            playerController.Die();
-            await Task.Delay(2000);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
-        public async void PlayerDied(Animator animator){
+        public void PlayerDied(Animator animator)
+        {
             UnsubscribeToEvents();
             PlayDeathAnimation(animator);
-            await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
+            CoroutineService.StartCoroutine(DelayedRespawnCoroutine(), "PlayerRespawn");
+        }
+
+        private IEnumerator DelayedRespawnCoroutine()
+        {
+            yield return new WaitForSeconds(playerScriptableObject.delayAfterDeath);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
