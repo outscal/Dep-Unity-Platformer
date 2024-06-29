@@ -8,6 +8,9 @@ namespace Platformer.Player
 {
     public class PlayerController
     {
+        [SerializeField] private Animator animator;
+        private AnimationService animation_service;
+        private PlayerState current_state;
         #region Service References
         private PlayerService PlayerService => GameService.Instance.PlayerService;
         #endregion
@@ -180,7 +183,7 @@ namespace Platformer.Player
             }
         }
 
-        private IEnumerator SlideCoroutine(float slidingTime)
+        private void FlipSpriteIfNeeded(float horizontalInput)
         {
             SetPlayerState(PlayerStates.SLIDE);
             yield return new WaitForSeconds(slidingTime);
