@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using Platformer.Player;
 using UnityEngine;
 
 namespace Platformer.AnimationSystem
 {
     public class AnimationService
     {
-        #region Player Animations
         private Animator player_animator;
 
         public AnimationService(Animator player_animator) 
@@ -13,37 +13,14 @@ namespace Platformer.AnimationSystem
             this.player_animator = player_animator;
         }
 
-        private static readonly Dictionary<PlayerTriggerAnimation, string> AnimationParameters = new Dictionary<PlayerTriggerAnimation, string>
+        public void PlayPlayerMovementAnimation(PlayerState current_player_state)
         {
-            { PlayerTriggerAnimation.JUMP, "Jump" },
-            { PlayerTriggerAnimation.SLIDE, "Slide" },
-            { PlayerTriggerAnimation.ATTACK, "Attack" },
-            { PlayerTriggerAnimation.TAKE_DAMAGE, "TakeDamage" },
-            { PlayerTriggerAnimation.DEATH, "Death" }
-        };
-
-        public void PlayPlayerMovementAnimation(bool isRunning) => player_animator.SetBool("Running", isRunning);
+            player_animator.SetBool(PlayerAnimation.RUNNING.ToString(), current_player_state == PlayerState.RUNNING);
+        }
 
         public void PlayPlayerTriggerAnimation(PlayerTriggerAnimation animationToPlay)
         {
-            if (AnimationParameters.TryGetValue(animationToPlay, out string animationParameter))
-            {
-                player_animator.SetTrigger(animationParameter);
-            }
-            else
-            {
-                Debug.LogWarning($"No animation parameter found for {animationToPlay}");
-            }
+            player_animator.SetTrigger(animationToPlay.ToString());
         }
-        #endregion
-    }
-
-    public enum PlayerTriggerAnimation
-    {
-        JUMP,
-        SLIDE,
-        ATTACK,
-        TAKE_DAMAGE,
-        DEATH,
     }
 }
