@@ -29,7 +29,7 @@ namespace Platformer.Main
 
         #region ScriptableObjestsReferences
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        [SerializeField] public List<LevelScriptableObject> levelScriptableObjects;
         #endregion
 
         #region Scene Refrences
@@ -48,6 +48,6 @@ namespace Platformer.Main
 
         private void Update() => InputService.UpdateInputService();
 
-        private void Start() => UIService.ShowLevelSelectionUI(levelScriptableObjects.Count);
+        private void Start() => UIService.ShowLevelSelectionUI();
     }
 }

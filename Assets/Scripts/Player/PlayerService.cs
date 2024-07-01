@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Platformer.AnimationSystem;
 using Platformer.Events;
+using Platformer.Game;
 using Platformer.Main;
 using Platformer.UI;
 using UnityEngine;
@@ -18,13 +20,19 @@ namespace Platformer.Player
         private PlayerScriptableObject playerScriptableObject;
         public PlayerController playerController { get; private set; }
 
+        public static event Action<GameEndType> OnGameEnd;
         
         public PlayerService(PlayerScriptableObject playerScriptableObject){
             this.playerScriptableObject = playerScriptableObject;
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => EventService.OnLevelSelected.AddListener(SpawnPlayer);
+        private void SubscribeToEvents() 
+        {
+            EventService.OnLevelSelected.AddListener(SpawnPlayer);
+            
+                
+        }
 
         private void UnsubscribeToEvents(){
             EventService.OnLevelSelected.RemoveListener(SpawnPlayer);
@@ -45,19 +53,12 @@ namespace Platformer.Player
 
         public void TakeDamage(int damageToInflict) => playerController.TakeDamage(damageToInflict);
 
-        public async void PlayerDied(Animator animator){ // can be an event 
+        public async void PlayerLose(Animator animator){ // can be an event 
             UnsubscribeToEvents();
-            PlayDeathAnimation(animator); // functionality which can be called in the PlayerDied event
+            PlayDeathAnimation(animator);// functionality which can be called in the PlayerDied event
             await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
-            UIService.EndGame(false); // functionality which can be called in the PlayerDied event
+            OnGameEnd?.Invoke(GameEndType.LOSE);
         }
-
-        // public async void PlayerDied(Animator animator){
-        //     UnsubscribeToEvents();
-        //     PlayDeathAnimation(animator);
-        //     await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
 
         #region Player Animations
         private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);

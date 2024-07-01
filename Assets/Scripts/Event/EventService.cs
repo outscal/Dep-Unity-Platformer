@@ -21,7 +21,6 @@ namespace Platformer.Events
 
         #region Player Events
         public EventController<Vector3> OnPlayerMoved { get; private set; }
-        public EventController OnPlayerDied { get; private set ;}
         #endregion
 
         public EventService()
@@ -30,7 +29,6 @@ namespace Platformer.Events
             OnHorizontalAxisInputReceived = new EventController<float>();
             OnPlayerTriggerInputReceived = new EventController<PlayerInputTriggers>();
             OnPlayerMoved = new EventController<Vector3>();
-            OnPlayerDied = new EventController();
         }
     }
 }

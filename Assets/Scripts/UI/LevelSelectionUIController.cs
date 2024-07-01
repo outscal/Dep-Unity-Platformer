@@ -12,31 +12,35 @@ namespace Platformer.UI
         
         public LevelSelectionUIController(LevelSelectionUIView levelSelectionView, LevelButtonView levelButtonPrefab)
         {
-            this.levelSelectionView = levelSelectionView;
-            this.levelButtonPrefab = levelButtonPrefab;
-            levelSelectionView.SetController(this);
-            InitializeController();
+
+            InitializeController(levelSelectionView);
+            InitializeLevelButtons(levelButtonPrefab);
         }
 
-        private void InitializeController()
+        public void InitializeController(IUIView iuiView)
         {
-            levelButtons = new List<LevelButtonView>();
-            Hide();
+            levelSelectionView = iuiView as LevelSelectionUIView;
+            levelSelectionView.SetController(this);
         }
 
-        public void Show(int levelCount)
+        private void InitializeLevelButtons(LevelButtonView levelButtonPrefab)
+        {
+            this.levelButtonPrefab = levelButtonPrefab;
+            levelButtons = new List<LevelButtonView>();
+            CreateLevelButtons(GameService.Instance.levelScriptableObjects.Count);
+        }
+
+        public void Show()
         {
             levelSelectionView.EnableView();
-            CreateLevelButtons(levelCount);
         }
 
         public void Hide()
         {
-            ResetLevelButtons();
             levelSelectionView.DisableView();
         }
 
-        private void ResetLevelButtons()
+        private void RemoveLevelButtons()
         {
             levelButtons.ForEach(button => Object.Destroy(button.gameObject));
             levelButtons.Clear();
@@ -52,10 +56,10 @@ namespace Platformer.UI
             }
         }
 
-        // To Learn more about Events and Observer Pattern, check out the course list here: https://outscal.com/courses
         public void OnLevelSelected(int levelId)
         {
             GameService.Instance.EventService.OnLevelSelected.InvokeEvent(levelId);
+            RemoveLevelButtons();
             Hide();
         }
     }

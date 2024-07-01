@@ -1,3 +1,4 @@
+using Platformer.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,11 +10,14 @@ namespace Platformer.UI
         
         public LevelEndUIController(LevelEndUIView levelEndView)
         {
-            this.levelEndView = levelEndView;
+            InitializeController(levelEndView);
+        }
+        public void InitializeController(IUIView iuiView) 
+        {
+            levelEndView = iuiView as LevelEndUIView;
             levelEndView.SetController(this);
             Hide();
         }
-
         public void Show() => levelEndView.EnableView();
 
         public void Hide() => levelEndView.DisableView();
@@ -22,8 +26,8 @@ namespace Platformer.UI
 
         public void OnQuitButtonClicked() => Application.Quit();
 
-        public void EndGame(bool playerWon){
-            levelEndView.EndGame(playerWon);
+        public void EndGame(GameEndType gameEndType){
+            levelEndView.EndGame(gameEndType);
             Show();
         }
     }

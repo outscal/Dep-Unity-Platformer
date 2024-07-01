@@ -255,6 +255,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 827010083, guid: d5c4131d964907842a4d82438f1845a0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 827010083, guid: d5c4131d964907842a4d82438f1845a0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3889939497049684047, guid: d5c4131d964907842a4d82438f1845a0, type: 3}
       propertyPath: m_Name
       value: Canvas-UIService
@@ -341,6 +349,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3889939497049684082, guid: d5c4131d964907842a4d82438f1845a0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6344401652110063940, guid: d5c4131d964907842a4d82438f1845a0, type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
