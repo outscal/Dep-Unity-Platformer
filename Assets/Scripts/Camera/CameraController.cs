@@ -29,7 +29,7 @@ namespace Platformer.Cameras
                 Debug.Log("look up or down depending on the input");    
         }
 
-        public void OnCameraZoomInputReceived(bool zoom) => CameraView.Zoom(zoom, cameraScriptableObject.cameraSizeIncrement, cameraScriptableObject.minSize, cameraScriptableObject.maxSize);
+        public void OnCameraZoomInputReceived(ZoomType zoomType) => CameraView.Zoom(zoomType, cameraScriptableObject.cameraSizeIncrement, cameraScriptableObject.minSize, cameraScriptableObject.maxSize);
 
         public void OnPlayerMoved(Vector3 playerPosition) => CameraView.FollowPlayer(playerPosition);
 

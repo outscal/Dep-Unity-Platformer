@@ -1,3 +1,4 @@
+using Platformer.Cameras;
 using Platformer.Events;
 using Platformer.Main;
 
@@ -13,7 +14,7 @@ namespace Platformer.InputSystem{
 
         public void HandleHorizontalAxisInput(float horizontalInput) => EventService.OnHorizontalAxisInputReceived.InvokeEvent(horizontalInput);
 
-        public void HandleCameraZoomInput(bool zoom) => EventService.OnCameraZoomInputReceived.InvokeEvent(zoom);
+        public void HandleCameraZoomInput(ZoomType zoomType) => EventService.OnCameraZoomInputReceived.InvokeEvent(zoomType);
         
         public void HandleVerticalAxisInput(float verticalInput) => EventService.OnVerticalAxisInputReceived.InvokeEvent(verticalInput);
 

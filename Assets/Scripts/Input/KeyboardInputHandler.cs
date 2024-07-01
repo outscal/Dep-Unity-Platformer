@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Platformer.Cameras;
 using Platformer.Main;
 using UnityEngine;
 
@@ -46,9 +47,9 @@ namespace Platformer.InputSystem
         private void HandleCameraControlInput()
         {
             if (Input.GetKey(KeyCode.Q))
-                InputService.HandleCameraZoomInput(false);
+                InputService.HandleCameraZoomInput(ZoomType.ZOOMOUT);
             else if (Input.GetKey(KeyCode.E))
-                InputService.HandleCameraZoomInput(true);
+                InputService.HandleCameraZoomInput(ZoomType.ZOOMIN);
         }
     }
 

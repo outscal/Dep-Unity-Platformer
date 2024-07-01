@@ -46,10 +46,12 @@ namespace Platformer.Cameras{
         #endregion
 
         #region Camera Zoom
-        public void Zoom(bool isZoomIn, float sizeIncrement, float minSize, float maxSize){
-            cameraComponent.orthographicSize += isZoomIn ? -sizeIncrement : sizeIncrement;
-            cameraComponent.orthographicSize = Mathf.Clamp(cameraComponent.orthographicSize, minSize, maxSize);
+        public void Zoom(ZoomType zoomType, float sizeIncrement, float minSize, float maxSize)
+        {
+            float newSize = Mathf.Clamp(cameraComponent.orthographicSize + (zoomType == ZoomType.ZOOMIN ? -sizeIncrement : sizeIncrement), minSize, maxSize);
+            cameraComponent.orthographicSize = newSize;
         }
+
         #endregion
 
         #region Follow Player
@@ -57,15 +59,26 @@ namespace Platformer.Cameras{
         #endregion
 
         #region Background Parallax Effect
-        public void ParallaxEffect(Transform sprite){
-            var zPosition = sprite.position.z;
-            Vector3 deltaMovement = transform.position - originalPosition;
-            var distanceFromPlayer = sprite.position.z - playerTransform.position.z;
-            var clippingPlane = transform.position.z + (distanceFromPlayer > 0 ? cameraComponent.farClipPlane : cameraComponent.nearClipPlane);
-            var parallaxFactor = Mathf.Abs(distanceFromPlayer) / clippingPlane;
-            sprite.position += deltaMovement * parallaxFactor;
-            sprite.position = new Vector3(sprite.position.x, sprite.position.y, zPosition);
+        public void ParallaxEffect(Transform sprite)
+        {
+            float parallaxFactor = CalculateParallaxFactor(sprite);
+            Vector3 newPosition = CalculateNewSpritePosition(sprite, parallaxFactor);
+            sprite.position = newPosition;
             originalPosition = transform.position;
+        }
+
+        private float CalculateParallaxFactor(Transform sprite)
+        {
+            float distanceFromPlayer = sprite.position.z - playerTransform.position.z;
+            float clippingPlane = transform.position.z + (distanceFromPlayer > 0 ? cameraComponent.farClipPlane : cameraComponent.nearClipPlane);
+            return Mathf.Abs(distanceFromPlayer) / clippingPlane;
+        }
+
+        private Vector3 CalculateNewSpritePosition(Transform sprite, float parallaxFactor)
+        {
+            Vector3 deltaMovement = transform.position - originalPosition;
+            Vector3 newPosition = sprite.position + deltaMovement * parallaxFactor;
+            return new Vector3(newPosition.x, newPosition.y, sprite.position.z);
         }
         #endregion
     }   
