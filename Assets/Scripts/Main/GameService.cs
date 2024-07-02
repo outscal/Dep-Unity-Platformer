@@ -16,17 +16,16 @@ namespace Platformer.Main
 {
     public class GameService : GenericMonoSingleton<GameService>
     {
-        #region Services
+        // Services:
         public PlayerService PlayerService { get; private set; }
         public InputService InputService { get; private set; }
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
-        #endregion
-
-        #region ScriptableObjestsReferences
+        
+        // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
-        #endregion
+        // TODO: Create A single SO called LevelConfigurations which has a list of LevelSO. This decreases inspector dependency.
+        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;  
 
         protected override void Awake()
         {
