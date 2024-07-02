@@ -7,18 +7,27 @@ namespace Platformer.Enemy
     [CreateAssetMenu(fileName = "EnemyScriptableObject", menuName = "ScriptableObjects/EnemyScriptableObject")]
     public class EnemyScriptableObject : ScriptableObject
     {
+        [Header("GENERAL SETTINGS")]
         public EnemyView Prefab;
         public EnemyType Type;
         public Vector3 SpawnPosition;
+
+        [Header("PATROLLING SETTINGS")]
         public float PatrollingSpeed;
-        public int MaximumHealth;
-        public float RangeRadius;
         public List<Vector3> PatrollingPoints;
-        public float PlayerAttackingDistance; // not in use as of now
-        public float DelayAfterGameEnd;
-        public float HealthbarOffset;
+
+        [Header("HEALTH SETTINGS")]
+        public int MaximumHealth;
+        public float HealthbarPositionOffset;
+
+        [Header("COMBAT SETTINGS")]
+        public float AttackRangeRadius;
         public int DamageToInflict;
         public MeleeScriptableObject MeleeSO;
         public float DelayAfterAttack;
+
+        [Header("MISCELLANEOUS SETTINGS")]
+        public float PlayerAttackingDistance; // not in use as of now
+        public float DelayAfterGameEnd;
     }
 }

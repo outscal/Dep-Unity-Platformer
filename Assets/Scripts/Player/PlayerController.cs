@@ -28,7 +28,7 @@ namespace Platformer.Player
             get => currentHealth;
             private set {
                 currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
-                UIService.UpdatePlayerHealth((float)currentHealth / playerScriptableObject.maxHealth);
+                UIService.UpdatePlayerHealthUI((float)currentHealth / playerScriptableObject.maxHealth);
             }
         }
         #endregion
@@ -38,7 +38,7 @@ namespace Platformer.Player
         public int CurrentCoins { get => currentCoins; 
             private set{
                 currentCoins = value;
-                UIService.UpdateCoinsCount(currentCoins);
+                UIService.UpdateCoinsCountUI(currentCoins);
             }
         }
         #endregion
@@ -168,7 +168,6 @@ namespace Platformer.Player
         #endregion
 
         #region Damage/Death
-        public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
 
         public void TakeDamage(int damageToInflict)
         {

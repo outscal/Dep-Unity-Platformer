@@ -6,78 +6,116 @@ using Platformer.Melee;
 using Platformer.Player;
 using UnityEngine;
 
-namespace Platformer.Enemy{
+namespace Platformer.Enemy
+{
     public class MushroomHeadController : EnemyController
     {
         private EventService EventService => GameService.Instance.EventService;
+        private PlayerService PlayerService => GameService.Instance.PlayerService;
 
-        private readonly MushroomHeadView mushroomHeadView;
-        public MushroomHeadState MushroomHeadState { get; private set; }
+        private MushroomHeadView mushroomHeadView;
+        public EnemyState MushroomHeadState { get; private set; }
 
         #region Patrolling variables
         private Vector3 nextPosition;
+        private List<Vector3> patrollingPoints;
+        private int currentPatrolIndex;
         #endregion
-
-        private bool isPlayerAlive = true;
 
         public MushroomHeadController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {
+            InitializeView();
+            InitializeVariables(enemyScriptableObject);
+            SubscribeToEvents();
+        }
+
+        protected override void InitializeView()
+        {
+            base.InitializeView();
             mushroomHeadView = enemyView as MushroomHeadView;
             mushroomHeadView.SetController(this);
-            nextPosition = Data.PatrollingPoints[0];
-            SetMushroomHeadState(MushroomHeadState.PATROLLING);
-            SubscribeToEvents();
+        }
+
+        protected override void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
+        {
+            base.InitializeVariables(enemyScriptableObject);
+            patrollingPoints = enemyScriptableObject.PatrollingPoints;
+            currentPatrolIndex = 0;
+            nextPosition = patrollingPoints[currentPatrolIndex];
+            SetMushroomHeadState(EnemyState.PATROLLING);
         }
 
         private void SubscribeToEvents() => EventService.OnPlayerDied.AddListener(OnPlayerDied);
 
         private void UnsubscribeToEvents() => EventService.OnPlayerDied.RemoveListener(OnPlayerDied);
 
-        private void SetMushroomHeadState(MushroomHeadState state) => MushroomHeadState = state;
+        private void SetMushroomHeadState(EnemyState state) => MushroomHeadState = state;
 
-        public void Update() {
+        public void Update()
+        {
             DetectPlayer();
             HandleStateBehaviour();
         }
-
-        private void DetectPlayer(){
-            if (!isPlayerAlive){
-                PlayerExitedAttackRadius();
-                return; 
-            }
-
-            var otherColliders = Physics2D.OverlapCircleAll(enemyView.transform.position, Data.RangeRadius)?.ToList();
-            var playerCollider = otherColliders?.Find(x => x.GetComponent<PlayerView>() != null && !x.isTrigger);
-            if (playerCollider != null) PlayerEnteredAttackRadius();
-            else PlayerExitedAttackRadius();
+        private bool CanAttackPlayer()
+        {
+            return PlayerService.PlayerController != null && PlayerService.PlayerController.CurrentHealth > 0;
         }
 
-        private void HandleStateBehaviour(){
+        private void DetectPlayer()
+        {
+            if (!CanAttackPlayer())
+            {
+                PlayerExitedAttackRadius();
+                return;
+            }
+
+            if (IsPlayerInAttackRadius())
+            {
+                PlayerEnteredAttackRadius();
+            }
+            else
+            {
+                PlayerExitedAttackRadius();
+            }
+        }
+
+        private bool IsPlayerInAttackRadius()
+        {
+            var otherColliders = Physics2D.OverlapCircleAll(enemyView.transform.position, Data.AttackRangeRadius);
+            return otherColliders?.Any(collider => collider.GetComponent<PlayerView>() != null) ?? false;
+        }
+
+        private void HandleStateBehaviour()
+        {
             switch (MushroomHeadState)
             {
-                case MushroomHeadState.PATROLLING:
+                case EnemyState.PATROLLING:
                     PatrolBehavior();
                     break;
-                case MushroomHeadState.ATTACK:
+                case EnemyState.ATTACK:
                     AttackBehavior();
                     break;
             }
         }
 
         #region Patrol Behaviour
-        private void PatrolBehavior() {
-            var patrollingPoints = enemyScriptableObject.PatrollingPoints;
-            if (Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f) {
-                ToggleNextPatrolPoint(patrollingPoints);
+        private void PatrolBehavior()
+        {
+            if (Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f)
+            {
+                ToggleNextPatrolPoint();
             }
             UpdateMovementTowardsNextPosition();
         }
 
-        private void ToggleNextPatrolPoint(List<Vector3> patrollingPoints) {
-            nextPosition = nextPosition == patrollingPoints[0] ? patrollingPoints[1] : patrollingPoints[0];
+        private void ToggleNextPatrolPoint()
+        {
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrollingPoints.Count;
+            nextPosition = patrollingPoints[currentPatrolIndex];
         }
 
-        private void UpdateMovementTowardsNextPosition() {
+        private void UpdateMovementTowardsNextPosition()
+        {
             var isMovingRight = nextPosition.x > enemyView.transform.position.x;
             mushroomHeadView.Move(nextPosition, Data.PatrollingSpeed, isMovingRight);
             EnemyMoved();
@@ -85,26 +123,25 @@ namespace Platformer.Enemy{
         #endregion
 
         #region Attack Behaviour
-        private  void AttackBehavior() {
-            if(mushroomHeadView.MeleeContainer.childCount == 0){
+        private void AttackBehavior()
+        {
+            if (mushroomHeadView.MeleeContainer.childCount == 1)
+            {
                 EnemyService.PlayAttackAnimation(mushroomHeadView.Animator);
-                _ = new MeleeController(Data.MeleeSO, mushroomHeadView.MeleeContainer);
+                _ = new MeleeController(Data.MeleeSO, mushroomHeadView.transform);
             }
         }
 
-        private void OnPlayerDied(){
+        private void OnPlayerDied()
+        {
             UnsubscribeToEvents();
-            isPlayerAlive = false;
         }
 
-        private void PlayerEnteredAttackRadius() => SetMushroomHeadState(MushroomHeadState.ATTACK);
+        private void PlayerEnteredAttackRadius() => SetMushroomHeadState(EnemyState.ATTACK);
 
-        private void PlayerExitedAttackRadius() => SetMushroomHeadState(MushroomHeadState.PATROLLING);
+        private void PlayerExitedAttackRadius() => SetMushroomHeadState(EnemyState.PATROLLING);
         #endregion
     }
 
-    public enum MushroomHeadState{
-        PATROLLING,
-        ATTACK
-    }
+    
 }

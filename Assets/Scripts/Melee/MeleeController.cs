@@ -1,12 +1,15 @@
 using Platformer.Utilities;
 using UnityEngine;
 
-namespace Platformer.Melee{
-    public class MeleeController{
+namespace Platformer.Melee
+{
+    public class MeleeController
+    {
         public MeleeScriptableObject MeleeScriptableObject { get; private set; }
         private MeleeView meleeView;
 
-        public MeleeController(MeleeScriptableObject meleeScriptableObject, Transform parentTransform){
+        public MeleeController(MeleeScriptableObject meleeScriptableObject, Transform parentTransform)
+        {
             MeleeScriptableObject = meleeScriptableObject;
             InitializeView(parentTransform);
         }

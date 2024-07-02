@@ -19,7 +19,8 @@ namespace Platformer.Melee{
             Destroy(gameObject);
         }
 
-        private void OnTriggerEnter2D(Collider2D other) => meleeController?.InflictDamage(other);
+        private void OnTriggerEnter2D(Collider2D other) => meleeController?.InflictDamage(other); 
+        
 
         private void OnDestroy() => cancellationTokenSource?.Cancel();
     }

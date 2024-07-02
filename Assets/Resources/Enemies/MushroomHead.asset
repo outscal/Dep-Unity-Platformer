@@ -16,14 +16,14 @@ MonoBehaviour:
   Type: 2
   SpawnPosition: {x: -14, y: -0.8, z: 0}
   PatrollingSpeed: 1.5
-  MaximumHealth: 20
-  RangeRadius: 1
   PatrollingPoints:
   - {x: -14, y: -0.8, z: 0}
   - {x: -10, y: -0.8, z: 0}
-  PlayerAttackingDistance: 0
-  DelayAfterGameEnd: 3
-  HealthbarOffset: 1.2
+  MaximumHealth: 20
+  HealthbarPositionOffset: 1.2
+  AttackRangeRadius: 0
   DamageToInflict: 10
   MeleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
   DelayAfterAttack: 1.5
+  PlayerAttackingDistance: 0
+  DelayAfterGameEnd: 3

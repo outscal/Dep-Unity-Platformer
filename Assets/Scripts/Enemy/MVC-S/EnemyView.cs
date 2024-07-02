@@ -1,3 +1,4 @@
+using Platformer.Player;
 using UnityEngine;
 
 namespace Platformer.Enemy{
@@ -7,7 +8,11 @@ namespace Platformer.Enemy{
 
         public virtual void SetController(EnemyController controllerToSet) => Controller = controllerToSet;
 
-        private void OnTriggerEnter2D(Collider2D other) => Controller?.InflictDamage(other);
+        private void OnTriggerEnter2D(Collider2D other) 
+        { 
+            if(other.gameObject.TryGetComponent<PlayerView>(out PlayerView _))
+                    Controller?.InflictDamage(other);
+        } 
 
         public void Destroy() => Destroy(gameObject);
     }

@@ -15,13 +15,38 @@ namespace Platformer.Enemy
 
         #region Health 
         protected int currentHealth;
-        public int CurrentHealth {
+        public int CurrentHealth
+        {
             get => currentHealth;
-            private set {
-                currentHealth = Mathf.Clamp(value, 0, enemyScriptableObject.MaximumHealth);
-                if(this is not SpikeController)
-                    EnemyService.UpdateEnemyHealth(this, (float)currentHealth / enemyScriptableObject.MaximumHealth);
+            private set
+            {
+                currentHealth = ClampHealth(value);
+                if (ShouldUpdateHealth())
+                {
+                    UpdateHealthService();
+                }
             }
+        }
+
+        private int ClampHealth(int value)
+        {
+            return Mathf.Clamp(value, 0, enemyScriptableObject.MaximumHealth);
+        }
+
+        private bool ShouldUpdateHealth()
+        {
+            return this is not SpikeController;
+        }
+
+        private void UpdateHealthService()
+        {
+            float healthRatio = CalculateHealthRatio();
+            EnemyService.UpdateEnemyHealth(this, healthRatio);
+        }
+
+        private float CalculateHealthRatio()
+        {
+            return (float)currentHealth / enemyScriptableObject.MaximumHealth;
         }
         #endregion
 
@@ -32,18 +57,21 @@ namespace Platformer.Enemy
 
         public EnemyController(EnemyScriptableObject enemyScriptableObject)
         {
-            this.enemyScriptableObject = enemyScriptableObject;
+            enemyView = Object.Instantiate(enemyScriptableObject.Prefab);
+            InitializeVariables(enemyScriptableObject);
             InitializeView();
-            InitializeVariables();
         }
 
         protected virtual void InitializeView()
         {
-            enemyView = Object.Instantiate(enemyScriptableObject.Prefab);
             enemyView.transform.position = enemyScriptableObject.SpawnPosition;
         }
 
-        private void InitializeVariables() => CurrentHealth = enemyScriptableObject.MaximumHealth;
+        protected virtual void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
+        {
+            this.enemyScriptableObject = enemyScriptableObject;
+            CurrentHealth = enemyScriptableObject.MaximumHealth;
+        } 
 
 
         #region Damage

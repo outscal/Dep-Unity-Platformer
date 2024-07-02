@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00d29fc70e7fd624b890c46c1be6ce6b, type: 3}
-  m_Name: PatrolMan 1
+  m_Name: Slime 1
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4382203948783424941, guid: ed52d0fd0388e5a4ea88bf52eabca66f, type: 3}
   Type: 1
-  SpawnPosition: {x: -0.56, y: 3.9, z: 0}
+  SpawnPosition: {x: -12, y: -1.1, z: 0}
   PatrollingSpeed: 1.5
-  MaximumHealth: 20
-  RangeRadius: 0
   PatrollingPoints:
-  - {x: 8, y: 3.9, z: 0}
-  - {x: -0.56, y: 3.9, z: 0}
+  - {x: -14, y: -1.1, z: 0}
+  - {x: -10, y: -1.1, z: 0}
+  MaximumHealth: 20
+  HealthbarPositionOffset: 1.2
+  AttackRangeRadius: 0
+  DamageToInflict: 10
+  MeleeSO: {fileID: 11400000, guid: 3f209005f096fa64d9deaabe2d22d866, type: 2}
+  DelayAfterAttack: 0
   PlayerAttackingDistance: 0
   DelayAfterGameEnd: 3
-  HealthbarOffset: 1.2
-  DamageToInflict: 10
-  MeleeSO: {fileID: 0}
-  DelayAfterAttack: 0

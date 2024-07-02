@@ -15,3 +15,4 @@ MonoBehaviour:
   Prefab: {fileID: 1354984841532806221, guid: bf4ea7c44af40f3408ef15e3d3982133, type: 3}
   DamageToInflict: 10
   MeleeDuration: 0.25
+  meleeType: 1

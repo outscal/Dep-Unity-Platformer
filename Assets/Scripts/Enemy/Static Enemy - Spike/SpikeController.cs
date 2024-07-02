@@ -5,5 +5,6 @@ namespace Platformer.Enemy{
         {
             enemyView.SetController(this);
         }
+
     }
 }

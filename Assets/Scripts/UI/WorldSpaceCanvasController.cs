@@ -35,7 +35,7 @@ namespace Platformer.UI{
 
         private void SetHealthBarPosition(EnemyController enemy){
             if (enemyHealthBars.TryGetValue(enemy, out var healthBar) && healthBar != null) {
-                var offset = new Vector3(0, enemy.Data.HealthbarOffset, 0);
+                var offset = new Vector3(0, enemy.Data.HealthbarPositionOffset, 0);
                 healthBar.transform.position = enemy.EnemyView.transform.position + offset;
             }
         }

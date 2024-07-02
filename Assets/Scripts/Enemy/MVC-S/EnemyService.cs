@@ -24,7 +24,7 @@ namespace Platformer.Enemy
             get => spawnedEnemies;
             private set {
                 spawnedEnemies = value;
-                UIService.UpdateEnemyCount(ActiveEnemiesCount, spawnedEnemies);
+                UIService.UpdateEnemyCountUI(ActiveEnemiesCount, spawnedEnemies);
             } 
         }
         #endregion
@@ -84,7 +84,7 @@ namespace Platformer.Enemy
             }
         }
 
-        public void UpdateEnemyHealth(EnemyController enemy, float healthRatio) => UIService.UpdateEnemyHealth(enemy, healthRatio);
+        public void UpdateEnemyHealth(EnemyController enemy, float healthRatio) => UIService.UpdateEnemyHealthUI(enemy, healthRatio);
 
         public void EnemyMoved(EnemyController enemyController) => EventService.OnEnemyMoved.InvokeEvent(enemyController);
 

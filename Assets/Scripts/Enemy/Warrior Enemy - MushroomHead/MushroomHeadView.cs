@@ -48,7 +48,7 @@ namespace Platformer.Enemy{
         private void Update() => (Controller as MushroomHeadController).Update();     
 
         #region IDamagable Implementation
-        public void TakeDamage(int damageToInflict) => Controller.TakeDamage(damageToInflict);
+        public void TakeDamage(int damageToTake) => Controller.TakeDamage(damageToTake);
         #endregion
     }
 }
