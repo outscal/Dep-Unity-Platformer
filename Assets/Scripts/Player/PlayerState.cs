@@ -3,6 +3,8 @@
     public enum PlayerState
     {
         IDLE,
-        RUNNING
+        RUNNING,
+        SLIDE,
+        ATTACK
     }
 }
