@@ -11,20 +11,24 @@ namespace Platformer.Player
 {
     public class PlayerService
     {
-        #region Service References
         private AnimationService AnimationService => GameService.Instance.AnimationService;
-        #endregion
-
-        private PlayerScriptableObject playerScriptableObject;
         public PlayerController playerController { get; private set; }
-
+        private float delayAfterDeath;
         
-        public PlayerService(PlayerScriptableObject playerScriptableObject){
-            this.playerScriptableObject = playerScriptableObject;
-            SpawnPlayer();
+        public PlayerService(PlayerScriptableObject playerScriptableObject)
+        {
+            intializeVariables(playerScriptableObject);
+            SpawnPlayer(playerScriptableObject);
             SubscribeToEvents();
         }
 
+        void intializeVariables(PlayerScriptableObject playerScriptableObject) =>
+            delayAfterDeath = playerScriptableObject.delayAfterDeath;
+        
+        private void SpawnPlayer(PlayerScriptableObject playerScriptableObject) => 
+            playerController = new PlayerController(playerScriptableObject);
+
+        // TODO: These events should be subscribed and unsubscribed by PlayerController directly.
         private void SubscribeToEvents(){
             InputService.OnHorizontalAxisInputReceived += playerController.HandleHorizontalMovementAxisInput;
             InputService.OnPlayerTriggerInputReceived += playerController.HandleTriggerInput;
@@ -34,11 +38,8 @@ namespace Platformer.Player
             InputService.OnHorizontalAxisInputReceived -= playerController.HandleHorizontalMovementAxisInput;
             InputService.OnPlayerTriggerInputReceived -= playerController.HandleTriggerInput;
         }
-        
-        private void SpawnPlayer(){
-            playerController = new PlayerController(playerScriptableObject);
-        }
 
+        // TODO: This function will not be needed in this class. PlayerController will directly communicate with Animation Service for handling Player Animations.
         public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
             PlayMovementAnimation(animator, isRunning);
         }
@@ -56,13 +57,14 @@ namespace Platformer.Player
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        #region Player Animations
+        // TODO: All these methods will not be needed as Generic methods have been created inside Animation Service in previous branch. Use them.
+        // TODO: All this Player Animation should not be in PlayerService as it is too specific to be handled by PlayerService.
+        // TODO: Either move this to PlayerController or create a PlayerAnimatorController.cs below PlayerController if PlayerController is getting too cluttered.
         private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
         public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerJumpAnimation(animator);
         public void PlayDamageAnimation(Animator animator) => AnimationService.PlayPlayerDamageAnimation(animator);
         public void PlayDeathAnimation(Animator animator) => AnimationService.PlayPlayerDeathAnimation(animator);
         public void PlaySlideAnimation(Animator animator) => AnimationService.PlayPlayerSlideAnimation(animator);
         public void PlayAttackAnimation(Animator animator) => AnimationService.PlayPlayerAttackAnimation(animator);
-        #endregion
     }
 }
