@@ -19,6 +19,8 @@ MonoBehaviour:
   PatrollingPoints:
   - {x: 8, y: 3.9, z: 0}
   - {x: -0.56, y: 3.9, z: 0}
+  - {x: 4, y: 3.9, z: 0}
+  - {x: -0.56, y: 2, z: 0}
   MaximumHealth: 20
   HealthbarPositionOffset: 1.2
   AttackRangeRadius: 0
