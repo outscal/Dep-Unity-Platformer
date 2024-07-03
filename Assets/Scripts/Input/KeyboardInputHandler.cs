@@ -46,9 +46,9 @@ namespace Platformer.InputSystem
 
         private void HandleCameraControlInput()
         {
-            if (Input.GetKey(KeyCode.Q))
+            if (Input.GetKey(KeyCode.Q)) //ZoomOut
                 InputService.HandleCameraZoomInput(ZoomType.ZOOMOUT);
-            else if (Input.GetKey(KeyCode.E))
+            else if (Input.GetKey(KeyCode.E)) //ZoomIn
                 InputService.HandleCameraZoomInput(ZoomType.ZOOMIN);
         }
     }
