@@ -22,11 +22,11 @@ namespace Platformer.InputSystem
 
         public void HandleInput() 
         {
-            HandlePlayerMoevementInput();
+            HandlePlayerMovementInput();
             HandlePlayerTriggerInput();
         }
 
-        private void HandlePlayerMoevementInput()
+        private void HandlePlayerMovementInput()
         {
             var horizontalInput = Input.GetAxisRaw("Horizontal");
             InputService.HandleHorizontalAxisInput(horizontalInput);
@@ -42,6 +42,7 @@ namespace Platformer.InputSystem
         }
     }
 
+    // TODO: Create separate file for this Enum inside Input namespace 
     public enum PlayerInputTriggers
     {
         JUMP, // SPACE
