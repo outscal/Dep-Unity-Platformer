@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Platformer.Drop;
 using Platformer.Enemy;
 using Platformer.Main;
+using Platformer.Sound;
 using Platformer.UI;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Platformer.Level
     {
         #region Service Refrences
         private UIService UIService => GameService.Instance.UIService;
+        private SoundService SoundService => GameService.Instance.SoundService;
         #endregion
 
         private List<LevelScriptableObject> levelScriptableObjects;
@@ -46,6 +48,7 @@ namespace Platformer.Level
 
         public void PlayerReachedGate(){
             if(CanOpenGate){
+                SoundService.PlaySoundEffects(SoundType.GAME_WON);
                 UIService.EndGame(true);
                 UnsubscribeToEvents();
             }

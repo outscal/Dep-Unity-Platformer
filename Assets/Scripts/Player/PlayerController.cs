@@ -5,6 +5,7 @@ using Platformer.Melee;
 using Platformer.UI;
 using UnityEngine;
 using Platformer.Drop;
+using Platformer.Sound;
 
 namespace Platformer.Player
 {
@@ -13,6 +14,7 @@ namespace Platformer.Player
         #region Service References
         private PlayerService PlayerService => GameService.Instance.PlayerService;
         private UIService UIService => GameService.Instance.UIService;
+        private SoundService SoundService => GameService.Instance.SoundService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
@@ -143,6 +145,7 @@ namespace Platformer.Player
             if(CanAttack()){
                 Attack();
                 PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
+                SoundService.PlaySoundEffects(SoundType.PLAYER_ATTACK);
             }
         
         
