@@ -48,7 +48,7 @@ namespace Platformer.Player
 
         public void TakeDamage(int damageToInflict) => playerController.TakeDamage(damageToInflict);
 
-        public async void PlayerLose(Animator animator){ // can be an event 
+        public async void PlayerDied(Animator animator){ // can be an event 
             UnsubscribeToEvents();
             PlayDeathAnimation(animator);// functionality which can be called in the PlayerDied event
             await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);

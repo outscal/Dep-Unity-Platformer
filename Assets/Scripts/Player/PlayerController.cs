@@ -171,7 +171,7 @@ namespace Platformer.Player
             }
         }
 
-        private void PlayerDied() => PlayerService.PlayerLose(PlayerView.PlayerAnimator);
+        private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
         #endregion
 
         #region Getter Functions
