@@ -25,9 +25,18 @@ namespace Platformer.Sound
             SubscribeToEvents();
         }
 
+        ~SoundService()
+        {
+            UnsubscribeToEvents();
+        }
+
         #region Private Functions
 
-        private void SubscribeToEvents() => EventService.OnEnemyDied.AddListener(OnEnemyDied);
+        private void SubscribeToEvents() 
+        { 
+            EventService.OnEnemyDied.AddListener(OnEnemyDied);
+            EventService.OnAllEnemiesDied.AddListener(OnAllEnemiesDied);
+        } 
 
         private void UnsubscribeToEvents() => EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
 
