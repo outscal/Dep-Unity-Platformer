@@ -27,12 +27,7 @@ namespace Platformer.Player
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() 
-        {
-            EventService.OnLevelSelected.AddListener(SpawnPlayer);
-            
-                
-        }
+        private void SubscribeToEvents() => EventService.OnLevelSelected.AddListener(SpawnPlayer);
 
         private void UnsubscribeToEvents(){
             EventService.OnLevelSelected.RemoveListener(SpawnPlayer);

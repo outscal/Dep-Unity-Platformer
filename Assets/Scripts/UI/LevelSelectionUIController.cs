@@ -12,7 +12,6 @@ namespace Platformer.UI
         
         public LevelSelectionUIController(LevelSelectionUIView levelSelectionView, LevelButtonView levelButtonPrefab)
         {
-
             InitializeController(levelSelectionView);
             InitializeLevelButtons(levelButtonPrefab);
         }
@@ -27,7 +26,6 @@ namespace Platformer.UI
         {
             this.levelButtonPrefab = levelButtonPrefab;
             levelButtons = new List<LevelButtonView>();
-            CreateLevelButtons(GameService.Instance.levelScriptableObjects.Count);
         }
 
         public void Show()

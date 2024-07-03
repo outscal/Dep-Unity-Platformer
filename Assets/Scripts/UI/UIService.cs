@@ -41,9 +41,13 @@ namespace Platformer.UI
             PlayerService.OnGameEnd -= EndGame;
         }
 
-
-        public void ShowLevelSelectionUI() => levelSelectionUIController.Show();
-
+        public void ShowMainMenuUI(int levelCount)
+        {
+            CreateLevelButtons(levelCount);
+            ShowLevelSelectionUI();
+        }
+        private void ShowLevelSelectionUI() => levelSelectionUIController.Show();
+        private void CreateLevelButtons(int levelCount) => levelSelectionUIController.CreateLevelButtons(levelCount);
         private void ShowGameplayUI(int levelId) => gameplayUIController.ShowLevel(levelId);
 
         public void ToggleKillOverlay(bool value) => gameplayUIController.ToggleKillOverlay(value);
