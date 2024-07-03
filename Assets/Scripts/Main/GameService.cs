@@ -50,7 +50,7 @@ namespace Platformer.Main
 
         private void Start() 
         {
-            UIService.ShowMainMenuUI(levelScriptableObjects.Count);
+            UIService.CreateAndShowLevelSelectionUI(levelScriptableObjects.Count);
         }
     }
 }

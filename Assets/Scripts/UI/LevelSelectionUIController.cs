@@ -27,7 +27,11 @@ namespace Platformer.UI
             this.levelButtonPrefab = levelButtonPrefab;
             levelButtons = new List<LevelButtonView>();
         }
-
+        public void CreateAndShowLevelSelection(int levelCount)
+        {
+            CreateLevelButtons(levelCount);
+            Show();
+        }
         public void Show()
         {
             levelSelectionView.EnableView();
