@@ -50,8 +50,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8900895014493026388}
   characterSprite: {fileID: 4066710263046111380}
-  groundCheckPoint: {fileID: 8278573718330745679}
-  groundCheckSize: {x: 0.49, y: 0.1}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -160,7 +158,7 @@ Transform:
   m_GameObject: {fileID: 7316300105025840823}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4439454481439469522}
