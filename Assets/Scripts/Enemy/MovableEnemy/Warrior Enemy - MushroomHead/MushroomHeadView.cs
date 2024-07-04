@@ -33,19 +33,23 @@ namespace Platformer.Enemy{
             boxCollider = GetComponent<BoxCollider2D>();
         }
 
-        #region Patrol Functionality
-        public void Move(Vector3 position, float speed, bool isMovingRight){
-            SetCharacterSpriteDirection(isMovingRight);
-            transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
-        }
+        // public Vector3 GetPosition() => transform.position;
+        // public void SetPosition(Vector3 positionToSet) => transform.position = positionToSet; 
+        // public Vector3 GetLocalScale() => transform.localScale;
+        //
+        // public void SetLocalScale(Vector3 localScale) => transform.localScale = localScale;
+        
+        // public void Move(Vector3 position, float speed, bool isMovingRight){
+        //     SetCharacterSpriteDirection(isMovingRight);
+        //     transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
+        // }
+        //
+        // private void SetCharacterSpriteDirection(bool isMovingRight) {
+        //     if (isMovingRight != (transform.localScale.x > 0))
+        //         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        // }
 
-        private void SetCharacterSpriteDirection(bool isMovingRight) {
-            if (isMovingRight != (transform.localScale.x > 0))
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
-        #endregion
-
-        private void Update() => (Controller as MushroomHeadController).Update();     
+        //private void Update() => (Controller as MushroomHeadController).Update();     
 
         #region IDamagable Implementation
         public void TakeDamage(int damageToTake) => Controller.TakeDamage(damageToTake);

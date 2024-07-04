@@ -44,8 +44,8 @@ GameObject:
   - component: {fileID: 3738019520128718361}
   - component: {fileID: 4434763010371326}
   - component: {fileID: 2233408193191899455}
-  - component: {fileID: 2814245402117734481}
   - component: {fileID: 387656631982292860}
+  - component: {fileID: 3535772070237282434}
   m_Layer: 7
   m_Name: MushroomHead
   m_TagString: Untagged
@@ -168,23 +168,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2814245402117734481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6606441315159465579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8ac4778d001d024bb557d6ff8ab8c53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animator: {fileID: 0}
-  MeleeContainer: {fileID: 3267312777984044649}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!50 &387656631982292860
 Rigidbody2D:
   serializedVersion: 4
@@ -206,6 +189,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &3535772070237282434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6606441315159465579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0748dad147e380044ac41c060d316f35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6201971643649741416
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -53,7 +53,11 @@ namespace Platformer.Main
             AnimationService = new AnimationService();
         }
 
-        private void Update() => InputService.UpdateInputService();
+        private void Update()
+        {
+            InputService.UpdateInputService();
+            EnemyService.Update();
+        }
 
         private void Start() => UIService.ShowLevelSelectionUI(levelScriptableObjects.Count);
     }

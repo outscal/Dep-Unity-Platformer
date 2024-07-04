@@ -12,6 +12,7 @@ namespace Platformer.Enemy
 
         protected EnemyScriptableObject enemyScriptableObject;
         protected EnemyView enemyView;
+        public MovableEnemyController MovableEnemyController;
 
         #region Health 
         protected int currentHealth;
@@ -27,6 +28,8 @@ namespace Platformer.Enemy
                 }
             }
         }
+        
+        
 
         private int ClampHealth(int value)
         {
@@ -93,6 +96,11 @@ namespace Platformer.Enemy
         {
             GameService.Instance.EnemyService.EnemyDied(this);
             enemyView.Destroy();
+        }
+
+        public virtual void Update()
+        {
+            
         }
     }
 }

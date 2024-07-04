@@ -1,5 +1,5 @@
 namespace Platformer.Enemy{
-    public class SpikeController : EnemyController
+    public class SpikeController : ImmovableEnemyController
     {
         public SpikeController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {

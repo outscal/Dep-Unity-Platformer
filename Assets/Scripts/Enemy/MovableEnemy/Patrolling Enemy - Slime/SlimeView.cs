@@ -33,18 +33,17 @@ namespace Platformer.Enemy{
 
         private void Start() => boxCollider = GetComponent<BoxCollider2D>();
 
-        private void Update() => (Controller as SlimeController).Update();
-
+     
         #region Patrol Functionality
-        public void Move(Vector3 position, float speed, bool isMovingRight){
-            SetCharacterSpriteDirection(isMovingRight);
-            transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
-        }
-
-        private void SetCharacterSpriteDirection(bool isMovingRight) {
-            if (isMovingRight != (transform.localScale.x < 0))
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        }
+        // public void Move(Vector3 position, float speed, bool isMovingRight){
+        //     SetCharacterSpriteDirection(isMovingRight);
+        //     transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
+        // }
+        //
+        // private void SetCharacterSpriteDirection(bool isMovingRight) {
+        //     if (isMovingRight != (transform.localScale.x < 0))
+        //         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        // }
         #endregion
 
         #region IDamagable Implementation

@@ -89,6 +89,14 @@ namespace Platformer.Enemy
         public void EnemyMoved(EnemyController enemyController) => EventService.OnEnemyMoved.InvokeEvent(enemyController);
 
         private bool AllEnemiesDied() => activeEnemies.Count == 0;
+        
+        public void Update()
+        {
+            foreach (var enemy in activeEnemies)
+            {
+                enemy.Update();
+            }
+        }
 
         public void PlayAttackAnimation(Animator animator) => AnimationService.PlayMushroomHeadAttackAnimation(animator);
     }

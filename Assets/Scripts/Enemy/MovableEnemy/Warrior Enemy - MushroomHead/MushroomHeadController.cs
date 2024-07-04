@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Platformer.Enemy
 {
-    public class MushroomHeadController : EnemyController
+    public class MushroomHeadController : MovableEnemyController
     {
         private EventService EventService => GameService.Instance.EventService;
         private PlayerService PlayerService => GameService.Instance.PlayerService;
@@ -17,31 +17,28 @@ namespace Platformer.Enemy
         public EnemyState MushroomHeadState { get; private set; }
 
         #region Patrolling variables
-        private Vector3 nextPosition;
-        private List<Vector3> patrollingPoints;
-        private int currentPatrolIndex;
+        // private Vector3 nextPosition;
+        // private List<Vector3> patrollingPoints;
+        // private int currentPatrolIndex;
         #endregion
 
         public MushroomHeadController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {
-            InitializeView();
+            //InitializeView();
             InitializeVariables(enemyScriptableObject);
             SubscribeToEvents();
         }
 
-        protected override void InitializeView()
-        {
-            base.InitializeView();
-            mushroomHeadView = enemyView as MushroomHeadView;
-            mushroomHeadView.SetController(this);
-        }
+        // protected override void InitializeView()
+        // {
+        //     base.InitializeView();
+        //     mushroomHeadView = enemyView as MushroomHeadView;
+        //     mushroomHeadView.SetController(this);
+        // }
 
         protected override void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
         {
             base.InitializeVariables(enemyScriptableObject);
-            patrollingPoints = enemyScriptableObject.PatrollingPoints;
-            currentPatrolIndex = 0;
-            nextPosition = patrollingPoints[currentPatrolIndex];
             SetMushroomHeadState(EnemyState.PATROLLING);
         }
 
@@ -51,7 +48,7 @@ namespace Platformer.Enemy
 
         private void SetMushroomHeadState(EnemyState state) => MushroomHeadState = state;
 
-        public void Update()
+        public override void Update()
         {
             DetectPlayer();
             HandleStateBehaviour();
@@ -97,31 +94,11 @@ namespace Platformer.Enemy
                     break;
             }
         }
-
-        #region Patrol Behaviour
-        private void PatrolBehavior()
+        protected override void PatrolBehavior()
         {
-            if (Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f)
-            {
-                ToggleNextPatrolPoint();
-            }
-            UpdateMovementTowardsNextPosition();
+            base.PatrolBehavior();
         }
-
-        private void ToggleNextPatrolPoint()
-        {
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrollingPoints.Count;
-            nextPosition = patrollingPoints[currentPatrolIndex];
-        }
-
-        private void UpdateMovementTowardsNextPosition()
-        {
-            var isMovingRight = nextPosition.x > enemyView.transform.position.x;
-            mushroomHeadView.Move(nextPosition, Data.PatrollingSpeed, isMovingRight);
-            EnemyMoved();
-        }
-        #endregion
-
+        
         #region Attack Behaviour
         private void AttackBehavior()
         {
