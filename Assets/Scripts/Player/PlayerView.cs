@@ -9,22 +9,18 @@ namespace Platformer.Player{
     {
         public PlayerController Controller { get; private set; }
 
-        #region Editor properties
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer characterSprite;
         [SerializeField] private LayerMask groundLayer;
-        #endregion
 
-        #region Private variables
         private BoxCollider2D playerBoxCollider;
         private Rigidbody2D playerRigidBody;
-        #endregion
 
-        #region Getters
+
+        //Getters
         public Animator PlayerAnimator => animator;
         public LayerMask GroundLayer => groundLayer;
         [HideInInspector] public Vector3 Position => transform.position;
-        #endregion
 
         public void SetController(PlayerController controllerToSet){
             Controller = controllerToSet;
@@ -35,16 +31,13 @@ namespace Platformer.Player{
             playerRigidBody = GetComponent<Rigidbody2D>();
             playerBoxCollider = GetComponent<BoxCollider2D>();
         }
-
-        #region Movement Functions
+        
         public void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
 
         public void TranslatePlayer(Vector3 translateVector) => transform.Translate(translateVector);
-        #endregion
-
-        #region Take Damage Function
+        
         public void TakeDamage(int damage) => Controller.TakeDamage(damage);
-        #endregion
+
 
         public void SetVelocity(Vector2 newVelocity) => playerRigidBody.velocity = newVelocity; 
         public void AddVelocity(Vector2 additionalVelocity) => playerRigidBody.velocity += additionalVelocity; 
