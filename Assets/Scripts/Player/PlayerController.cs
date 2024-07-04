@@ -6,13 +6,13 @@ namespace Platformer.Player
     public class PlayerController: MonoBehaviour
     {
         [SerializeField] private Animator animator;
-        private AnimationService animation_service;
-        private PlayerState current_state;
+        private AnimationService animationService;
+        private PlayerState currentState;
 
         private void Awake()
         {
-            animation_service = new AnimationService(animator);
-            current_state = PlayerState.IDLE;
+            animationService = new AnimationService(animator);
+            currentState = PlayerState.IDLE;
         }
 
         private void Update()
@@ -32,7 +32,7 @@ namespace Platformer.Player
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             
             // Set Current Player State
-            current_state = (Mathf.Abs(horizontalInput) > 0.1f) ? PlayerState.RUNNING : PlayerState.IDLE;
+            currentState = (Mathf.Abs(horizontalInput) > 0.1f) ? PlayerState.RUNNING : PlayerState.IDLE;
 
             // PLay Movement Animations
             PlayMovementAnimation();
@@ -43,27 +43,27 @@ namespace Platformer.Player
 
         private void FlipSpriteIfNeeded(float horizontalInput)
         {
-            if (current_state == PlayerState.RUNNING)
+            if (currentState == PlayerState.RUNNING)
                 transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
         }
 
         private void PlayMovementAnimation()
         {
-            animation_service.PlayPlayerMovementAnimation(current_state);
+            animationService.PlayPlayerMovementAnimation(currentState);
         }
 
         private void HandleTriggerInput()
         {
             if (Input.GetKeyDown(KeyCode.Space))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
+                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
             if (Input.GetKeyDown(KeyCode.C))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.SLIDE);
+                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.SLIDE);
             if (Input.GetKeyDown(KeyCode.X))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.ATTACK);
+                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.ATTACK);
             if (Input.GetKeyDown(KeyCode.J))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.TAKE_DAMAGE);
+                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.TAKE_DAMAGE);
             if (Input.GetKeyDown(KeyCode.K))
-                animation_service.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
+                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
         }
     }
 }
