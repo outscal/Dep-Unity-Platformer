@@ -41,13 +41,4 @@ namespace Platformer.InputSystem
             }
         }
     }
-
-    // TODO: Create separate file for this Enum inside Input namespace 
-    public enum PlayerInputTriggers
-    {
-        JUMP, // SPACE
-        ATTACK, // X
-        SLIDE, // C
-        TAKE_DAMAGE // J // temporary
-    }
 }

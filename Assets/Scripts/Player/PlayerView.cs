@@ -36,8 +36,6 @@ namespace Platformer.Player{
             playerBoxCollider = GetComponent<BoxCollider2D>();
         }
 
-        private void Update() => Controller?.Update();
-
         #region Movement Functions
         public void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
 

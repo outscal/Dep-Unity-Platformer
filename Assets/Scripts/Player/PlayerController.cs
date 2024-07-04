@@ -4,46 +4,48 @@ using Platformer.InputSystem;
 using Platformer.Main;
 using Platformer.Services;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Platformer.Player
 {
     public class PlayerController
     {
-        // Dependencies:
-        // TODO: This dependency on Player Service should be removed.
-        private PlayerService PlayerService => GameService.Instance.PlayerService;
-        private AnimationService animationService => GameService.Instance.AnimationService;
-
         // References:
         private PlayerScriptableObject playerScriptableObject;
         public PlayerView PlayerView { get; private set; }
+        public PlayerAnimationController PlayerAnimationController { get; private set; }
         private Animator animator;
         
         // Variables:
         private PlayerState currentPlayerState;
         private int currentHealth;
         private float currentSpeed;
+        private float cachedHorizontalInput;
         
         // Properties:
         public int CurrentHealth {
             get => currentHealth;
             private set => currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
         }
-
-        // TODO: This should be implemented as a proper method instead as a Property like below.
-        // TODO: Magic Variables are being used here, add this offset data in PlayerSO if needed.
-        private bool IsGrounded {
-            get {
-                var offset = 0.3f;
-                var raycastHit = Physics2D.Raycast(PlayerView.GetColliderBounds().center, Vector2.down, PlayerView.GetColliderBounds().extents.y + offset, PlayerView.GroundLayer);
-                return raycastHit.collider != null;
-            }
+        
+        private bool IsGrounded()
+        {
+            var offset = 0.3f;
+            var raycastHit = Physics2D.Raycast(PlayerView.GetColliderBounds().center, Vector2.down, PlayerView.GetColliderBounds().extents.y + offset, PlayerView.GroundLayer);
+            return raycastHit.collider != null;
         }
 
         public PlayerController(PlayerScriptableObject playerScriptableObject){
             this.playerScriptableObject = playerScriptableObject;
             InitializeView();
             InitializeVariables();
+            InitializePlayerAnimationController();
+            SubscribeToEvents();
+        }
+
+        private void InitializePlayerAnimationController()
+        {
+            PlayerAnimationController = new PlayerAnimationController();
         }
 
         private void InitializeView(){
@@ -57,58 +59,65 @@ namespace Platformer.Player
             CurrentHealth = playerScriptableObject.maxHealth;
             SetPlayerState(PlayerState.IDLE);
         }
+        
+        private void SubscribeToEvents(){
+            InputService.OnHorizontalAxisInputReceived += HandleHorizontalMovementAxisInput;
+            InputService.OnPlayerTriggerInputReceived += HandleTriggerInput;
+        }
+
+        private void UnsubscribeToEvents(){
+            InputService.OnHorizontalAxisInputReceived -= HandleHorizontalMovementAxisInput;
+            InputService.OnPlayerTriggerInputReceived -= HandleTriggerInput;
+        }
       
         // TODO: The listener method should simply cache the horizontalInput for the Player.
         // TODO: The movement should happen through update accordingly, else there will be an independent flow for movement which may not consider other state chanegs for the player.
-        public void HandleHorizontalMovementAxisInput(float horizontalInput) => MovePlayer(horizontalInput);
-        
-        private void MovePlayer(float horizontalInput)
+        public void HandleHorizontalMovementAxisInput(float horizontalInput)
         {
-            // TODO: 
-            // if(CanRun())
-            //    UpdateRunningState();
-            
-            UpdateRunningStatus(horizontalInput);
-            SetPlayerSpriteDirection(horizontalInput);
-            TranslatePlayer(horizontalInput);
-            
-            // TODO: Its not PlayerService's responsibility to play animations for the Player.
-            PlayerService.MovePlayer(currentPlayerState);
+            cachedHorizontalInput = horizontalInput;
         }
         
-        private void UpdateRunningStatus(float horizontalInput)
+        private void MovePlayer(float cachedHorizontalInput)
         {
-            // TODO: Check should be outside the function. Better if you create a CanRun() method; in case more checks can be added in that function in future.
-            if (currentPlayerState == PlayerState.SLIDE)
-                return;
+            UpdateRunningStatus();
+            SetPlayerSpriteDirection();
+            TranslatePlayer();
             
-            if (IsRunning(horizontalInput))
-                SetPlayerState(PlayerState.RUNNING);
-            else
-                SetPlayerState(PlayerState.IDLE);
+            PlayerAnimationController.PlayMovementAnimation(currentPlayerState);
+            
         }
+        
+        private void UpdateRunningStatus()
+        {
+            SetPlayerState(cachedHorizontalInput != 0 ? PlayerState.RUNNING : PlayerState.IDLE);
+        }
+        
+        private bool CanRun() => currentPlayerState != PlayerState.SLIDE;
 
         // TODO: This check is not needed inside PlayerController.
         // TODO: Here we are essentially checking if any horizontal input is received or not.
         // TODO: This should be checked inside Input Service and only if the input is received the event should be fired!
-        private bool IsRunning(float horizontalInput) => horizontalInput != 0;
         
-        private void SetPlayerSpriteDirection(float horizontalInput)
+        private void SetPlayerSpriteDirection()
         {
-            if (horizontalInput != 0)
-                PlayerView.SetCharacterSpriteDirection(horizontalInput < 0);
+            if (cachedHorizontalInput != 0)
+                PlayerView.SetCharacterSpriteDirection(cachedHorizontalInput < 0);
         }
         
-        private void TranslatePlayer(float horizontalInput)
+        private void TranslatePlayer()
         {
-            var movementVector = new Vector3(horizontalInput, 0.0f, 0.0f).normalized;
+            var movementVector = new Vector3(cachedHorizontalInput, 0.0f, 0.0f).normalized;
             PlayerView.TranslatePlayer(currentSpeed * Time.deltaTime * movementVector);
         }
 
         // TODO: This Update should be called by ServiceLocator -> PlayerService; not from the PlayerView
         // TODO: To have control over the order of execution and game loop. 
-        public void Update() => HandleJumpAndFall();
-        
+        public void Update()
+        {
+            HandleJumpAndFall();
+            MovePlayer(cachedHorizontalInput);
+        }
+
         private void HandleJumpAndFall()
         {
             if (isFalling())
@@ -141,7 +150,7 @@ namespace Platformer.Player
                     ProcessSlideInput();
                     break;
                 case PlayerInputTriggers.TAKE_DAMAGE: // temporary switch case (just for testing animation)
-                    PlayerService.PlayDamageAnimation(PlayerView.PlayerAnimator);
+                    PlayerAnimationController.PlayDamageAnimation();
                     break;
             }
         }
@@ -150,11 +159,11 @@ namespace Platformer.Player
         {
             if(CanJump()){
                 Jump();
-                PlayerService.PlayJumpAnimation(PlayerView.PlayerAnimator);
+                PlayerAnimationController.PlayJumpAnimation();
             }
         }
 
-        private bool CanJump() => IsGrounded && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
+        private bool CanJump() => IsGrounded() && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
 
         // JUMP 1st IMPLEMENTATION
         public void Jump() => PlayerView.SetVelocity(Vector2.up * playerScriptableObject.jumpForce);
@@ -174,11 +183,11 @@ namespace Platformer.Player
         private void ProcessAttackInput(){
             if(CanAttack()){
                 currentPlayerState = PlayerState.ATTACK;
-                PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
+                PlayerAnimationController.PlayAttackAnimation();
             }
         }
 
-        private bool CanAttack() => IsGrounded && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
+        private bool CanAttack() => IsGrounded() && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
 
         private void ProcessSlideInput()
         {
@@ -186,21 +195,21 @@ namespace Platformer.Player
             {
                 // TODO: Where is this coroutine?
                 //CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingTime), "PlayerSlide");
-                PlayerService.PlaySlideAnimation(PlayerView.PlayerAnimator);
+                PlayerAnimationController.PlaySlideAnimation();
             }
         }
         
-        private bool CanSlide() => IsGrounded && currentPlayerState == PlayerState.RUNNING;
+        private bool CanSlide() => IsGrounded() && currentPlayerState == PlayerState.RUNNING;
 
-        // TODO: Is this a redundant method?
-        private void FlipSpriteIfNeeded(float horizontalInput)
-        {
-            SetPlayerState(PlayerState.SLIDE);
-            //yield return new WaitForSeconds(slidingTime);
-            SetPlayerState(PlayerState.IDLE);
-        }
+        //redundant method:
+        // private void FlipSpriteIfNeeded(float horizontalInput)
+        // {
+        //     SetPlayerState(PlayerState.SLIDE);
+        //     //yield return new WaitForSeconds(slidingTime);
+        //     SetPlayerState(PlayerState.IDLE);
+        // }
         
-        public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
+        
 
         public void TakeDamage(int damageToInflict)
         {
@@ -210,12 +219,23 @@ namespace Platformer.Player
                 CurrentHealth = 0;
                 PlayerDied();
             }else{
-                PlayerService.PlayDamageAnimation(PlayerView.PlayerAnimator);
+                PlayerAnimationController.PlayDamageAnimation();
             }
         }
 
-        private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
-
+        private void PlayerDied()
+        {
+            UnsubscribeToEvents();
+            PlayerAnimationController.PlayDeathAnimation();
+            CoroutineService.StartCoroutine(DelayedRespawnCoroutine(), "PlayerRespawn");
+        }
+        
+        private IEnumerator DelayedRespawnCoroutine()
+        {
+            yield return new WaitForSeconds(playerScriptableObject.delayAfterDeath);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
         public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;
 
         public float GetLowJumpMultiplier() => playerScriptableObject.lowJumpMultiplier;

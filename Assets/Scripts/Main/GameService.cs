@@ -29,7 +29,7 @@ namespace Platformer.Main
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
         
         //Variables
-        [SerializeField] private Animator playerAnimator;
+        private Animator playerAnimator;
 
         protected override void Awake()
         {
@@ -46,6 +46,11 @@ namespace Platformer.Main
             AnimationService = new AnimationService(playerAnimator);
         }
 
-        private void Update() => InputService.UpdateInputService();
+        private void Update()
+        {
+            InputService.UpdateInputService();
+            PlayerService.Update();
+        }
+        
     }
 }
