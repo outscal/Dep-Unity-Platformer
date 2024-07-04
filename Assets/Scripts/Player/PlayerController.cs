@@ -21,6 +21,8 @@ namespace Platformer.Player
         private int currentHealth;
         private float currentSpeed;
         private float cachedHorizontalInput;
+        private int coroutineIdRespawn;
+        private int coroutineIdSlide;
         
         // Properties:
         public int CurrentHealth {
@@ -69,15 +71,12 @@ namespace Platformer.Player
             InputService.OnHorizontalAxisInputReceived -= HandleHorizontalMovementAxisInput;
             InputService.OnPlayerTriggerInputReceived -= HandleTriggerInput;
         }
-      
-        // TODO: The listener method should simply cache the horizontalInput for the Player.
-        // TODO: The movement should happen through update accordingly, else there will be an independent flow for movement which may not consider other state chanegs for the player.
         public void HandleHorizontalMovementAxisInput(float horizontalInput)
         {
             cachedHorizontalInput = horizontalInput;
         }
         
-        private void MovePlayer(float cachedHorizontalInput)
+        private void MovePlayer()
         {
             UpdateRunningStatus();
             SetPlayerSpriteDirection();
@@ -92,11 +91,7 @@ namespace Platformer.Player
             SetPlayerState(cachedHorizontalInput != 0 ? PlayerState.RUNNING : PlayerState.IDLE);
         }
         
-        private bool CanRun() => currentPlayerState != PlayerState.SLIDE;
-
-        // TODO: This check is not needed inside PlayerController.
-        // TODO: Here we are essentially checking if any horizontal input is received or not.
-        // TODO: This should be checked inside Input Service and only if the input is received the event should be fired!
+        private bool CanRun() => currentPlayerState != PlayerState.SLIDE && cachedHorizontalInput != 0;
         
         private void SetPlayerSpriteDirection()
         {
@@ -109,13 +104,11 @@ namespace Platformer.Player
             var movementVector = new Vector3(cachedHorizontalInput, 0.0f, 0.0f).normalized;
             PlayerView.TranslatePlayer(currentSpeed * Time.deltaTime * movementVector);
         }
-
-        // TODO: This Update should be called by ServiceLocator -> PlayerService; not from the PlayerView
-        // TODO: To have control over the order of execution and game loop. 
+        
         public void Update()
         {
             HandleJumpAndFall();
-            MovePlayer(cachedHorizontalInput);
+            MovePlayer();
         }
 
         private void HandleJumpAndFall()
@@ -194,11 +187,22 @@ namespace Platformer.Player
             if (CanSlide())
             {
                 // TODO: Where is this coroutine?
-                //CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingTime), "PlayerSlide");
+                coroutineIdSlide = CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime));
                 PlayerAnimationController.PlaySlideAnimation();
             }
         }
         
+        private IEnumerator SlideCoroutine(float slidingSpeed, float slidingTime)
+        {
+            var temp = currentSpeed;
+            SetPlayerState(PlayerState.SLIDE);
+            yield return new WaitForSeconds(playerScriptableObject.slidingTime * 1000);
+            bool _canRun = CanRun();
+            if (_canRun)
+                SetPlayerState(PlayerState.RUNNING);
+            else
+                SetPlayerState(PlayerState.IDLE);
+        }
         private bool CanSlide() => IsGrounded() && currentPlayerState == PlayerState.RUNNING;
 
         //redundant method:
@@ -227,7 +231,7 @@ namespace Platformer.Player
         {
             UnsubscribeToEvents();
             PlayerAnimationController.PlayDeathAnimation();
-            CoroutineService.StartCoroutine(DelayedRespawnCoroutine(), "PlayerRespawn");
+            coroutineIdRespawn = CoroutineService.StartCoroutine(DelayedRespawnCoroutine());
         }
         
         private IEnumerator DelayedRespawnCoroutine()
