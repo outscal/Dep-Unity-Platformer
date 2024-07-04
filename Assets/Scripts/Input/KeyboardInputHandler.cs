@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Platformer.InputSystem
 {
-    public class KeyboardInputHandler : IInputHandler
+    public class KeyboardInputHandler
     {
         private InputService InputService => GameService.Instance.InputService;
 

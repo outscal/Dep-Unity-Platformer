@@ -12,6 +12,7 @@ using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Platformer.Main
 {
@@ -25,8 +26,7 @@ namespace Platformer.Main
         
         // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        // TODO: Create A single SO called LevelConfigurations which has a list of LevelSO. This decreases inspector dependency.
-        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        [FormerlySerializedAs("levelScriptableObjects")] [SerializeField] private List<LevelScriptableObject> levelConfigurations;
         
         //Variables
         private Animator playerAnimator;
@@ -34,7 +34,7 @@ namespace Platformer.Main
         protected override void Awake()
         {
             base.Awake();
-            LevelService = new LevelService(levelScriptableObjects);
+            LevelService = new LevelService(levelConfigurations);
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
             playerAnimator = PlayerService.playerController.PlayerView.PlayerAnimator;
