@@ -20,7 +20,7 @@ namespace Platformer.Player
         private Animator animator;
         
         // Variables:
-        private PlayerState currentState;
+        private PlayerState currentPlayerState;
         private int currentHealth;
         private float currentSpeed;
         
@@ -73,13 +73,13 @@ namespace Platformer.Player
             TranslatePlayer(horizontalInput);
             
             // TODO: Its not PlayerService's responsibility to play animations for the Player.
-            PlayerService.MovePlayer(PlayerView.PlayerAnimator, IsRunning(horizontalInput), PlayerView.Position);
+            PlayerService.MovePlayer(currentPlayerState);
         }
         
         private void UpdateRunningStatus(float horizontalInput)
         {
             // TODO: Check should be outside the function. Better if you create a CanRun() method; in case more checks can be added in that function in future.
-            if (currentState == PlayerState.SLIDE)
+            if (currentPlayerState == PlayerState.SLIDE)
                 return;
             
             if (IsRunning(horizontalInput))
@@ -154,7 +154,7 @@ namespace Platformer.Player
             }
         }
 
-        private bool CanJump() => IsGrounded && (currentState == PlayerState.IDLE || currentState == PlayerState.RUNNING);
+        private bool CanJump() => IsGrounded && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
 
         // JUMP 1st IMPLEMENTATION
         public void Jump() => PlayerView.SetVelocity(Vector2.up * playerScriptableObject.jumpForce);
@@ -173,31 +173,31 @@ namespace Platformer.Player
 
         private void ProcessAttackInput(){
             if(CanAttack()){
-                currentState = PlayerState.ATTACK;
+                currentPlayerState = PlayerState.ATTACK;
                 PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
             }
         }
 
-        private bool CanAttack() => IsGrounded && (currentState == PlayerState.IDLE || currentState == PlayerState.RUNNING);
+        private bool CanAttack() => IsGrounded && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
 
         private void ProcessSlideInput()
         {
             if (CanSlide())
             {
                 // TODO: Where is this coroutine?
-                CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingTime), "PlayerSlide");
+                //CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingTime), "PlayerSlide");
                 PlayerService.PlaySlideAnimation(PlayerView.PlayerAnimator);
             }
         }
         
-        private bool CanSlide() => IsGrounded && currentState == PlayerState.RUNNING;
+        private bool CanSlide() => IsGrounded && currentPlayerState == PlayerState.RUNNING;
 
         // TODO: Is this a redundant method?
         private void FlipSpriteIfNeeded(float horizontalInput)
         {
-            SetPlayerState(PlayerStates.SLIDE);
-            yield return new WaitForSeconds(slidingTime);
-            SetPlayerState(PlayerStates.IDLE);
+            SetPlayerState(PlayerState.SLIDE);
+            //yield return new WaitForSeconds(slidingTime);
+            SetPlayerState(PlayerState.IDLE);
         }
         
         public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
@@ -222,13 +222,13 @@ namespace Platformer.Player
 
         private void SetPlayerState(PlayerState newState)
         {
-            currentState = newState;
+            currentPlayerState = newState;
             UpdateCurrentSpeed();
         }
 
         private void UpdateCurrentSpeed()
         {
-            switch (currentState)
+            switch (currentPlayerState)
             {
                 case PlayerState.IDLE:
                     currentSpeed = 0f;

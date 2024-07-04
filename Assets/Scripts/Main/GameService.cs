@@ -4,6 +4,7 @@
 *  Link: https://outscal.com/courses
 **/
 
+using System;
 using UnityEngine;
 using Platformer.Utilities;
 using Platformer.Player;
@@ -25,7 +26,10 @@ namespace Platformer.Main
         // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
         // TODO: Create A single SO called LevelConfigurations which has a list of LevelSO. This decreases inspector dependency.
-        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;  
+        [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
+        
+        //Variables
+        [SerializeField] private Animator playerAnimator;
 
         protected override void Awake()
         {
@@ -33,7 +37,13 @@ namespace Platformer.Main
             LevelService = new LevelService(levelScriptableObjects);
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
-            AnimationService = new AnimationService();
+            playerAnimator = PlayerService.playerController.PlayerView.PlayerAnimator;
+            
+        }
+
+        private void Start()
+        {
+            AnimationService = new AnimationService(playerAnimator);
         }
 
         private void Update() => InputService.UpdateInputService();

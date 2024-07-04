@@ -40,8 +40,8 @@ namespace Platformer.Player
         }
 
         // TODO: This function will not be needed in this class. PlayerController will directly communicate with Animation Service for handling Player Animations.
-        public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
-            PlayMovementAnimation(animator, isRunning);
+        public void MovePlayer(PlayerState currentPlayerState){
+            PlayMovementAnimation(currentPlayerState);
         }
 
         public void PlayerDied(Animator animator)
@@ -53,18 +53,18 @@ namespace Platformer.Player
 
         private IEnumerator DelayedRespawnCoroutine()
         {
-            yield return new WaitForSeconds(playerScriptableObject.delayAfterDeath);
+            yield return new WaitForSeconds(delayAfterDeath);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         // TODO: All these methods will not be needed as Generic methods have been created inside Animation Service in previous branch. Use them.
         // TODO: All this Player Animation should not be in PlayerService as it is too specific to be handled by PlayerService.
         // TODO: Either move this to PlayerController or create a PlayerAnimatorController.cs below PlayerController if PlayerController is getting too cluttered.
-        private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
-        public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerJumpAnimation(animator);
-        public void PlayDamageAnimation(Animator animator) => AnimationService.PlayPlayerDamageAnimation(animator);
-        public void PlayDeathAnimation(Animator animator) => AnimationService.PlayPlayerDeathAnimation(animator);
-        public void PlaySlideAnimation(Animator animator) => AnimationService.PlayPlayerSlideAnimation(animator);
-        public void PlayAttackAnimation(Animator animator) => AnimationService.PlayPlayerAttackAnimation(animator);
+        private void PlayMovementAnimation(PlayerState currentPlayerState) => AnimationService.PlayPlayerMovementAnimation(currentPlayerState);
+        public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.JUMP);
+        public void PlayDamageAnimation(Animator animator) => AnimationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.TAKE_DAMAGE);
+        public void PlayDeathAnimation(Animator animator) => AnimationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.DEATH);
+        public void PlaySlideAnimation(Animator animator) => AnimationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.SLIDE);
+        public void PlayAttackAnimation(Animator animator) => AnimationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimation.ATTACK);
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Platformer.Player;
 
 namespace Platformer.AnimationSystem
 {
