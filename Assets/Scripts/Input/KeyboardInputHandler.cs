@@ -8,9 +8,11 @@ namespace Platformer.InputSystem
     {
         private InputService InputService => GameService.Instance.InputService;
 
-        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+        private Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
 
-        public KeyboardInputHandler()
+        public KeyboardInputHandler() => CreateTriggerMappings();
+
+        private void CreateTriggerMappings()
         {
             keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
                 { KeyCode.Space, PlayerInputTriggers.JUMP },
@@ -19,7 +21,7 @@ namespace Platformer.InputSystem
                 { KeyCode.J, PlayerInputTriggers.TAKE_DAMAGE } // temporary
             };
         }
-
+        
         public void HandleInput() 
         {
             HandlePlayerMovementInput();
@@ -29,14 +31,14 @@ namespace Platformer.InputSystem
         private void HandlePlayerMovementInput()
         {
             var horizontalInput = Input.GetAxisRaw("Horizontal");
-            InputService.HandleHorizontalAxisInput(horizontalInput);
+            InputService.HorizontalAxisInputReceived(horizontalInput);
         }
 
         private void HandlePlayerTriggerInput()
         {
             foreach (var mapping in keyMappings) {
                 if (Input.GetKeyDown(mapping.Key)) {
-                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                    InputService.PlayerTriggerInputReceived(mapping.Value);
                 }
             }
         }
