@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Platformer.Player;
 using UnityEngine;
 
@@ -15,10 +14,10 @@ namespace Platformer.AnimationSystem
 
         public void PlayPlayerMovementAnimation(PlayerState currentPlayerState)
         {
-            playerAnimator.SetBool(PlayerAnimation.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
+            playerAnimator.SetBool(PlayerAnimationType.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
         }
 
-        public void PlayPlayerTriggerAnimation(PlayerTriggerAnimation animationToPlay)
+        public void PlayPlayerTriggerAnimation(PlayerTriggerAnimationType animationToPlay)
         {
             playerAnimator.SetTrigger(animationToPlay.ToString());
         }
