@@ -1,23 +1,16 @@
 using UnityEngine;
-using Platformer.Player;
+using Platformer.Player.Enumerations;
 
 namespace Platformer.AnimationSystem
 {
     public class AnimationService
     {
-        private Animator playerAnimator;
-
-        public AnimationService(Animator playerAnimator) 
-        { 
-            this.playerAnimator = playerAnimator;
-        }
-
-        public void PlayPlayerMovementAnimation(PlayerState currentPlayerState)
+        public void PlayPlayerMovementAnimation(Animator playerAnimator, PlayerState currentPlayerState)
         {
             playerAnimator.SetBool(PlayerAnimationType.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
         }
 
-        public void PlayPlayerTriggerAnimation(PlayerTriggerAnimationType animationToPlay)
+        public void PlayPlayerTriggerAnimation(Animator playerAnimator, PlayerTriggerAnimationType animationToPlay)
         {
             playerAnimator.SetTrigger(animationToPlay.ToString());
         }
