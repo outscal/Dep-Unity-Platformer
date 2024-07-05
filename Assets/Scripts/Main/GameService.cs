@@ -1,18 +1,9 @@
-/**  This script demonstrates implementation of the Service Locator Pattern.
-*  If you're interested in learning about Service Locator Pattern, 
-*  you can find a dedicated course on Outscal's website.
-*  Link: https://outscal.com/courses
-**/
-
-using System;
 using UnityEngine;
 using Platformer.Utilities;
 using Platformer.Player;
 using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
-using System.Collections.Generic;
-using UnityEngine.Serialization;
 
 namespace Platformer.Main
 {
@@ -26,31 +17,21 @@ namespace Platformer.Main
         
         // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
-        [FormerlySerializedAs("levelScriptableObjects")] [SerializeField] private List<LevelScriptableObject> levelConfigurations;
-        
-        //Variables
-        private Animator playerAnimator;
+        [SerializeField] private LevelConfiguration levelData;
 
         protected override void Awake()
         {
             base.Awake();
-            LevelService = new LevelService(levelConfigurations);
+            LevelService = new LevelService(levelData);
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
-            playerAnimator = PlayerService.playerController.PlayerView.PlayerAnimator;
-            
-        }
-
-        private void Start()
-        {
-            AnimationService = new AnimationService(playerAnimator);
+            AnimationService = new AnimationService();
         }
 
         private void Update()
         {
-            InputService.UpdateInputService();
+            InputService.Update();
             PlayerService.Update();
         }
-        
     }
 }
