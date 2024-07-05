@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Platformer.Enemy;
 using Platformer.InputSystem;
 using Platformer.Main;
 using Platformer.Melee;
 using Platformer.UI;
 using UnityEngine;
+using Platformer.Drop;
+using Platformer.Sound;
 
 namespace Platformer.Player
 {
@@ -14,6 +14,7 @@ namespace Platformer.Player
         #region Service References
         private PlayerService PlayerService => GameService.Instance.PlayerService;
         private UIService UIService => GameService.Instance.UIService;
+        private SoundService SoundService => GameService.Instance.SoundService;
         #endregion
 
         private PlayerScriptableObject playerScriptableObject;
@@ -39,6 +40,18 @@ namespace Platformer.Player
             private set{
                 currentCoins = value;
                 UIService.UpdateCoinsCount(currentCoins);
+                PlayerService.DropCollected(DropType.Coin, currentCoins);
+            }
+        }
+        #endregion
+
+        #region Keys
+        private int currentKeys = 0;
+        public int CurrentKeys {
+            get => currentKeys;
+            private set {
+                currentKeys = value;
+                PlayerService.DropCollected(DropType.LevelKey, currentKeys);
             }
         }
         #endregion
@@ -132,6 +145,7 @@ namespace Platformer.Player
             if(CanAttack()){
                 Attack();
                 PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
+                SoundService.PlaySoundEffects(SoundType.PLAYER_ATTACK);
             }
         
         
@@ -184,6 +198,9 @@ namespace Platformer.Player
 
         private void PlayerDied() => PlayerService.PlayerDied(PlayerView.PlayerAnimator);
         #endregion
+
+        public void CollectCoin(int coinValue) => CurrentCoins += coinValue;
+        public void CollectLevelKey() => ++CurrentKeys;
 
         #region Getter Functions
         public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;

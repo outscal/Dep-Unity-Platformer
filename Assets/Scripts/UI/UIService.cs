@@ -27,14 +27,12 @@ namespace Platformer.UI
 
         private void SubscribeToEvents(){
             EventService.OnLevelSelected.AddListener(ShowGameplayUI);
-            EventService.OnAllEnemiesDied.AddListener(OnAllEnemiesDied);
             EventService.OnEnemyDied.AddListener(OnEnemyDied);
             EventService.OnEnemyMoved.AddListener(OnEnemyMoved);
         }
 
         private void UnsubscribeToEvents(){
             EventService.OnLevelSelected.RemoveListener(ShowGameplayUI);
-            EventService.OnAllEnemiesDied.RemoveListener(OnAllEnemiesDied);
             EventService.OnEnemyDied.RemoveListener(OnEnemyDied);
             EventService.OnEnemyMoved.RemoveListener(OnEnemyMoved);
         }
@@ -58,8 +56,6 @@ namespace Platformer.UI
             screenSpaceOverlayCanvasController.EnemyDied(EnemyService.ActiveEnemiesCount, EnemyService.SpawnedEnemies);
             worldSpaceCanvasController.OnEnemyDied(enemyController);
         }
-
-        private void OnAllEnemiesDied() => EndGame(true);
 
         private void OnDestroy() => UnsubscribeToEvents();
     }

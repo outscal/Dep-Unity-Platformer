@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using Platformer.Melee;
 using UnityEngine;
+using Platformer.Melee;
+using Platformer.Drop;
 
 namespace Platformer.Enemy
 {
@@ -20,5 +21,6 @@ namespace Platformer.Enemy
         public int DamageToInflict;
         public MeleeScriptableObject MeleeSO;
         public float DelayAfterAttack;
+        public List<DropScriptableObject> DropScriptableObjects;
     }
 }

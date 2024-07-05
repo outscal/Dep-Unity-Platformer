@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Platformer.Utilities;
 using UnityEngine;
 
@@ -64,5 +63,9 @@ namespace Platformer.Player{
         #region Take Damage Function
         public void TakeDamage(int damage) => Controller.TakeDamage(damage);
         #endregion
+
+        public void CollectCoin(int coinValue) => Controller?.CollectCoin(coinValue);
+
+        public void CollectLevelKey() => Controller?.CollectLevelKey();
     }
 }

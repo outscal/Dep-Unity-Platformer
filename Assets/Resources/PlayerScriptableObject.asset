@@ -19,7 +19,7 @@ MonoBehaviour:
   movementSpeed: 4
   slidingSpeed: 6
   slidingTime: 1
-  jumpForce: 10
+  jumpForce: 11
   gravityDownForceMultiplier: 0.09
   fallMultiplier: 7
   lowJumpMultiplier: 2.5
