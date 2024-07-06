@@ -18,6 +18,7 @@ namespace Platformer.Player
         public float jumpForce;
         public int delayAfterDeath;
         
+        // TODO: What the fuck are these multipliers even supposed to be ??!! :D 
         // Multipliers:
         public float gravityDownForceMultiplier;
         public float fallMultiplier;
