@@ -5,7 +5,7 @@ namespace Platformer.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(BoxCollider2D))]
-    public class PlayerView : MonoBehaviour, IDamagable
+    public class PlayerView : MonoBehaviour
     {
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer characterSprite;
