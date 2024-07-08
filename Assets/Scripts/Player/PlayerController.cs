@@ -12,7 +12,7 @@ namespace Platformer.Player
         private void Awake()
         {
             if(animator != null)
-                animationService = new AnimationService(animator);
+                animationService = new AnimationService();
             currentState = PlayerState.IDLE;
         }
 
@@ -45,20 +45,23 @@ namespace Platformer.Player
                 transform.localScale = new Vector3(Mathf.Sign(horizontalInput), transform.localScale.y, transform.localScale.z);
         }
 
-        private void PlayMovementAnimation() => animationService.PlayPlayerMovementAnimation(currentState);
+        private void PlayMovementAnimation()
+        {
+            animationService.ToggleBoolAnimation(animator, PlayerAnimationType.RUNNING.ToString(), currentState == PlayerState.RUNNING);
+        }
 
         private void HandleTriggerInput()
         {
             if (Input.GetKeyDown(KeyCode.Space))
-                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimationType.JUMP);
+                animationService.PlayTriggerAnimation(animator, PlayerTriggerAnimationType.JUMP.ToString());
             if (Input.GetKeyDown(KeyCode.C))
-                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimationType.SLIDE);
+                animationService.PlayTriggerAnimation(animator, PlayerTriggerAnimationType.SLIDE.ToString());
             if (Input.GetKeyDown(KeyCode.X))
-                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimationType.ATTACK);
+                animationService.PlayTriggerAnimation(animator, PlayerTriggerAnimationType.ATTACK.ToString());
             if (Input.GetKeyDown(KeyCode.J))
-                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimationType.TAKE_DAMAGE);
+                animationService.PlayTriggerAnimation(animator, PlayerTriggerAnimationType.TAKE_DAMAGE.ToString());
             if (Input.GetKeyDown(KeyCode.K))
-                animationService.PlayPlayerTriggerAnimation(PlayerTriggerAnimationType.DEATH);
+                animationService.PlayTriggerAnimation(animator, PlayerTriggerAnimationType.DEATH.ToString());
         }
     }
 }

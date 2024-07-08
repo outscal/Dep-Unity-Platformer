@@ -5,21 +5,14 @@ namespace Platformer.AnimationSystem
 {
     public class AnimationService
     {
-        private Animator playerAnimator;
-
-        public AnimationService(Animator playerAnimator) 
-        { 
-            this.playerAnimator = playerAnimator;
+        public void ToggleBoolAnimation(Animator animator, string animationToSwitch , bool isActive)
+        {
+            animator.SetBool(animationToSwitch, isActive);
         }
 
-        public void PlayPlayerMovementAnimation(PlayerState currentPlayerState)
+        public void PlayTriggerAnimation(Animator animator, string animationToPlay)
         {
-            playerAnimator.SetBool(PlayerAnimationType.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
-        }
-
-        public void PlayPlayerTriggerAnimation(PlayerTriggerAnimationType animationToPlay)
-        {
-            playerAnimator.SetTrigger(animationToPlay.ToString());
+            animator.SetTrigger(animationToPlay);
         }
     }
 }
