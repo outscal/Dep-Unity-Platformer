@@ -7,8 +7,8 @@ namespace Platformer.Player
     [RequireComponent(typeof(BoxCollider2D))]
     public class PlayerView : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
-        [SerializeField] private SpriteRenderer characterSprite;
+        private Animator animator;
+        private SpriteRenderer characterSprite;
         [SerializeField] private LayerMask groundLayer;
 
         private PlayerController controller;
@@ -30,6 +30,8 @@ namespace Platformer.Player
         {
             playerRigidBody = GetComponent<Rigidbody2D>();
             playerBoxCollider = GetComponent<BoxCollider2D>();
+            animator = GetComponent<Animator>();
+            characterSprite = GetComponent<SpriteRenderer>();
         }
         
         public void TakeDamage(int damage) => controller.TakeDamage(damage);

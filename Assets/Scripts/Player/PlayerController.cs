@@ -150,7 +150,7 @@ namespace Platformer.Player
         public void SetPlayerState(PlayerState newState)
         {
             currentPlayerState = newState;
-            movementController.UpdateCurrentSpeed();
+            movementController?.UpdateCurrentSpeed();
         }
 
         public PlayerState GetPlayerState() => currentPlayerState;

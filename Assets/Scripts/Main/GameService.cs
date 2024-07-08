@@ -23,9 +23,9 @@ namespace Platformer.Main
         {
             base.Awake();
             LevelService = new LevelService(levelData);
+            AnimationService = new AnimationService();
             PlayerService = new PlayerService(playerScriptableObject);
             InputService = new InputService();
-            AnimationService = new AnimationService();
         }
 
         private void Update()
