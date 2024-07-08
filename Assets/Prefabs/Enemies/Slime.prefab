@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2233408193191899455}
   - component: {fileID: 3055625062541944518}
   - component: {fileID: 260711026401855676}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c981975d14820d642923d7a0f697bd7d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -168,3 +168,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0748dad147e380044ac41c060d316f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MeleeContainer: {fileID: 0}
+  Animator: {fileID: 0}

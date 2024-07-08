@@ -10,5 +10,6 @@ namespace Platformer.Level
         public int ID;
         public LevelView LevelPrefab;
         public List<EnemyScriptableObject> EnemyScriptableObjects;
+        public LevelEnemySpawnConfigSO EnemySpawnConfig;
     }
 }

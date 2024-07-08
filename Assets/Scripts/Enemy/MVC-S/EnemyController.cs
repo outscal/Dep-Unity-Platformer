@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Platformer.Level;
 using Platformer.Main;
 using Platformer.Utilities;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace Platformer.Enemy
 
         protected EnemyScriptableObject enemyScriptableObject;
         protected EnemyView enemyView;
-        public MovableEnemyController MovableEnemyController;
+        public MovableEnemyScriptableObject MovableEnemyScriptableObject;
 
         #region Health 
         protected int currentHealth;
@@ -57,17 +59,18 @@ namespace Platformer.Enemy
         public EnemyScriptableObject Data => enemyScriptableObject;
         public EnemyView EnemyView => enemyView;
         #endregion
-
-        public EnemyController(EnemyScriptableObject enemyScriptableObject)
+        
+        
+        public EnemyController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData)
         {
             enemyView = Object.Instantiate(enemyScriptableObject.Prefab);
             InitializeVariables(enemyScriptableObject);
-            InitializeView();
+            InitializeView(spawnData);
         }
 
-        protected virtual void InitializeView()
+        protected virtual void InitializeView(EnemySpawnData spawnData)
         {
-            enemyView.transform.position = enemyScriptableObject.SpawnPosition;
+            enemyView.transform.position = spawnData.SpawnPosition;
         }
 
         protected virtual void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
@@ -102,5 +105,8 @@ namespace Platformer.Enemy
         {
             
         }
+
+        
+        
     }
 }

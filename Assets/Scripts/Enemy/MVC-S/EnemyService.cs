@@ -20,6 +20,7 @@ namespace Platformer.Enemy
 
         #region Getters
         public int ActiveEnemiesCount => activeEnemies.Count;
+        
         public int SpawnedEnemies { 
             get => spawnedEnemies;
             private set {
@@ -46,29 +47,52 @@ namespace Platformer.Enemy
 
         public void SpawnEnemies(int levelId)
         {
-            var enemyDataForLevel = LevelService.GetEnemyDataForLevel(levelId);
+            var levelEnemySpawnConfig = LevelService.GetLevelEnemySpawnConfigForLevel(levelId);
+            var enemyConfigurations = GameService.Instance.enemyConfiguration;
             
-            foreach(var enemySO in enemyDataForLevel)
+            foreach (var spawnData in levelEnemySpawnConfig.enemySpawnDataList)
             {
-                var enemy = CreateEnemy(enemySO);
-                if(enemy is not SpikeController)
-                    AddEnemy(enemy);
+                var enemySO = GetEnemyScriptableObject(spawnData.EnemyType, enemyConfigurations);
+                if (enemySO != null)
+                {
+                    var enemy = CreateEnemy(enemySO, spawnData);
+                    if (enemy is not SpikeController)
+                        AddEnemy(enemy);
+                }
             }
 
             SpawnedEnemies = activeEnemies.Count;
             UnsubscribeToEvents();
         }
-
-        public EnemyController CreateEnemy(EnemyScriptableObject enemyScriptableObject)
+        
+        public EnemyController CreateEnemy(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData)
         {
-            EnemyController enemy = enemyScriptableObject.Type switch
+            switch (enemyScriptableObject.enemyType)
             {
-                EnemyType.Spike => new SpikeController(enemyScriptableObject),
-                EnemyType.Slime => new SlimeController(enemyScriptableObject),
-                EnemyType.MushroomHead => new MushroomHeadController(enemyScriptableObject),
-                _ => new EnemyController(enemyScriptableObject),
-            };
-            return enemy;
+                case EnemyType.Spike:
+                    return new SpikeController(enemyScriptableObject, spawnData);
+                
+                case EnemyType.Slime:
+                    return new SlimeController(enemyScriptableObject, spawnData);
+                
+                case EnemyType.MushroomHead: 
+                    return new MushroomHeadController(enemyScriptableObject, spawnData);
+                        
+                default: 
+                    return new EnemyController(enemyScriptableObject, spawnData);
+            }
+        }
+        
+        private EnemyScriptableObject GetEnemyScriptableObject(EnemyType enemyType, EnemyConfiguration enemyConfigurations)
+        {
+            foreach (var config in enemyConfigurations.enemyConfigurations)
+            {
+                if (config.enemyType == enemyType)
+                {
+                    return config.enemyScriptableObject;
+                }
+            }
+            return null;
         }
 
         public void AddEnemy(EnemyController enemy) => activeEnemies.Add(enemy);

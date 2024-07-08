@@ -6,18 +6,18 @@ namespace Platformer.Melee
     public class MeleeController
     {
         public MeleeScriptableObject MeleeScriptableObject { get; private set; }
-        private MeleeView meleeView;
+        //private MeleeView meleeView;
 
-        public MeleeController(MeleeScriptableObject meleeScriptableObject, Transform parentTransform)
+        public MeleeController(MeleeScriptableObject meleeScriptableObject)
         {
             MeleeScriptableObject = meleeScriptableObject;
-            InitializeView(parentTransform);
+            //InitializeView(parentTransform);
         }
 
         private void InitializeView(Transform parentTransform)
         {
-            meleeView = Object.Instantiate(MeleeScriptableObject.Prefab, parentTransform);
-            meleeView.SetController(this);
+            // meleeView = Object.Instantiate(MeleeScriptableObject.Prefab, parentTransform);
+            //meleeView.SetController(this);
         }
 
         public void InflictDamage(Collider2D other) => other.GetComponent<IDamagable>()?.TakeDamage(MeleeScriptableObject.DamageToInflict);

@@ -9,13 +9,15 @@ namespace Platformer.Enemy
     {
         [Header("GENERAL SETTINGS")]
         public EnemyView Prefab;
-        public EnemyType Type;
-        public Vector3 SpawnPosition;
 
-        [Header("PATROLLING SETTINGS")]
+        public EnemyType enemyType;
         public float PatrollingSpeed;
-        public List<Vector3> PatrollingPoints;
 
+        public Dictionary<EnemyType, EnemyScriptableObject> enemyConfigurations;
+        
+        
+        
+        
         [Header("HEALTH SETTINGS")]
         public int MaximumHealth;
         public float HealthbarPositionOffset;
@@ -27,7 +29,6 @@ namespace Platformer.Enemy
         public float DelayAfterAttack;
 
         [Header("MISCELLANEOUS SETTINGS")]
-        public float PlayerAttackingDistance; // not in use as of now
         public float DelayAfterGameEnd;
     }
 }

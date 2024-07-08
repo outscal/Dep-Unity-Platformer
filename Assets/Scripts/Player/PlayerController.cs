@@ -137,7 +137,7 @@ namespace Platformer.Player
         
         }
         private void Attack(){
-            _ = new MeleeController(playerScriptableObject.meleeSO, PlayerView.MeleeContainer);
+            _ = new MeleeController(playerScriptableObject.meleeSO);
                 playerState = PlayerStates.ATTACK;
         }
 

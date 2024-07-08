@@ -5,7 +5,6 @@ namespace Platformer.Enemy
 {
     public class SlimeController : MovableEnemyController
     {
-        private SlimeView slimeView;
         
         public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;
 
@@ -14,62 +13,27 @@ namespace Platformer.Enemy
         private List<Vector3> patrollingPoints;
         private int currentPatrolIndex;
         #endregion
-        public SlimeController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
+        public SlimeController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
             InitializeVariables(enemyScriptableObject);
-            InitializeView();
+            InitializeView(spawnData);
         }
 
-        protected override void InitializeView()
+        protected override void InitializeView(EnemySpawnData spawnData)
         {
-            base.InitializeView();
-            slimeView = enemyView as SlimeView;
+            base.InitializeView(spawnData);
             enemyView.SetController(this);
+            patrollingPoints = spawnData.PatrolPoints;
         }
 
         protected override void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
         {
             base.InitializeVariables(enemyScriptableObject);
-            patrollingPoints = enemyScriptableObject.PatrollingPoints;
+           
             currentPatrolIndex = 0;
             nextPosition = patrollingPoints[currentPatrolIndex];
         }
 
         public override void Update() => PatrolBehavior();
-
-        #region Patrol Behaviour
-        // protected override void PatrolBehavior()
-        // {
-        //     base.PatrolBehavior();
-        //     // if (CanToggleMovementDirection())
-        //     // {
-        //     //     ToggleNextPatrolPoint();
-        //     //     UpdateMovementTowardsNextPosition();
-        //     //
-        //     // }
-        //     // else
-        //     // {
-        //     //     UpdateMovementTowardsNextPosition();
-        //     // }
-        // }
-        // private void ToggleNextPatrolPoint()
-        // {
-        //     currentPatrolIndex = (currentPatrolIndex + 1) % patrollingPoints.Count;
-        //     nextPosition = patrollingPoints[currentPatrolIndex];
-        // }
-        //
-        // private bool CanToggleMovementDirection()
-        // {
-        //     var reachedNextPatrolPoint = Vector3.Distance(enemyView.transform.position, nextPosition) < 0.1f;
-        //     var wallCheck = slimeView.WallCheck;
-        //     return reachedNextPatrolPoint || wallCheck;
-        // }
-        //
-        // private void UpdateMovementTowardsNextPosition()
-        // {
-        //     slimeView.Move(nextPosition, Data.PatrollingSpeed, IsMovingRight);
-        //     EnemyMoved();
-        // }
-        #endregion
     }
 }

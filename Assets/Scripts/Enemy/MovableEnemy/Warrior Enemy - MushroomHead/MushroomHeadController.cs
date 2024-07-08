@@ -12,29 +12,13 @@ namespace Platformer.Enemy
     {
         private EventService EventService => GameService.Instance.EventService;
         private PlayerService PlayerService => GameService.Instance.PlayerService;
-
-        private MushroomHeadView mushroomHeadView;
         public EnemyState MushroomHeadState { get; private set; }
 
-        #region Patrolling variables
-        // private Vector3 nextPosition;
-        // private List<Vector3> patrollingPoints;
-        // private int currentPatrolIndex;
-        #endregion
-
-        public MushroomHeadController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
+        public MushroomHeadController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
-            //InitializeView();
             InitializeVariables(enemyScriptableObject);
             SubscribeToEvents();
         }
-
-        // protected override void InitializeView()
-        // {
-        //     base.InitializeView();
-        //     mushroomHeadView = enemyView as MushroomHeadView;
-        //     mushroomHeadView.SetController(this);
-        // }
 
         protected override void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
         {
@@ -94,19 +78,13 @@ namespace Platformer.Enemy
                     break;
             }
         }
-        protected override void PatrolBehavior()
-        {
-            base.PatrolBehavior();
-        }
         
         #region Attack Behaviour
         private void AttackBehavior()
         {
-            if (mushroomHeadView.MeleeContainer.childCount == 1)
-            {
-                EnemyService.PlayAttackAnimation(mushroomHeadView.Animator);
-                _ = new MeleeController(Data.MeleeSO, mushroomHeadView.transform);
-            }
+            EnemyService.PlayAttackAnimation(enemyView.Animator);
+            _ = new MeleeController(Data.MeleeSO);
+            
         }
 
         private void OnPlayerDied()

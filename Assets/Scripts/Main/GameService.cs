@@ -36,6 +36,9 @@ namespace Platformer.Main
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
         [SerializeField] private CameraScriptableObject cameraScriptableObject;
         #endregion
+        
+        [Header("Configurations")]
+        public EnemyConfiguration enemyConfiguration;
 
         #region Scene Refrences
         [SerializeField] private UIService uiService;

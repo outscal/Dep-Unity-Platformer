@@ -6,14 +6,13 @@ namespace Platformer.Enemy
 {
     public class MovableEnemyController:EnemyController
     {
-        private MushroomHeadView mushroomHeadView;
-        
         private Vector3 nextPosition;
-        private List<Vector3> patrollingPoints;
+        public List<Vector3> patrollingPoints;
         private int currentPatrolIndex;
-        protected MovableEnemyController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
+        
+        protected MovableEnemyController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
-            patrollingPoints = enemyScriptableObject.PatrollingPoints;
+            patrollingPoints = spawnData.PatrolPoints;
             currentPatrolIndex = 0;
             nextPosition = patrollingPoints[currentPatrolIndex];
         }

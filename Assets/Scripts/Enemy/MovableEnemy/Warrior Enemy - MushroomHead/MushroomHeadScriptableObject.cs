@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Platformer.Enemy
 {
     [CreateAssetMenu(fileName = "MushroomHeadScriptableObject", menuName = "ScriptableObjects/MushroomHeadScriptableObject")]
-    public class MushrromHeadcriptableObject : MovableEnemyScriptableObject
+    public class MushroomHeadScriptableObject : MovableEnemyScriptableObject
     {
         
     }

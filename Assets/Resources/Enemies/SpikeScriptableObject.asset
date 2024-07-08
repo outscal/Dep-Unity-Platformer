@@ -9,19 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d29fc70e7fd624b890c46c1be6ce6b, type: 3}
-  m_Name: SpikeEnemy
+  m_Script: {fileID: 11500000, guid: dd2b76311b3e41be9def74f5c1abd29e, type: 3}
+  m_Name: SpikeScriptableObject
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 4810342422011848712, guid: 87c712bd643494e44bbaeba61c1086bf, type: 3}
-  Type: 0
-  SpawnPosition: {x: 3.95, y: -1.78, z: 0}
+  Prefab: {fileID: 4910111746936067550, guid: 87c712bd643494e44bbaeba61c1086bf, type: 3}
+  enemyType: 0
   PatrollingSpeed: 0
   MaximumHealth: 0
-  RangeRadius: 0
-  PatrollingPoints: []
-  PlayerAttackingDistance: 0
-  DelayAfterGameEnd: 3
-  HealthbarOffset: 0
-  DamageToInflict: 10
+  HealthbarPositionOffset: 0
+  AttackRangeRadius: 0
+  DamageToInflict: 0
   MeleeSO: {fileID: 0}
   DelayAfterAttack: 0
+  DelayAfterGameEnd: 0
