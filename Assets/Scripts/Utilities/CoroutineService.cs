@@ -26,8 +26,8 @@ namespace Platformer.Services
         {
             if (Instance == null)
             {
-                GameObject go = new GameObject();
-                go.AddComponent<CoroutineService>();
+                GameObject coroutineServiceObject = new GameObject();
+                coroutineServiceObject.AddComponent<CoroutineService>();
             }
             return Instance.StartCoroutineInternal(routine);
         }
@@ -50,12 +50,14 @@ namespace Platformer.Services
 
         private int StartCoroutineInternal(IEnumerator routine)
         {
+            // TODO: The ID for the coroutine should be generated and cached outside of CoroutineService.cs
+            // TODO: For example, PlayerMovementController should generate and cache the ID of PlayerSlideCoroutine
             int id = UniqueIdGenerator.GenerateUniqueId();
             Coroutine coroutine = base.StartCoroutine(routine);
+
             if (runningCoroutines.ContainsKey(id))
-            {
                 base.StopCoroutine(runningCoroutines[id]);
-            }
+
             runningCoroutines[id] = coroutine;
             return id;
         }
