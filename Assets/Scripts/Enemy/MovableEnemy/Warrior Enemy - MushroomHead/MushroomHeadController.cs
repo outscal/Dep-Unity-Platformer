@@ -14,7 +14,7 @@ namespace Platformer.Enemy
         private PlayerService PlayerService => GameService.Instance.PlayerService;
         public EnemyState MushroomHeadState { get; private set; }
 
-        public MushroomHeadController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
+        public MushroomHeadController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
             InitializeVariables(enemyScriptableObject);
             SubscribeToEvents();
@@ -83,8 +83,7 @@ namespace Platformer.Enemy
         private void AttackBehavior()
         {
             EnemyService.PlayAttackAnimation(enemyView.Animator);
-            _ = new MeleeController(Data.MeleeSO);
-            
+            _ = new MeleeController(Data.MeleeSO);    
         }
 
         private void OnPlayerDied()

@@ -73,11 +73,28 @@ namespace Platformer.Enemy
                     return new SpikeController(enemyScriptableObject, spawnData);
                 
                 case EnemyType.Slime:
-                    return new SlimeController(enemyScriptableObject, spawnData);
+                    if (enemyScriptableObject is MovableEnemyScriptableObject slimeScriptableObject)
+                    {
+                        return new SlimeController(slimeScriptableObject, spawnData);
+                    }
+                    else
+                    {
+                        Debug.LogError("Expected MovableEnemyScriptableObject for Slime, but got " + enemyScriptableObject.GetType());
+                        return null; // Or handle this error case as appropriate
+                    }
+                    break;
                 
                 case EnemyType.MushroomHead: 
-                    return new MushroomHeadController(enemyScriptableObject, spawnData);
-                        
+                    if (enemyScriptableObject is MovableEnemyScriptableObject muhsroomScriptableObject)
+                    {
+                        return new MushroomHeadController(muhsroomScriptableObject, spawnData);
+                    }
+                    else
+                    {
+                        Debug.LogError("Expected MovableEnemyScriptableObject for MushroomHead, but got " + enemyScriptableObject.GetType());
+                        return null; // Or handle this error case as appropriate
+                    }
+                    break;    
                 default: 
                     return new EnemyController(enemyScriptableObject, spawnData);
             }

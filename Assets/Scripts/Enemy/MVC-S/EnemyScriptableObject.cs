@@ -11,7 +11,6 @@ namespace Platformer.Enemy
         public EnemyView Prefab;
 
         public EnemyType enemyType;
-        public float PatrollingSpeed;
 
         public Dictionary<EnemyType, EnemyScriptableObject> enemyConfigurations;
         

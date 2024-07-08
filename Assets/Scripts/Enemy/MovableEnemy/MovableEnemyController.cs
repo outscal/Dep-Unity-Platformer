@@ -9,12 +9,15 @@ namespace Platformer.Enemy
         private Vector3 nextPosition;
         public List<Vector3> patrollingPoints;
         private int currentPatrolIndex;
+        private float patrolingSpeed;
+        public MovableEnemyScriptableObject Data;
         
-        protected MovableEnemyController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
+        protected MovableEnemyController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
             patrollingPoints = spawnData.PatrolPoints;
             currentPatrolIndex = 0;
             nextPosition = patrollingPoints[currentPatrolIndex];
+            Data = enemyScriptableObject;
         }
     
         public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;

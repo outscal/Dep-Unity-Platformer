@@ -13,7 +13,7 @@ namespace Platformer.Enemy
         private List<Vector3> patrollingPoints;
         private int currentPatrolIndex;
         #endregion
-        public SlimeController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
+        public SlimeController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
             InitializeVariables(enemyScriptableObject);
             InitializeView(spawnData);
