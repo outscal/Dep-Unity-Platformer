@@ -1,133 +1,87 @@
-using System.Collections;
-using Platformer.AnimationSystem;
-using Platformer.InputSystem;
-using Platformer.Main;
-using Platformer.Services;
+using System;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
+using Platformer.InputSystem;
+using Platformer.Player.Controllers;
+using Platformer.Player.Enumerations;
+using Platformer.Services;
+using Platformer.Utilities;
+using Object = UnityEngine.Object;
 
 namespace Platformer.Player
 {
-    public class PlayerController
+    public class PlayerController : IDamagable
     {
         // References:
+        private PlayerView playerView;
         private PlayerScriptableObject playerScriptableObject;
-        public PlayerView PlayerView { get; private set; }
-        public PlayerAnimationController PlayerAnimationController { get; private set; }
-        private Animator animator;
+        
+        // Sub-Controllers:
+        private PlayerMovementController movementController;
+        private PlayerAnimationController animationController;
+        private PlayerCombatController combatController;
         
         // Variables:
         private PlayerState currentPlayerState;
         private int currentHealth;
-        private float currentSpeed;
         private float cachedHorizontalInput;
         private int coroutineIdRespawn;
-        private int coroutineIdSlide;
-        
-        // Properties:
-        public int CurrentHealth {
-            get => currentHealth;
-            private set => currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
-        }
-        
-        private bool IsGrounded()
-        {
-            var offset = 0.3f;
-            var raycastHit = Physics2D.Raycast(PlayerView.GetColliderBounds().center, Vector2.down, PlayerView.GetColliderBounds().extents.y + offset, PlayerView.GroundLayer);
-            return raycastHit.collider != null;
-        }
 
-        public PlayerController(PlayerScriptableObject playerScriptableObject){
-            this.playerScriptableObject = playerScriptableObject;
+        public int CurrentHealth
+        {
+            get => currentHealth;
+            set => currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
+        }
+        
+        public PlayerController(PlayerScriptableObject playerScriptableObject)
+        {
+            InitializeVariables(playerScriptableObject);
             InitializeView();
-            InitializeVariables();
-            InitializePlayerAnimationController();
+            InitializeControllers();
             SubscribeToEvents();
         }
 
-        private void InitializePlayerAnimationController()
+        private void InitializeVariables(PlayerScriptableObject playerScriptableObject)
         {
-            PlayerAnimationController = new PlayerAnimationController();
-        }
-
-        private void InitializeView(){
-            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
-            PlayerView.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
-            PlayerView.SetController(this);
-        }
-
-        private void InitializeVariables()
-        {
+            this.playerScriptableObject = playerScriptableObject;
             CurrentHealth = playerScriptableObject.maxHealth;
             SetPlayerState(PlayerState.IDLE);
         }
+
+        private void InitializeView()
+        {
+            playerView = Object.Instantiate(playerScriptableObject.prefab);
+            playerView.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
+            playerView.SetController(this);
+        }
+
+        private void InitializeControllers()
+        {
+            animationController = new PlayerAnimationController(this, playerView);
+            movementController = new PlayerMovementController(this, playerView, playerScriptableObject);
+            combatController = new PlayerCombatController(this);
+        }
         
-        private void SubscribeToEvents(){
-            InputService.OnHorizontalAxisInputReceived += HandleHorizontalMovementAxisInput;
+        private void SubscribeToEvents()
+        {
+            InputService.OnHorizontalAxisInputReceived += UpdateHorizontalAxisInput;
             InputService.OnPlayerTriggerInputReceived += HandleTriggerInput;
         }
 
-        private void UnsubscribeToEvents(){
-            InputService.OnHorizontalAxisInputReceived -= HandleHorizontalMovementAxisInput;
+        private void UnsubscribeToEvents()
+        {
+            InputService.OnHorizontalAxisInputReceived -= UpdateHorizontalAxisInput;
             InputService.OnPlayerTriggerInputReceived -= HandleTriggerInput;
         }
-        public void HandleHorizontalMovementAxisInput(float horizontalInput)
-        {
-            cachedHorizontalInput = horizontalInput;
-        }
-        
-        private void MovePlayer()
-        {
-            UpdateRunningStatus();
-            SetPlayerSpriteDirection();
-            TranslatePlayer();
-            
-            PlayerAnimationController.PlayMovementAnimation(currentPlayerState);
-            
-        }
-        
-        private void UpdateRunningStatus()
-        {
-            SetPlayerState(cachedHorizontalInput != 0 ? PlayerState.RUNNING : PlayerState.IDLE);
-        }
-        
-        private bool CanRun() => currentPlayerState != PlayerState.SLIDE && cachedHorizontalInput != 0;
-        
-        private void SetPlayerSpriteDirection()
-        {
-            if (cachedHorizontalInput != 0)
-                PlayerView.SetCharacterSpriteDirection(cachedHorizontalInput < 0);
-        }
-        
-        private void TranslatePlayer()
-        {
-            var movementVector = new Vector3(cachedHorizontalInput, 0.0f, 0.0f).normalized;
-            PlayerView.TranslatePlayer(currentSpeed * Time.deltaTime * movementVector);
-        }
-        
+
         public void Update()
         {
-            HandleJumpAndFall();
-            MovePlayer();
+            movementController.Update(cachedHorizontalInput);
+            animationController.Update(cachedHorizontalInput);
         }
-
-        private void HandleJumpAndFall()
-        {
-            if (isFalling())
-            {
-                //Increase Falling Velocity
-                PlayerView.AddVelocity((GetFallMultiplier()) * Physics2D.gravity.y * Time.deltaTime * Vector2.up);
-            }
-            else if (isJumping())
-            {
-                //Decrease Jumping Velocity
-                PlayerView.AddVelocity((GetLowJumpMultiplier()) * Physics2D.gravity.y * Time.deltaTime * Vector2.up);
-            }
-        }
-
-        private bool isFalling() => PlayerView.GetVelocity().y < 0;
         
-        private bool isJumping() => PlayerView.GetVelocity().y > 0;
+        public void UpdateHorizontalAxisInput(float horizontalInput) => cachedHorizontalInput = horizontalInput;
         
         public void HandleTriggerInput(PlayerInputTriggers playerInputTriggers)
         {
@@ -143,94 +97,47 @@ namespace Platformer.Player
                     ProcessSlideInput();
                     break;
                 case PlayerInputTriggers.TAKE_DAMAGE: // temporary switch case (just for testing animation)
-                    PlayerAnimationController.PlayDamageAnimation();
+                    ProcessTakeDamageInput();
                     break;
             }
         }
 
         private void ProcessJumpInput()
         {
-            if(CanJump()){
-                Jump();
-                PlayerAnimationController.PlayJumpAnimation();
+            if(movementController.CanJump())
+            {
+                movementController.Jump();
+                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.JUMP);
             }
         }
 
-        private bool CanJump() => IsGrounded() && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
-
-        // JUMP 1st IMPLEMENTATION
-        public void Jump() => PlayerView.SetVelocity(Vector2.up * playerScriptableObject.jumpForce);
-
-        // JUMP 2nd IMPLEMENTATION
-        // public void Jump() => PlayerView.AddForce(Vector2.up * playerScriptableObject.jumpForce, ForceMode2D.Impulse);
-
-        // JUMP 3rd IMPLEMENTATION
-        /*private void Jump() // direct changing the position through translate method
+        private void ProcessAttackInput()
         {
-            var force = playerScriptableObject.jumpForce;
-            float jumpHeight = force * Time.deltaTime; // Convert force to a height
-            PlayerView.TranslatePlayer(Vector2.up * jumpHeight);
-        }*/
-
-
-        private void ProcessAttackInput(){
-            if(CanAttack()){
-                currentPlayerState = PlayerState.ATTACK;
-                PlayerAnimationController.PlayAttackAnimation();
+            if(combatController.CanAttack(movementController.IsGrounded(), currentPlayerState))
+            {
+                SetPlayerState(PlayerState.ATTACK);
+                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.ATTACK);
             }
         }
-
-        private bool CanAttack() => IsGrounded() && (currentPlayerState == PlayerState.IDLE || currentPlayerState == PlayerState.RUNNING);
 
         private void ProcessSlideInput()
         {
-            if (CanSlide())
+            if (movementController.CanSlide())
             {
-                // TODO: Where is this coroutine?
-                coroutineIdSlide = CoroutineService.StartCoroutine(SlideCoroutine(playerScriptableObject.slidingSpeed, playerScriptableObject.slidingTime));
-                PlayerAnimationController.PlaySlideAnimation();
-            }
-        }
-        
-        private IEnumerator SlideCoroutine(float slidingSpeed, float slidingTime)
-        {
-            var temp = currentSpeed;
-            SetPlayerState(PlayerState.SLIDE);
-            yield return new WaitForSeconds(playerScriptableObject.slidingTime * 1000);
-            bool _canRun = CanRun();
-            if (_canRun)
-                SetPlayerState(PlayerState.RUNNING);
-            else
-                SetPlayerState(PlayerState.IDLE);
-        }
-        private bool CanSlide() => IsGrounded() && currentPlayerState == PlayerState.RUNNING;
-
-        //redundant method:
-        // private void FlipSpriteIfNeeded(float horizontalInput)
-        // {
-        //     SetPlayerState(PlayerState.SLIDE);
-        //     //yield return new WaitForSeconds(slidingTime);
-        //     SetPlayerState(PlayerState.IDLE);
-        // }
-        
-        
-
-        public void TakeDamage(int damageToInflict)
-        {
-            CurrentHealth -= damageToInflict;
-            if(CurrentHealth <= 0)
-            {
-                CurrentHealth = 0;
-                PlayerDied();
-            }else{
-                PlayerAnimationController.PlayDamageAnimation();
+                movementController.Slide(cachedHorizontalInput);
+                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.SLIDE);
             }
         }
 
-        private void PlayerDied()
+        private void ProcessTakeDamageInput()
+        {
+            animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.TAKE_DAMAGE);
+        }
+
+        public void PlayerDied()
         {
             UnsubscribeToEvents();
-            PlayerAnimationController.PlayDeathAnimation();
+            animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.DEATH);
             coroutineIdRespawn = CoroutineService.StartCoroutine(DelayedRespawnCoroutine());
         }
         
@@ -240,33 +147,20 @@ namespace Platformer.Player
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
-        public float GetFallMultiplier() => playerScriptableObject.fallMultiplier;
-
-        public float GetLowJumpMultiplier() => playerScriptableObject.lowJumpMultiplier;
-
-        private void SetPlayerState(PlayerState newState)
+        public void SetPlayerState(PlayerState newState)
         {
             currentPlayerState = newState;
-            UpdateCurrentSpeed();
+            movementController.UpdateCurrentSpeed();
         }
 
-        private void UpdateCurrentSpeed()
+        public PlayerState GetPlayerState() => currentPlayerState;
+        
+        public void TakeDamage(int damage)
         {
-            switch (currentPlayerState)
-            {
-                case PlayerState.IDLE:
-                    currentSpeed = 0f;
-                    break;
-                case PlayerState.RUNNING: 
-                    currentSpeed = playerScriptableObject.movementSpeed;
-                    break;
-                case PlayerState.SLIDE:
-                    currentSpeed = playerScriptableObject.slidingSpeed;
-                    break;
-                case PlayerState.ATTACK: 
-                    currentSpeed = 0f;
-                    break;
-            }
-        }
+            bool isDead = combatController.TakeDamage(damage);
+            if(!isDead)
+                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.DEATH);
+            
+        }  
     }
 }

@@ -7,23 +7,37 @@ namespace Platformer.Player.Controllers
 {
     public class PlayerAnimationController
     {
-        private Animator playerAnimator;
+        private PlayerController owner;
+        private PlayerView playerView;
         private AnimationService animationService;
 
-        PlayerAnimationController(Animator playerAnimator)
+        public PlayerAnimationController(PlayerController owner, PlayerView playerView)
         {
-            this.playerAnimator = playerAnimator;
+            this.owner = owner;
+            this.playerView = playerView;
             animationService = GameService.Instance.AnimationService;
-        } 
+        }
+
+        public void Update(float currentHorizontalInput)
+        {
+            SetPlayerSpriteDirection(currentHorizontalInput);
+            PlayMovementAnimation(owner.GetPlayerState());
+        }
+        
+        private void SetPlayerSpriteDirection(float currentHorizontalInput)
+        {
+            if (currentHorizontalInput != 0)
+                playerView.SetCharacterSpriteDirection(currentHorizontalInput < 0);
+        }
         
         public void PlayMovementAnimation(PlayerState currentPlayerState)
         {
-            animationService.ToggleBoolAnimation(playerAnimator, PlayerState.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
+            animationService.ToggleBoolAnimation(playerView.PlayerAnimator, PlayerState.RUNNING.ToString(), currentPlayerState == PlayerState.RUNNING);
         }
         
         public void PlayTriggerAnimation(PlayerTriggerAnimationType triggerType)
         {
-            animationService.PlayTriggerAnimation(playerAnimator, triggerType.ToString());
+            animationService.PlayTriggerAnimation(playerView.PlayerAnimator, triggerType.ToString());
         }
     }
 }
