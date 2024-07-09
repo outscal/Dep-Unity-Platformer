@@ -6,9 +6,9 @@ namespace Platformer.Level
 {
     public class LevelService
     {
-        private List<LevelScriptableObject> levelScriptableObjects;
+        private LevelConfiguration levelConfiguration;
 
-        public LevelService(List<LevelScriptableObject> levelScriptableObjects)
+        public LevelService(LevelConfiguration levelConfiguration)
         {
             this.levelScriptableObjects = levelScriptableObjects;
             SubscribeToEvents();
@@ -20,7 +20,7 @@ namespace Platformer.Level
 
         private void LoadLevel(int levelID = 1)
         {
-            var levelData = levelScriptableObjects.Find(levelSO => levelSO.ID == levelID);
+            var levelData = levelConfiguration.levelConfig.Find(levelSO => levelSO.ID == levelID);
             Object.Instantiate(levelData.LevelPrefab);
             UnsubscribeToEvents();
         }

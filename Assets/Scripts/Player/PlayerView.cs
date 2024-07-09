@@ -1,66 +1,47 @@
-using System.Threading.Tasks;
 using Platformer.Utilities;
 using UnityEngine;
 
-namespace Platformer.Player{
+namespace Platformer.Player
+{
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(BoxCollider2D))]
-    public class PlayerView : MonoBehaviour, IDamagable
+    public class PlayerView : MonoBehaviour
     {
-        public PlayerController Controller { get; private set; }
-
-        #region Editor properties
-        [SerializeField] private Animator animator;
-        [SerializeField] private SpriteRenderer characterSprite;
+        private Animator animator;
+        private SpriteRenderer characterSprite;
         [SerializeField] private LayerMask groundLayer;
-        #endregion
 
-        #region Private variables
+        private PlayerController controller;
         private BoxCollider2D playerBoxCollider;
         private Rigidbody2D playerRigidBody;
-        #endregion
 
-        #region Getters
+        //Getters
         public Animator PlayerAnimator => animator;
         public LayerMask GroundLayer => groundLayer;
-        public BoxCollider2D PlayerBoxCollider => playerBoxCollider;
-        public Rigidbody2D PlayerRigidBody => playerRigidBody;
-        [HideInInspector] public Vector3 Position => transform.position;
-        #endregion
+        public Vector3 Position => transform.position;
 
-        public void SetController(PlayerController controllerToSet){
-            Controller = controllerToSet;
+        public void SetController(PlayerController controllerToSet)
+        {
+            controller = controllerToSet;
             InitializeVariables();
         }
 
-        private void InitializeVariables(){
+        private void InitializeVariables()
+        {
             playerRigidBody = GetComponent<Rigidbody2D>();
             playerBoxCollider = GetComponent<BoxCollider2D>();
+            animator = GetComponent<Animator>();
+            characterSprite = GetComponent<SpriteRenderer>();
         }
-
-        private void Update() => Controller?.Update();
-
-        #region Movement Functions
-        public void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
-
+        
+        public void TakeDamage(int damage) => controller.TakeDamage(damage);
         public void TranslatePlayer(Vector3 translateVector) => transform.Translate(translateVector);
-        #endregion
-
-        #region JUMP
-        // public void Jump(float jumpForce) => playerRigidBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-        public void Jump(float jumpForce) => playerRigidBody.velocity = Vector2.up * jumpForce;
-
-        // private void Jump() // direct changing the position through translate method
-        // {
-        //     var force = Controller.GetJumpForce();
-        //     float jumpHeight = force * Time.deltaTime; // Convert force to a height
-        //     transform.Translate(Vector2.up * jumpHeight);
-        // }
-        #endregion
-
-        #region Take Damage Function
-        public void TakeDamage(int damage) => Controller.TakeDamage(damage);
-        #endregion
+        public void AddVelocity(Vector2 additionalVelocity) => playerRigidBody.velocity += additionalVelocity; 
+        public void AddForce(Vector2 forceToAdd, ForceMode2D forceMode2D) => playerRigidBody.AddForce(forceToAdd, forceMode2D);
+        public void SetCharacterSpriteDirection(bool flipX) => characterSprite.flipX = flipX;
+        public void SetPositionAndRotation(Vector3 position, Quaternion rotation) => transform.SetLocalPositionAndRotation(position, rotation);
+        public void SetVelocity(Vector2 newVelocity) => playerRigidBody.velocity = newVelocity; 
+        public Vector2 GetVelocity() => playerRigidBody.velocity;
+        public Bounds GetColliderBounds() => playerBoxCollider.bounds;
     }
 }

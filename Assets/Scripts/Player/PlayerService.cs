@@ -35,11 +35,7 @@ namespace Platformer.Player
             EventService.OnPlayerTriggerInputReceived.RemoveListener(playerController.HandleTriggerInput);
         }
 
-        private void SpawnPlayer(int levelId){
-            playerController = new PlayerController(playerScriptableObject);
-            EventService.OnHorizontalAxisInputReceived.AddListener(playerController.HandleHorizontalMovementAxisInput);
-            EventService.OnPlayerTriggerInputReceived.AddListener(playerController.HandleTriggerInput);
-        }
+        
 
         public void MovePlayer(Animator animator, bool isRunning, Vector3 playerPosition){
             PlayMovementAnimation(animator, isRunning);
@@ -54,14 +50,11 @@ namespace Platformer.Player
             await Task.Delay(playerScriptableObject.delayAfterDeath * 1000);
             OnGameEnd?.Invoke(GameEndType.LOSE);
         }
+        public PlayerController playerController { get; private set; }
+        
 
-        #region Player Animations
-        private void PlayMovementAnimation(Animator animator, bool isRunning) => AnimationService.PlayPlayerMovementAnimation(animator, isRunning);
-        public void PlayJumpAnimation(Animator animator) => AnimationService.PlayPlayerJumpAnimation(animator);
-        public void PlayTakeDamageAnimation(Animator animator) => AnimationService.PlayPlayerDamageAnimation(animator);
-        public void PlayDeathAnimation(Animator animator) => AnimationService.PlayPlayerDeathAnimation(animator);
-        public void PlaySlideAnimation(Animator animator) => AnimationService.PlayPlayerSlideAnimation(animator);
-        public void PlayAttackAnimation(Animator animator) => AnimationService.PlayPlayerAttackAnimation(animator);
-        #endregion
+        private void SpawnPlayer(PlayerScriptableObject playerScriptableObject) => playerController = new PlayerController(playerScriptableObject);
+
+        public void Update() => playerController.Update();
     }
 }
