@@ -1,4 +1,6 @@
 using Platformer.Level;
+using Platformer.Player;
+using UnityEngine;
 
 namespace Platformer.Enemy{
     public class SpikeController : ImmovableEnemyController

@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33e84066b1e2d8046acda926130ae2c3, type: 3}
-  m_Name: MeleeScriptableObject
+  m_Name: EnemyMeleeScriptableObject
   m_EditorClassIdentifier: 
   Prefab: {fileID: 1354984841532806221, guid: bf4ea7c44af40f3408ef15e3d3982133, type: 3}
   DamageToInflict: 10
   MeleeDuration: 0.25
-  meleeType: 1
+  AttackDelay: 2
+  AttackRange: 2
+  TargetLayer:
+    m_Bits: 8
+  AttackDuration: 0.5

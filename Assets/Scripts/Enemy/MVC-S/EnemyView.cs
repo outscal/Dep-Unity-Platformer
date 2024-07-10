@@ -16,6 +16,7 @@ namespace Platformer.Enemy{
             
         }
 
+        public Transform GetTransform() => transform;
         public Vector3 GetPosition() => transform.position;
         public void SetPosition(Vector3 positionToSet) => transform.position = positionToSet; 
         public Vector3 GetLocalScale() => transform.localScale;
@@ -34,12 +35,16 @@ namespace Platformer.Enemy{
         //     private set => WallCheck = value;
         // }
 
-        // private void OnTriggerEnter2D(Collider2D other) 
-        // { 
-        //     if(other.gameObject.TryGetComponent<PlayerView>(out PlayerView _))
-        //             Controller?.InflictDamage(other);
-        // } 
-
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.TryGetComponent<PlayerView>(out var _))
+            {
+                Controller.OnCollisionWithPlayer(other);
+            }
+        }
+        
+        
+        public void TakeDamage(int damageToTake) => Controller.TakeDamage(damageToTake);
         public void Destroy() => Destroy(gameObject);
     }
 }

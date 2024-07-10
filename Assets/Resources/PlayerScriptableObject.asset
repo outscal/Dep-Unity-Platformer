@@ -15,7 +15,6 @@ MonoBehaviour:
   prefab: {fileID: 4231813749555353494, guid: e467824ec1b4beb47b86935c85910b74, type: 3}
   spawnPosition: {x: -22, y: -0.7, z: 0}
   spawnRotation: {x: 0, y: 0, z: 0}
-  meleeSO: {fileID: 11400000, guid: c7026e7acdabdc749a7b416b97aebaf1, type: 2}
   movementSpeed: 4
   slidingSpeed: 6
   slidingTime: 1
@@ -25,3 +24,5 @@ MonoBehaviour:
   lowJumpMultiplier: 2.5
   maxHealth: 30
   delayAfterDeath: 2
+  AttackRangeRadius: 1.75
+  DamageToInflict: 20

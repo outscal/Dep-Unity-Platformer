@@ -13,13 +13,11 @@ MonoBehaviour:
   m_Name: SlimeScriptableObject
   m_EditorClassIdentifier: 
   Prefab: {fileID: 260711026401855676, guid: ed52d0fd0388e5a4ea88bf52eabca66f, type: 3}
-  enemyType: 0
-  PatrollingSpeed: 1
+  enemyType: 1
   MaximumHealth: 23
   HealthbarPositionOffset: 1
-  AttackRangeRadius: 0
-  DamageToInflict: 0
-  MeleeSO: {fileID: 0}
-  DelayAfterAttack: 0
+  AttackRangeRadius: 1
+  DelayAfterAttack: 1
+  DamageToInflict: 2
   DelayAfterGameEnd: 0
-  PatrollingSpeed: 0
+  PatrollingSpeed: 1

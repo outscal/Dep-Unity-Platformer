@@ -1,6 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
+using Platformer.AnimationSystem;
 using Platformer.Level;
 using Platformer.Main;
+using Platformer.Player;
+using Platformer.Services;
 using Platformer.Utilities;
 using UnityEngine;
 
@@ -9,12 +13,14 @@ namespace Platformer.Enemy
     public class EnemyController
     {
         #region Enemy Service
-        protected EnemyService EnemyService => GameService.Instance.EnemyService;
+        public EnemyService EnemyService => GameService.Instance.EnemyService;
+        
         #endregion
 
-        protected EnemyScriptableObject enemyScriptableObject;
+        public EnemyScriptableObject enemyScriptableObject;
         protected EnemyView enemyView;
-        public MovableEnemyScriptableObject MovableEnemyScriptableObject;
+        private int attackCoroutineId;
+
 
         #region Health 
         protected int currentHealth;
@@ -30,8 +36,6 @@ namespace Platformer.Enemy
                 }
             }
         }
-        
-        
 
         private int ClampHealth(int value)
         {
@@ -90,7 +94,20 @@ namespace Platformer.Enemy
             }
         }
 
-        public virtual void InflictDamage(Collider2D other) => other.GetComponent<IDamagable>()?.TakeDamage(enemyScriptableObject.DamageToInflict);
+        public virtual void OnCollisionWithPlayer(Collider2D other) => OnEnemyAttack(other);
+
+        //public virtual void OnCollisionEndWithPlayer() => StopAttackCoroutine();
+
+        public virtual void OnEnemyAttack(Collider2D other)
+        {
+            InflictDamage(other);
+        }
+
+        public virtual void InflictDamage(Collider2D other)
+        {
+            other.GetComponent<PlayerView>()?.TakeDamage(enemyScriptableObject.DamageToInflict);
+        }
+
         #endregion
 
         public void EnemyMoved() => EnemyService.EnemyMoved(this);
@@ -105,8 +122,5 @@ namespace Platformer.Enemy
         {
             
         }
-
-        
-        
     }
 }

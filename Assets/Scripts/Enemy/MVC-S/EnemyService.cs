@@ -73,7 +73,7 @@ namespace Platformer.Enemy
                     return new SpikeController(enemyScriptableObject, spawnData);
                 
                 case EnemyType.Slime:
-                    if (enemyScriptableObject is MovableEnemyScriptableObject slimeScriptableObject)
+                    if (enemyScriptableObject is SlimeScriptableObject slimeScriptableObject)
                     {
                         return new SlimeController(slimeScriptableObject, spawnData);
                     }
@@ -85,9 +85,9 @@ namespace Platformer.Enemy
                     break;
                 
                 case EnemyType.MushroomHead: 
-                    if (enemyScriptableObject is MovableEnemyScriptableObject muhsroomScriptableObject)
+                    if (enemyScriptableObject is MushroomHeadScriptableObject muhsroomHeadScriptableObject)
                     {
-                        return new MushroomHeadController(muhsroomScriptableObject, spawnData);
+                        return new MushroomHeadController(muhsroomHeadScriptableObject, spawnData);
                     }
                     else
                     {

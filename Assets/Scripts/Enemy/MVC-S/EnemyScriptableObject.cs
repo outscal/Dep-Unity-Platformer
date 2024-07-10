@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Platformer.Melee;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -14,18 +13,16 @@ namespace Platformer.Enemy
 
         public Dictionary<EnemyType, EnemyScriptableObject> enemyConfigurations;
         
-        
-        
-        
         [Header("HEALTH SETTINGS")]
         public int MaximumHealth;
         public float HealthbarPositionOffset;
 
         [Header("COMBAT SETTINGS")]
         public float AttackRangeRadius;
-        public int DamageToInflict;
-        public MeleeScriptableObject MeleeSO;
         public float DelayAfterAttack;
+        
+        [Header("DAMAGE SETTINGS")]
+        public int DamageToInflict;
 
         [Header("MISCELLANEOUS SETTINGS")]
         public float DelayAfterGameEnd;

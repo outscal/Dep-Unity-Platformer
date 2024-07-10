@@ -14,11 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 4910111746936067550, guid: 87c712bd643494e44bbaeba61c1086bf, type: 3}
   enemyType: 0
-  PatrollingSpeed: 0
   MaximumHealth: 0
   HealthbarPositionOffset: 0
   AttackRangeRadius: 0
-  DamageToInflict: 0
-  MeleeSO: {fileID: 0}
   DelayAfterAttack: 0
+  DamageToInflict: 5
   DelayAfterGameEnd: 0

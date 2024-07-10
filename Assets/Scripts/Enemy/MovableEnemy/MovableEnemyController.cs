@@ -11,6 +11,7 @@ namespace Platformer.Enemy
         private int currentPatrolIndex;
         private float patrolingSpeed;
         public MovableEnemyScriptableObject Data;
+        protected EnemyCombatController enemyCombatController;
         
         protected MovableEnemyController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
@@ -18,6 +19,7 @@ namespace Platformer.Enemy
             currentPatrolIndex = 0;
             nextPosition = patrollingPoints[currentPatrolIndex];
             Data = enemyScriptableObject;
+            enemyCombatController = new EnemyCombatController(this);
         }
     
         public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;

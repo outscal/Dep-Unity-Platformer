@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prefab: {fileID: 3535772070237282434, guid: 6464e387df824224b9872178dd0adc98, type: 3}
   enemyType: 2
-  PatrollingSpeed: 2
   MaximumHealth: 20
   HealthbarPositionOffset: 1
-  AttackRangeRadius: 0
-  DamageToInflict: 0
-  MeleeSO: {fileID: 0}
-  DelayAfterAttack: 0
+  AttackRangeRadius: 0.8
+  DelayAfterAttack: 3
+  DamageToInflict: 2
   DelayAfterGameEnd: 0
-  PatrollingSpeed: 0
+  PatrollingSpeed: 1
+  AttackTargetLayer:
+    serializedVersion: 2
+    m_Bits: 8

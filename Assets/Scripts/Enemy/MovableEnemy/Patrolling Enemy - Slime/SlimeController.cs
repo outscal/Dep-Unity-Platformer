@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Enemy
 {
-    public class SlimeController : MovableEnemyController
+    public class SlimeController : MovableEnemyController, IDamagable
     {
         
         public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;
@@ -15,7 +16,6 @@ namespace Platformer.Enemy
         #endregion
         public SlimeController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
-            InitializeVariables(enemyScriptableObject);
             InitializeView(spawnData);
         }
 
@@ -23,15 +23,6 @@ namespace Platformer.Enemy
         {
             base.InitializeView(spawnData);
             enemyView.SetController(this);
-            patrollingPoints = spawnData.PatrolPoints;
-        }
-
-        protected override void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
-        {
-            base.InitializeVariables(enemyScriptableObject);
-           
-            currentPatrolIndex = 0;
-            nextPosition = patrollingPoints[currentPatrolIndex];
         }
 
         public override void Update() => PatrolBehavior();
