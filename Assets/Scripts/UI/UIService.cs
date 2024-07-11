@@ -44,13 +44,13 @@ namespace Platformer.UI
         private void ShowGameplayUI(int levelId) => screenSpaceOverlayCanvasController.ShowGameplayUI(levelId);
         public void ToggleKillOverlay(bool value) => screenSpaceOverlayCanvasController.ToggleKillOverlay(value);
         public void EndGame(bool playerWon) => screenSpaceOverlayCanvasController.EndGame(playerWon);
-        public void UpdatePlayerHealth(float healthRatio) => screenSpaceOverlayCanvasController.UpdatePlayerHealth(healthRatio);
-        public void UpdateEnemyCount(int activeEnemies, int totalEnemies) => screenSpaceOverlayCanvasController.UpdateEnemyCount(activeEnemies, totalEnemies);
-        public void UpdateCoinsCount(int coinsCount) => screenSpaceOverlayCanvasController.UpdateCoinsCount(coinsCount);
+        public void UpdatePlayerHealthUI(float healthRatio) => screenSpaceOverlayCanvasController.UpdatePlayerHealth(healthRatio);
+        public void UpdateEnemyCountUI(int activeEnemies, int totalEnemies) => screenSpaceOverlayCanvasController.UpdateEnemyCount(activeEnemies, totalEnemies);
+        public void UpdateCoinsCountUI(int coinsCount) => screenSpaceOverlayCanvasController.UpdateCoinsCount(coinsCount);
         #endregion
 
         #region World Space
-        public void UpdateEnemyHealth(EnemyController enemy, float healthRatio) => worldSpaceCanvasController.UpdateEnemyHealth(enemy, healthRatio);
+        public void UpdateEnemyHealthUI(EnemyController enemy, float healthRatio) => worldSpaceCanvasController.UpdateEnemyHealth(enemy, healthRatio);
         public void OnEnemyMoved(EnemyController enemyController) => worldSpaceCanvasController.OnEnemyMoved(enemyController);
         #endregion
 

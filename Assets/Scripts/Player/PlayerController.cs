@@ -1,15 +1,16 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Platformer.Enemy;
 using Platformer.InputSystem;
 using Platformer.Main;
-using Platformer.Melee;
 using Platformer.UI;
+using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Player
 {
-    public class PlayerController
+    public class PlayerController : IDamagable
     {
         #region Service References
         private PlayerService PlayerService => GameService.Instance.PlayerService;
@@ -24,12 +25,45 @@ namespace Platformer.Player
 
         #region Health
         private int currentHealth;
-        public int CurrentHealth {
-            get => currentHealth;
-            private set {
-                currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
-                UIService.UpdatePlayerHealth((float)currentHealth / playerScriptableObject.maxHealth);
-            }
+        
+        public PlayerController(PlayerScriptableObject playerScriptableObject){
+            this.playerScriptableObject = playerScriptableObject;
+            InitializeView();
+            InitializeVariables(playerScriptableObject);
+            
+        }
+        
+        private void InitializeView(){
+            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
+            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
+            PlayerView.SetController(this);
+        }
+
+        private void InitializeVariables(PlayerScriptableObject playerScriptableObject)
+        {
+            CurrentCoins = 0;
+            currentHealth = playerScriptableObject.maxHealth;
+        }
+        public int CurrentHealth()
+        {
+            currentHealth = ClampHealth(currentHealth);
+            UpdateHealthService();
+            return currentHealth;
+        }
+        public int GetCurrentHealth => currentHealth;
+        public float CalculateHealthRatio()
+        {
+            return (float)currentHealth / playerScriptableObject.maxHealth;
+        }
+        
+        public int ClampHealth(int value)
+        {
+            return Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
+        }
+        
+        public void UpdateHealthService()
+        {
+            UIService.UpdatePlayerHealthUI(CalculateHealthRatio());
         }
         #endregion
 
@@ -38,7 +72,7 @@ namespace Platformer.Player
         public int CurrentCoins { get => currentCoins; 
             private set{
                 currentCoins = value;
-                UIService.UpdateCoinsCount(currentCoins);
+                UIService.UpdateCoinsCountUI(currentCoins);
             }
         }
         #endregion
@@ -52,25 +86,7 @@ namespace Platformer.Player
             }
         }
         #endregion
-
-        public PlayerController(PlayerScriptableObject playerScriptableObject){
-            this.playerScriptableObject = playerScriptableObject;
-            InitializeView();
-            InitializeVariables();
-        }
-
-        private void InitializeView(){
-            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
-            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
-            PlayerView.SetController(this);
-        }
-
-        private void InitializeVariables()
-        {
-            CurrentCoins = 0;
-            CurrentHealth = playerScriptableObject.maxHealth;
-        }
-
+        
         public void Update(){
             var check = IsGrounded;
             if(PlayerView.PlayerRigidBody.velocity.y < 0){
@@ -78,6 +94,8 @@ namespace Platformer.Player
             }else if(PlayerView.PlayerRigidBody.velocity.y > 0){
                 PlayerView.PlayerRigidBody.velocity += (GetLowJumpMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
             }
+
+            CurrentHealth();
         }
 
 
@@ -111,6 +129,7 @@ namespace Platformer.Player
                     break;
                 case PlayerInputTriggers.ATTACK:
                     ProcessAttackInput();
+                    ProcessAttack();
                     break;
                 case PlayerInputTriggers.SLIDE:
                     ProcessSlideInput();
@@ -133,15 +152,33 @@ namespace Platformer.Player
                 Attack();
                 PlayerService.PlayAttackAnimation(PlayerView.PlayerAnimator);
             }
-        
-        
+        }
+
+        private void ProcessAttack()
+        {
+            if(IsEnemyInAttackRadius(out var enemyCollider))
+                OnPlayerAttack(enemyCollider);
+        }
+        private void OnPlayerAttack(Collider2D other) => InflictDamage(other);
+
+        public virtual void InflictDamage(Collider2D other)
+        {
+            other.GetComponent<EnemyView>().TakeDamage(playerScriptableObject.DamageToInflict);
         }
         private void Attack(){
-            _ = new MeleeController(playerScriptableObject.meleeSO, PlayerView.MeleeContainer);
-                playerState = PlayerStates.ATTACK;
+            playerState = PlayerStates.ATTACK;
         }
 
         private bool CanAttack() => IsGrounded && (playerState == PlayerStates.IDLE || playerState == PlayerStates.RUNNING);
+        
+        private bool IsEnemyInAttackRadius(out Collider2D enemyCollider)
+        {
+            var otherColliders = Physics2D.OverlapCircleAll(PlayerView.transform.position, playerScriptableObject.AttackRangeRadius);
+
+            enemyCollider = otherColliders.FirstOrDefault(collider => collider.GetComponent<EnemyView>() != null);
+            return enemyCollider != null;
+        }
+
 
         private void ProcessSlideInput(){
             if(CanSlide()){
@@ -168,14 +205,13 @@ namespace Platformer.Player
         #endregion
 
         #region Damage/Death
-        public void Die() => PlayerService.PlayDeathAnimation(PlayerView.PlayerAnimator);
 
         public void TakeDamage(int damageToInflict)
         {
-            CurrentHealth -= damageToInflict;
-            if(CurrentHealth <= 0)
+            currentHealth -= damageToInflict;
+            if(currentHealth <= 0)
             {
-                CurrentHealth = 0;
+                currentHealth = 0;
                 PlayerDied();
             }else{
                 PlayerService.TakeDamage(PlayerView.PlayerAnimator);

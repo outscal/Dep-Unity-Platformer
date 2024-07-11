@@ -1,5 +1,5 @@
 using Platformer.Main;
-using Platformer.Utilities;
+using Platformer.Player;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -7,56 +7,63 @@ namespace Platformer.Enemy
     public class EnemyController
     {
         #region Enemy Service
-        protected EnemyService EnemyService => GameService.Instance.EnemyService;
+        public EnemyService EnemyService => GameService.Instance.EnemyService;
+        
         #endregion
 
-        protected EnemyScriptableObject enemyScriptableObject;
+        public EnemyScriptableObject enemyScriptableObject;
         protected EnemyView enemyView;
+        private int attackCoroutineId;
+
 
         #region Health 
         protected int currentHealth;
-        public int CurrentHealth {
-            get => currentHealth;
-            private set {
-                currentHealth = Mathf.Clamp(value, 0, enemyScriptableObject.MaximumHealth);
-                if(this is not SpikeController)
-                    EnemyService.UpdateEnemyHealth(this, (float)currentHealth / enemyScriptableObject.MaximumHealth);
-            }
-        }
+        
+
+        
+
+        
         #endregion
 
         #region Getters
         public EnemyScriptableObject Data => enemyScriptableObject;
         public EnemyView EnemyView => enemyView;
         #endregion
-
-        public EnemyController(EnemyScriptableObject enemyScriptableObject)
-        {
-            this.enemyScriptableObject = enemyScriptableObject;
-            InitializeView();
-            InitializeVariables();
-        }
-
-        protected virtual void InitializeView()
+        
+        
+        public EnemyController(EnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData)
         {
             enemyView = Object.Instantiate(enemyScriptableObject.Prefab);
-            enemyView.transform.position = enemyScriptableObject.SpawnPosition;
+            InitializeVariables(enemyScriptableObject);
+            InitializeView(spawnData);
         }
 
-        private void InitializeVariables() => CurrentHealth = enemyScriptableObject.MaximumHealth;
+        protected virtual void InitializeView(EnemySpawnData spawnData)
+        {
+            enemyView.transform.position = spawnData.SpawnPosition;
+        }
 
-
+        protected virtual void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
+        {
+            this.enemyScriptableObject = enemyScriptableObject;
+            
+        } 
+        
         #region Damage
-        public virtual void TakeDamage(int damageToInflict){
-            CurrentHealth -= damageToInflict;
-            if(CurrentHealth <= 0)
-            {
-                CurrentHealth = 0;
-                Die();
-            }
+        
+
+        public virtual void OnCollisionWithPlayer(Collider2D other) => OnEnemyAttack(other);
+
+        public virtual void OnEnemyAttack(Collider2D other)
+        {
+            InflictDamage(other);
         }
 
-        public virtual void InflictDamage(Collider2D other) => other.GetComponent<IDamagable>()?.TakeDamage(enemyScriptableObject.DamageToInflict);
+        public virtual void InflictDamage(Collider2D other)
+        {
+            other.GetComponent<PlayerView>()?.TakeDamage(enemyScriptableObject.DamageToInflict);
+        }
+
         #endregion
 
         public void EnemyMoved() => EnemyService.EnemyMoved(this);
@@ -65,6 +72,11 @@ namespace Platformer.Enemy
         {
             GameService.Instance.EnemyService.EnemyDied(this);
             enemyView.Destroy();
+        }
+
+        public virtual void Update()
+        {
+            
         }
     }
 }

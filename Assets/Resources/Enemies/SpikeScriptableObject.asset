@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2b76311b3e41be9def74f5c1abd29e, type: 3}
+  m_Name: SpikeScriptableObject
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 4910111746936067550, guid: 87c712bd643494e44bbaeba61c1086bf, type: 3}
+  enemyType: 0
+  MaximumHealth: 0
+  HealthbarPositionOffset: 0
+  AttackRangeRadius: 0
+  DelayAfterAttack: 0
+  DamageToInflict: 5
+  DelayAfterGameEnd: 0

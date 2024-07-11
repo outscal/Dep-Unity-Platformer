@@ -28,5 +28,6 @@ namespace Platformer.Level
 
         public void BackgroundParallaxEffect(Transform[] sprites) => GameService.Instance.CameraService.BackgroundParallax(sprites);
         public List<EnemyScriptableObject> GetEnemyDataForLevel(int levelId) => levelScriptableObjects.Find(level => level.ID == levelId).EnemyScriptableObjects;
+        public LevelEnemySpawnConfigSO GetLevelEnemySpawnConfigForLevel(int levelId) => levelScriptableObjects.Find(level => level.ID == levelId).EnemySpawnConfig;
     }
 }

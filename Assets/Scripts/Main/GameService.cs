@@ -36,6 +36,9 @@ namespace Platformer.Main
         [SerializeField] private List<LevelScriptableObject> levelScriptableObjects;
         [SerializeField] private CameraScriptableObject cameraScriptableObject;
         #endregion
+        
+        [Header("Configurations")]
+        public EnemyConfiguration enemyConfiguration;
 
         #region Scene Refrences
         [SerializeField] private UIService uiService;
@@ -53,7 +56,11 @@ namespace Platformer.Main
             AnimationService = new AnimationService();
         }
 
-        private void Update() => InputService.UpdateInputService();
+        private void Update()
+        {
+            InputService.UpdateInputService();
+            EnemyService.Update();
+        }
 
         private void Start() => UIService.ShowLevelSelectionUI(levelScriptableObjects.Count);
     }

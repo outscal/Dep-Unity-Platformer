@@ -1,4 +1,3 @@
-using Platformer.Melee;
 using UnityEngine;
 
 namespace Platformer.Player
@@ -9,7 +8,6 @@ namespace Platformer.Player
         public PlayerView prefab;
         public Vector3 spawnPosition;
         public Vector3 spawnRotation;
-        public MeleeScriptableObject meleeSO;
         public float movementSpeed;
         public float slidingSpeed;
         public float slidingTime;
@@ -19,5 +17,7 @@ namespace Platformer.Player
         public float lowJumpMultiplier;
         public int maxHealth;
         public int delayAfterDeath;
+        public float AttackRangeRadius;
+        public int DamageToInflict;
     }
 }
