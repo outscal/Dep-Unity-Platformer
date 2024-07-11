@@ -1,10 +1,10 @@
+using System;
 using UnityEngine;
 using Platformer.Utilities;
 using Platformer.Player;
 using Platformer.InputSystem;
 using Platformer.AnimationSystem;
 using Platformer.Level;
-using System.Collections.Generic;
 using Platformer.UI;
 
 namespace Platformer.Main
@@ -17,7 +17,6 @@ namespace Platformer.Main
         public AnimationService AnimationService { get; private set; }
         public LevelService LevelService { get; private set; }
         public UIService UIService => uiService;
-        #endregion
 
         // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
@@ -25,7 +24,6 @@ namespace Platformer.Main
 
         //Scene References:
         [SerializeField] private UIService uiService;
-        #endregion
 
         protected override void Awake()
         {
@@ -38,13 +36,21 @@ namespace Platformer.Main
 
         private void Start() 
         {
-            UIService.CreateAndShowLevelSelectionUI(levelScriptableObjects.Count);
+            UIService.CreateAndShowLevelSelectionUI(levelData.levelConfig.Count);
         }
         
         private void Update()
         {
             InputService.Update();
             PlayerService.Update();
+        }
+
+        private void OnDestroy()
+        {
+            LevelService = null;
+            AnimationService = null;
+            PlayerService = null;
+            InputService = null;
         }
     }
 }

@@ -1,6 +1,8 @@
+using System;
 using Platformer.Main;
 using System.Collections.Generic;
-using UnityEngine;
+using Platformer.Game;
+using Object = UnityEngine.Object;
 
 namespace Platformer.UI
 {
@@ -9,6 +11,9 @@ namespace Platformer.UI
         private LevelSelectionUIView levelSelectionView;
         private LevelButtonView levelButtonPrefab;
         private List<LevelButtonView> levelButtons;
+        
+        //Action Events:
+        public static event Action<int> OnLevelSelected;
         
         public LevelSelectionUIController(LevelSelectionUIView levelSelectionView, LevelButtonView levelButtonPrefab)
         {
@@ -58,11 +63,14 @@ namespace Platformer.UI
             }
         }
 
-        public void OnLevelSelected(int levelId)
+        public void LevelSelected(int levelId)
         {
-            GameService.Instance.EventService.OnLevelSelected.InvokeEvent(levelId);
+            OnLevelSelected?.Invoke(levelId);
+            CleanEventListeners();
             RemoveLevelButtons();
             Hide();
         }
+
+        private void CleanEventListeners() => OnLevelSelected = null;
     }
 }

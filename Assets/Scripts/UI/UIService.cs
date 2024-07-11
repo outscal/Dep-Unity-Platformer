@@ -1,5 +1,4 @@
 using Platformer.Game;
-using Platformer.Main;
 using Platformer.Player;
 using UnityEngine;
 
@@ -20,25 +19,26 @@ namespace Platformer.UI
         private GameplayUIController gameplayUIController;
         [SerializeField] private GameplayUIView gameplayView;
 
-        private void Start()
+        private void Awake()
         {
             levelSelectionUIController = new LevelSelectionUIController(levelSelectionView, levelButtonPrefab);
             levelEndUIController = new LevelEndUIController(levelEndView);
             gameplayUIController = new GameplayUIController(gameplayView);
+            gameplayUIController.Hide();
             SubscribeToEvents();
         }
 
         private void SubscribeToEvents() 
         {
-            GameService.Instance.EventService.OnLevelSelected.AddListener(ShowGameplayUI);
-            PlayerService.OnGameEnd += EndGame;
+            LevelSelectionUIController.OnLevelSelected += ShowGameplayUI;
+            PlayerController.OnGameEnd += EndGame;
 
         }
 
         private void UnsubscribeToEvents() 
         {
-            GameService.Instance.EventService.OnLevelSelected.RemoveListener(ShowGameplayUI);
-            PlayerService.OnGameEnd -= EndGame;
+            LevelSelectionUIController.OnLevelSelected -= ShowGameplayUI;
+            PlayerController.OnGameEnd -= EndGame;
         }
 
         public void CreateAndShowLevelSelectionUI(int levelCount) => levelSelectionUIController.CreateAndShowLevelSelection(levelCount);

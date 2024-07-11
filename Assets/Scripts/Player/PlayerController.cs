@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Platformer.InputSystem;
 using Platformer.Main;
+using Platformer.Game;
 using Platformer.UI;
 using UnityEngine;
 using System.Collections;
@@ -34,11 +36,14 @@ namespace Platformer.Player
         private int currentHealth;
         private float cachedHorizontalInput;
         private int coroutineIdRespawn;
+        
+        //Action-Events
+        public static event Action<GameEndType> OnGameEnd;
 
         public int CurrentHealth
         {
             get => currentHealth;
-            private set {
+            set {
                 currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
                 UIService.UpdatePlayerHealthUI((float)currentHealth / playerScriptableObject.maxHealth);
             }
@@ -146,22 +151,18 @@ namespace Platformer.Player
             }
         }
 
-        private void ProcessTakeDamageInput()
-        {
-            animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.TAKE_DAMAGE);
-        }
-
         public void PlayerDied()
         {
             UnsubscribeToEvents();
             animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.DEATH);
-            coroutineIdRespawn = CoroutineService.StartCoroutine(DelayedRespawnCoroutine());
+            coroutineIdRespawn = CoroutineService.StartCoroutine(GameEndCoroutine());
         }
         
-        private IEnumerator DelayedRespawnCoroutine()
+        private IEnumerator GameEndCoroutine()
         {
             yield return new WaitForSeconds(playerScriptableObject.delayAfterDeath);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            OnGameEnd?.Invoke(GameEndType.LOSE);
+            CleanEventListeners();
         }
         
         public void SetPlayerState(PlayerState newState)
@@ -176,8 +177,16 @@ namespace Platformer.Player
         {
             bool isDead = combatController.TakeDamage(damage);
             if(!isDead)
-                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.DEATH);
+                animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.TAKE_DAMAGE);
             
-        }  
+        }
+
+        private void CleanEventListeners() => OnGameEnd = null;
+        
+        ~PlayerController()
+        {
+            playerView.DeletePlayer();
+            playerView = null;
+        }
     }
 }

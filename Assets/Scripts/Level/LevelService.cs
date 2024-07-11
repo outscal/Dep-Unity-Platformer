@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Platformer.Main;
+using Platformer.UI;
+using Platformer.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Platformer.Level
 {
@@ -10,13 +14,13 @@ namespace Platformer.Level
 
         public LevelService(LevelConfiguration levelConfiguration)
         {
-            this.levelScriptableObjects = levelScriptableObjects;
+            this.levelConfiguration = levelConfiguration;
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.AddListener(LoadLevel);
+        private void SubscribeToEvents() => LevelSelectionUIController.OnLevelSelected += LoadLevel;
 
-        private void UnsubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.RemoveListener(LoadLevel);
+        private void UnsubscribeToEvents() => LevelSelectionUIController.OnLevelSelected -= LoadLevel;
 
         private void LoadLevel(int levelID = 1)
         {
@@ -24,5 +28,7 @@ namespace Platformer.Level
             Object.Instantiate(levelData.LevelPrefab);
             UnsubscribeToEvents();
         }
+
+        ~LevelService() => UnsubscribeToEvents();
     }
 }

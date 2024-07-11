@@ -1,4 +1,6 @@
+using System;
 using Platformer.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Platformer.Player
@@ -19,14 +21,15 @@ namespace Platformer.Player
         public Animator PlayerAnimator => animator;
         public LayerMask GroundLayer => groundLayer;
         public Vector3 Position => transform.position;
-
+        
+        private void Awake() => GetComponents();
+        
         public void SetController(PlayerController controllerToSet)
         {
             controller = controllerToSet;
-            InitializeVariables();
         }
 
-        private void InitializeVariables()
+        private void GetComponents()
         {
             playerRigidBody = GetComponent<Rigidbody2D>();
             playerBoxCollider = GetComponent<BoxCollider2D>();
@@ -43,5 +46,8 @@ namespace Platformer.Player
         public void SetVelocity(Vector2 newVelocity) => playerRigidBody.velocity = newVelocity; 
         public Vector2 GetVelocity() => playerRigidBody.velocity;
         public Bounds GetColliderBounds() => playerBoxCollider.bounds;
+        public void DeletePlayer() => Destroy(this.gameObject);
+
+        private void OnDestroy() => controller = null;
     }
 }

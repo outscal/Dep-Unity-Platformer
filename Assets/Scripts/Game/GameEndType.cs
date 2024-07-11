@@ -1,6 +1,3 @@
-using System;
-
-
 namespace Platformer.Game
 {
     public enum GameEndType
