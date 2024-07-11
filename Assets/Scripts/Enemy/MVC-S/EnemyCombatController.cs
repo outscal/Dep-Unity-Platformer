@@ -1,8 +1,6 @@
 using System.Collections;
-using Platformer.AnimationSystem;
-using Platformer.Main;
-using Platformer.Player;
 using Platformer.Services;
+using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -19,7 +17,7 @@ namespace Platformer.Enemy
 
         public IEnumerator RepeatedlyAttackPlayer(Collider2D playerCollider, float delay)
         {
-            while (owner.CurrentHealth > 0)
+            while (true)
             {
                 OnEnemyAttack(playerCollider);
                 yield return new WaitForSeconds(delay);
@@ -32,7 +30,8 @@ namespace Platformer.Enemy
         
         public void StartAttackCoroutine(Collider2D playerCollider)
         {
-            attackCoroutineId = CoroutineService.StartCoroutine(RepeatedlyAttackPlayer(playerCollider, owner.enemyScriptableObject.DelayAfterAttack));
+            if(owner.enemyScriptableObject is MovableEnemyScriptableObject movableScriptableObject)
+                attackCoroutineId = CoroutineService.StartCoroutine(RepeatedlyAttackPlayer(playerCollider, movableScriptableObject.DelayAfterAttack));
         }
 
         public void StopAttackCoroutine()

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpawnDataList:
   - EnemyType: 2
-    SpawnPosition: {x: -23, y: -0.8, z: 0}
+    SpawnPosition: {x: -9, y: -0.8, z: 0}
     PatrolPoints:
     - {x: -18, y: -0.8, z: 0}
     - {x: -23, y: -0.8, z: 0}

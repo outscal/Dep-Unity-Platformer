@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Platformer.Enemy
 {
-    public class MovableEnemyController:EnemyController
+    public class MovableEnemyController : EnemyController
     {
         private Vector3 nextPosition;
         public List<Vector3> patrollingPoints;
@@ -21,6 +21,8 @@ namespace Platformer.Enemy
             Data = enemyScriptableObject;
             enemyCombatController = new EnemyCombatController(this);
         }
+
+        
     
         public bool IsMovingRight => nextPosition.x > enemyView.transform.position.x;
         

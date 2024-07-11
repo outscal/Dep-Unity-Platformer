@@ -6,6 +6,10 @@ namespace Platformer.Enemy
     [CreateAssetMenu(fileName = "MushroomHeadScriptableObject", menuName = "ScriptableObjects/MushroomHeadScriptableObject")]
     public class MushroomHeadScriptableObject : MovableEnemyScriptableObject
     {
-        public LayerMask AttackTargetLayer; 
+        [Header("HEALTH SETTINGS")]
+        public int MaximumHealth;
+        
+        [Header("COMBAT SETTINGS")]
+        public float AttackRangeRadius;
     }
 }

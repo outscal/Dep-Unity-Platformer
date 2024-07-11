@@ -1,4 +1,5 @@
 using Platformer.Player;
+using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Enemy{
@@ -11,29 +12,15 @@ namespace Platformer.Enemy{
         public virtual void SetController(EnemyController controllerToSet)
         {
             Controller = controllerToSet;
-            boxCollider = GetComponent<BoxCollider2D>();
             Animator = GetComponent<Animator>();
             
         }
 
-        public Transform GetTransform() => transform;
         public Vector3 GetPosition() => transform.position;
         public void SetPosition(Vector3 positionToSet) => transform.position = positionToSet; 
         public Vector3 GetLocalScale() => transform.localScale;
 
         public void SetLocalScale(Vector3 localScale) => transform.localScale = localScale;
-        
-        private BoxCollider2D boxCollider;
-        
-        
-        // [HideInInspector] public bool WallCheck{
-        //     get{
-        //         var offset = 0.3f;
-        //         var raycastHit = Physics2D.Raycast(boxCollider.bounds.center, Controller.MovableEnemyController.IsMovingRight ? Vector2.right : Vector2.left, boxCollider.bounds.extents.x + offset);
-        //         return raycastHit.collider != null;
-        //     }
-        //     private set => WallCheck = value;
-        // }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -43,8 +30,12 @@ namespace Platformer.Enemy{
             }
         }
         
-        
-        public void TakeDamage(int damageToTake) => Controller.TakeDamage(damageToTake);
+        public void TakeDamage(int damageToTake)
+        {
+            if(Controller is IDamagable controller)
+                controller.TakeDamage(damageToTake);
+        }
+
         public void Destroy() => Destroy(gameObject);
     }
 }

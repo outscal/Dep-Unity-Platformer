@@ -8,5 +8,11 @@ namespace Platformer.Enemy
     {
         [Header("PATROLLING SETTINGS")]
         public float PatrollingSpeed;
+        
+        public float DelayAfterAttack;
+        
+        [Header("HEALTH SETTINGS")]
+        public int MaximumHealth;
+        public float HealthbarPositionOffset;
     }
 }

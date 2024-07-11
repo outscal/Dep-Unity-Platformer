@@ -16,9 +16,10 @@ namespace Platformer.Enemy
         public EnemyState MushroomHeadState { get; private set; }
         private AnimationService animationService;
         private Collider2D playerCollider;
-        public MushroomHeadController(MovableEnemyScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
+        public MushroomHeadController(MushroomHeadScriptableObject enemyScriptableObject, EnemySpawnData spawnData) : base(enemyScriptableObject, spawnData)
         {
             InitializeVariables(enemyScriptableObject);
+            currentHealth = enemyScriptableObject.MaximumHealth;
             InitializeView(spawnData);           
             SubscribeToEvents();
         }
@@ -41,15 +42,53 @@ namespace Platformer.Enemy
         private void UnsubscribeToEvents() => EventService.OnPlayerDied.RemoveListener(OnPlayerDied);
 
         private void SetMushroomHeadState(EnemyState state) => MushroomHeadState = state;
+        
+        public int CurrentHealth()
+        { 
+            currentHealth = ClampHealth(currentHealth); 
+            UpdateHealthService();
+            return currentHealth;
+        }
+
+        public int ClampHealth(int value)
+        {
+            if(Data is MushroomHeadScriptableObject data)
+                return Mathf.Clamp(value, 0, data.MaximumHealth);
+            return 0;
+        }
+
+        public void UpdateHealthService()
+        {
+            float healthRatio = CalculateHealthRatio();
+            EnemyService.UpdateEnemyHealth(this, healthRatio);
+        }
+        
+        public float CalculateHealthRatio()
+        {
+            if(Data is MushroomHeadScriptableObject data)
+                return (float)currentHealth / data.MaximumHealth;
+            return 0;
+        }
+        
+        
+        public virtual void TakeDamage(int damageToInflict){
+            currentHealth -= damageToInflict;
+            if(currentHealth <= 0)
+            {
+                currentHealth = 0;
+                Die();
+            }
+        }
 
         public override void Update()
         {
             DetectPlayer();
             HandleStateBehaviour();
+            CurrentHealth();
         }
         private bool CanAttackPlayer()
         {
-            return PlayerService.PlayerController != null && PlayerService.PlayerController.CurrentHealth > 0;
+            return PlayerService.PlayerController != null && PlayerService.PlayerController.GetCurrentHealth > 0;
         }
 
         private void DetectPlayer()
@@ -73,10 +112,16 @@ namespace Platformer.Enemy
 
         public bool IsPlayerInAttackRadius(out Collider2D playerCollider)
         {
-            var otherColliders = Physics2D.OverlapCircleAll(enemyView.transform.position, Data.AttackRangeRadius);
-            playerCollider = otherColliders.FirstOrDefault(collider => collider.GetComponent<PlayerView>() != null);
-            this.playerCollider = playerCollider;
-            return otherColliders?.Any(collider => collider.GetComponent<PlayerView>() != null) ?? false;
+            if (Data is MushroomHeadScriptableObject data)
+            {
+                var otherColliders = Physics2D.OverlapCircleAll(enemyView.transform.position, data.AttackRangeRadius);
+                playerCollider = otherColliders.FirstOrDefault(collider => collider.GetComponent<PlayerView>() != null);
+                this.playerCollider = playerCollider;
+                return otherColliders?.Any(collider => collider.GetComponent<PlayerView>() != null) ?? false;
+            }
+
+            playerCollider = null;
+            return false;
         }
 
         private void HandleStateBehaviour()

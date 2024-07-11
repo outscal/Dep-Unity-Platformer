@@ -18,7 +18,7 @@ MonoBehaviour:
   HealthbarPositionOffset: 1
   AttackRangeRadius: 0.8
   DelayAfterAttack: 3
-  DamageToInflict: 2
+  DamageToInflict: 1
   DelayAfterGameEnd: 0
   PatrollingSpeed: 1
   AttackTargetLayer:

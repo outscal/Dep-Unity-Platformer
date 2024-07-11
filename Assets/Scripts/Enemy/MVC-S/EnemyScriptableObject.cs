@@ -13,14 +13,6 @@ namespace Platformer.Enemy
 
         public Dictionary<EnemyType, EnemyScriptableObject> enemyConfigurations;
         
-        [Header("HEALTH SETTINGS")]
-        public int MaximumHealth;
-        public float HealthbarPositionOffset;
-
-        [Header("COMBAT SETTINGS")]
-        public float AttackRangeRadius;
-        public float DelayAfterAttack;
-        
         [Header("DAMAGE SETTINGS")]
         public int DamageToInflict;
 

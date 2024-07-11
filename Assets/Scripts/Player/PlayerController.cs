@@ -25,12 +25,45 @@ namespace Platformer.Player
 
         #region Health
         private int currentHealth;
-        public int CurrentHealth {
-            get => currentHealth;
-            private set {
-                currentHealth = Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
-                UIService.UpdatePlayerHealthUI((float)currentHealth / playerScriptableObject.maxHealth);
-            }
+        
+        public PlayerController(PlayerScriptableObject playerScriptableObject){
+            this.playerScriptableObject = playerScriptableObject;
+            InitializeView();
+            InitializeVariables(playerScriptableObject);
+            
+        }
+        
+        private void InitializeView(){
+            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
+            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
+            PlayerView.SetController(this);
+        }
+
+        private void InitializeVariables(PlayerScriptableObject playerScriptableObject)
+        {
+            CurrentCoins = 0;
+            currentHealth = playerScriptableObject.maxHealth;
+        }
+        public int CurrentHealth()
+        {
+            currentHealth = ClampHealth(currentHealth);
+            UpdateHealthService();
+            return currentHealth;
+        }
+        public int GetCurrentHealth => currentHealth;
+        public float CalculateHealthRatio()
+        {
+            return (float)currentHealth / playerScriptableObject.maxHealth;
+        }
+        
+        public int ClampHealth(int value)
+        {
+            return Mathf.Clamp(value, 0, playerScriptableObject.maxHealth);
+        }
+        
+        public void UpdateHealthService()
+        {
+            UIService.UpdatePlayerHealthUI(CalculateHealthRatio());
         }
         #endregion
 
@@ -53,26 +86,7 @@ namespace Platformer.Player
             }
         }
         #endregion
-
-        public PlayerController(PlayerScriptableObject playerScriptableObject){
-            this.playerScriptableObject = playerScriptableObject;
-            InitializeView();
-            InitializeVariables(playerScriptableObject);
-            
-        }
-
-        private void InitializeView(){
-            PlayerView = Object.Instantiate(playerScriptableObject.prefab);
-            PlayerView.transform.SetPositionAndRotation(playerScriptableObject.spawnPosition, Quaternion.Euler(playerScriptableObject.spawnRotation));
-            PlayerView.SetController(this);
-        }
-
-        private void InitializeVariables(PlayerScriptableObject playerScriptableObject)
-        {
-            CurrentCoins = 0;
-            CurrentHealth = playerScriptableObject.maxHealth;
-        }
-
+        
         public void Update(){
             var check = IsGrounded;
             if(PlayerView.PlayerRigidBody.velocity.y < 0){
@@ -80,6 +94,8 @@ namespace Platformer.Player
             }else if(PlayerView.PlayerRigidBody.velocity.y > 0){
                 PlayerView.PlayerRigidBody.velocity += (GetLowJumpMultiplier() - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
             }
+
+            CurrentHealth();
         }
 
 
@@ -192,10 +208,10 @@ namespace Platformer.Player
 
         public void TakeDamage(int damageToInflict)
         {
-            CurrentHealth -= damageToInflict;
-            if(CurrentHealth <= 0)
+            currentHealth -= damageToInflict;
+            if(currentHealth <= 0)
             {
-                CurrentHealth = 0;
+                currentHealth = 0;
                 PlayerDied();
             }else{
                 PlayerService.TakeDamage(PlayerView.PlayerAnimator);

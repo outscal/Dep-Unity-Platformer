@@ -1,11 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Platformer.AnimationSystem;
-using Platformer.Level;
 using Platformer.Main;
 using Platformer.Player;
-using Platformer.Services;
-using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Enemy
@@ -24,39 +18,11 @@ namespace Platformer.Enemy
 
         #region Health 
         protected int currentHealth;
-        public int CurrentHealth
-        {
-            get => currentHealth;
-            private set
-            {
-                currentHealth = ClampHealth(value);
-                if (ShouldUpdateHealth())
-                {
-                    UpdateHealthService();
-                }
-            }
-        }
+        
 
-        private int ClampHealth(int value)
-        {
-            return Mathf.Clamp(value, 0, enemyScriptableObject.MaximumHealth);
-        }
+        
 
-        private bool ShouldUpdateHealth()
-        {
-            return this is not SpikeController;
-        }
-
-        private void UpdateHealthService()
-        {
-            float healthRatio = CalculateHealthRatio();
-            EnemyService.UpdateEnemyHealth(this, healthRatio);
-        }
-
-        private float CalculateHealthRatio()
-        {
-            return (float)currentHealth / enemyScriptableObject.MaximumHealth;
-        }
+        
         #endregion
 
         #region Getters
@@ -80,23 +46,13 @@ namespace Platformer.Enemy
         protected virtual void InitializeVariables(EnemyScriptableObject enemyScriptableObject)
         {
             this.enemyScriptableObject = enemyScriptableObject;
-            CurrentHealth = enemyScriptableObject.MaximumHealth;
+            
         } 
-
-
+        
         #region Damage
-        public virtual void TakeDamage(int damageToInflict){
-            CurrentHealth -= damageToInflict;
-            if(CurrentHealth <= 0)
-            {
-                CurrentHealth = 0;
-                Die();
-            }
-        }
+        
 
         public virtual void OnCollisionWithPlayer(Collider2D other) => OnEnemyAttack(other);
-
-        //public virtual void OnCollisionEndWithPlayer() => StopAttackCoroutine();
 
         public virtual void OnEnemyAttack(Collider2D other)
         {

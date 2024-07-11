@@ -77,24 +77,15 @@ namespace Platformer.Enemy
                     {
                         return new SlimeController(slimeScriptableObject, spawnData);
                     }
-                    else
-                    {
-                        Debug.LogError("Expected MovableEnemyScriptableObject for Slime, but got " + enemyScriptableObject.GetType());
-                        return null; // Or handle this error case as appropriate
-                    }
-                    break;
+                    return null;
                 
                 case EnemyType.MushroomHead: 
                     if (enemyScriptableObject is MushroomHeadScriptableObject muhsroomHeadScriptableObject)
                     {
                         return new MushroomHeadController(muhsroomHeadScriptableObject, spawnData);
                     }
-                    else
-                    {
-                        Debug.LogError("Expected MovableEnemyScriptableObject for MushroomHead, but got " + enemyScriptableObject.GetType());
-                        return null; // Or handle this error case as appropriate
-                    }
-                    break;    
+                    return null;
+                
                 default: 
                     return new EnemyController(enemyScriptableObject, spawnData);
             }

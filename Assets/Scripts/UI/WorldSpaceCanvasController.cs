@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Platformer.Enemy;
 using Platformer.Main;
+using Platformer.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,8 +36,11 @@ namespace Platformer.UI{
 
         private void SetHealthBarPosition(EnemyController enemy){
             if (enemyHealthBars.TryGetValue(enemy, out var healthBar) && healthBar != null) {
-                var offset = new Vector3(0, enemy.Data.HealthbarPositionOffset, 0);
-                healthBar.transform.position = enemy.EnemyView.transform.position + offset;
+                if (enemy is IDamagable && enemy.Data is MovableEnemyScriptableObject movableEnemy)
+                {
+                    var offset = new Vector3(0, movableEnemy.HealthbarPositionOffset, 0);
+                    healthBar.transform.position = enemy.EnemyView.transform.position + offset;
+                }
             }
         }
 
