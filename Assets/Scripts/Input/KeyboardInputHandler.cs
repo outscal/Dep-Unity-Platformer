@@ -5,13 +5,15 @@ using UnityEngine;
 
 namespace Platformer.InputSystem
 {
-    public class KeyboardInputHandler : IInputHandler
+    public class KeyboardInputHandler
     {
         private InputService InputService => GameService.Instance.InputService;
 
-        private readonly Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
+        private Dictionary<KeyCode, PlayerInputTriggers> keyMappings;
 
-        public KeyboardInputHandler()
+        public KeyboardInputHandler() => CreateTriggerMappings();
+
+        private void CreateTriggerMappings()
         {
             keyMappings = new Dictionary<KeyCode, PlayerInputTriggers> {
                 { KeyCode.Space, PlayerInputTriggers.JUMP },
@@ -19,7 +21,7 @@ namespace Platformer.InputSystem
                 { KeyCode.C, PlayerInputTriggers.SLIDE }
             };
         }
-
+        
         public void HandleInput() 
         {
             HandlePlayerMovementInput();
@@ -39,7 +41,7 @@ namespace Platformer.InputSystem
         {
             foreach (var mapping in keyMappings) {
                 if (Input.GetKeyDown(mapping.Key)) {
-                    InputService.HandlePlayerTriggerInput(mapping.Value);
+                    InputService.PlayerTriggerInputReceived(mapping.Value);
                 }
             }
         }
@@ -51,12 +53,5 @@ namespace Platformer.InputSystem
             else if (Input.GetKey(KeyCode.E)) //ZoomIn
                 InputService.HandleCameraZoomInput(ZoomType.ZOOMIN);
         }
-    }
-
-    public enum PlayerInputTriggers
-    {
-        JUMP, // SPACE
-        ATTACK, // X
-        SLIDE // C
     }
 }

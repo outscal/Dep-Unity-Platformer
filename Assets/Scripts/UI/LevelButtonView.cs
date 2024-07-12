@@ -14,7 +14,7 @@ namespace Platformer.UI
 
         public void SetOwner(LevelSelectionUIController owner) => this.owner = owner;
 
-        private void OnLevelButtonClicked() => owner.OnLevelSelected(levelId);
+        private void OnLevelButtonClicked() => owner.LevelSelected(levelId);
 
         public void SetLevelID(int levelId)
         {

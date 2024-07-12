@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0828eb33ab78f794488030ce31ab3291, type: 3}
-  m_Name: CameraScriptableObject
+  m_Script: {fileID: 11500000, guid: bdeb08ae3f3b463f884b862ffcf155a4, type: 3}
+  m_Name: LevelConfiguration
   m_EditorClassIdentifier: 
   Prefab: {fileID: 8019677801428785714, guid: a7eb3db55fcc35848a6e292e01a2e5c5, type: 3}
   shakeDuration: 0.3

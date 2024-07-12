@@ -1,31 +1,35 @@
+using System;
 using System.Collections.Generic;
 using Platformer.Main;
-using TMPro;
+using Platformer.UI;
+using Platformer.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Platformer.Level
 {
     public class LevelService
     {
-        private List<LevelScriptableObject> levelScriptableObjects;
+        private LevelConfiguration levelConfiguration;
 
-        public LevelService(List<LevelScriptableObject> levelScriptableObjects)
+        public LevelService(LevelConfiguration levelConfiguration)
         {
-            this.levelScriptableObjects = levelScriptableObjects;
+            this.levelConfiguration = levelConfiguration;
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.AddListener(LoadLevel);
+        private void SubscribeToEvents() => LevelSelectionUIController.OnLevelSelected += LoadLevel;
 
-        private void UnsubscribeToEvents() => GameService.Instance.EventService.OnLevelSelected.RemoveListener(LoadLevel);
+        private void UnsubscribeToEvents() => LevelSelectionUIController.OnLevelSelected -= LoadLevel;
 
         private void LoadLevel(int levelID = 1)
         {
-            var levelData = levelScriptableObjects.Find(levelSO => levelSO.ID == levelID);
+            var levelData = levelConfiguration.levelConfig.Find(levelSO => levelSO.ID == levelID);
             Object.Instantiate(levelData.LevelPrefab);
             UnsubscribeToEvents();
         }
 
         public void BackgroundParallaxEffect(Transform[] sprites) => GameService.Instance.CameraService.BackgroundParallax(sprites);
+        ~LevelService() => UnsubscribeToEvents();
     }
 }

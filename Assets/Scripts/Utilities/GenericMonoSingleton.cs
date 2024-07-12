@@ -15,7 +15,7 @@ namespace Platformer.Utilities
             }
             else
             {
-                Destroy(this);
+                Destroy(this.gameObject);
             }
         }
     }

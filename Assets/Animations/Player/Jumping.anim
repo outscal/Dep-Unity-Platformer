@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jumping
-  serializedVersion: 7
+  serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,8 +18,7 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - serializedVersion: 2
-    curve:
+  - curve:
     - time: 0
       value: {fileID: -1059015185, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - time: 0.083333336
@@ -56,7 +55,6 @@ AnimationClip:
     path: 
     classID: 212
     script: {fileID: 0}
-    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -71,24 +69,15 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
-      isIntCurve: 0
-      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: -1059015185, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: 1409891150, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: -1038535938, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: 837694168, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: 514688817, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: -1928362548, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: -1978745302, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: -820581041, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: 1165137134, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: 2076261132, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: 673240718, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: 1177353812, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: -716583505, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: -1010039132, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
-    - {fileID: 692166568, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
     - {fileID: -649460801, guid: d4ae8ced67ead0b4baddb3cd30453758, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

@@ -8,7 +8,11 @@ namespace Platformer.UI
 
         public GameplayUIController(GameplayUIView gameplayView)
         {
-            this.gameplayView = gameplayView;
+            InitializeController(gameplayView);
+        }
+        public void InitializeController(IUIView iuiView)
+        {
+            gameplayView = iuiView as GameplayUIView;
             gameplayView.SetController(this);
             Hide();
         }
@@ -29,5 +33,7 @@ namespace Platformer.UI
         public void SetCoinsCount(int coinsCollected) => gameplayView.UpdateCoinsCollectedUI($"{PLAYER_COINS_COLLECTED} {coinsCollected}");
 
         public void ToggleKillOverlay(bool value) => gameplayView.ToggleKillOverlay(value);
+
+        
     }
 }

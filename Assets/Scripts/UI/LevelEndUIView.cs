@@ -1,3 +1,4 @@
+using Platformer.Game;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,13 +31,19 @@ namespace Platformer.UI
 
         public void EnableView() => gameObject.SetActive(true);
         
-        public void EndGame(bool playerWon){
-            if(playerWon){
-                resultText.SetText(WIN_RESULT);
-                GetComponent<Image>().sprite = WinSprite;
-            }else{
-                resultText.SetText(LOST_RESULT);
-                GetComponent<Image>().sprite = LoseSprite;
+        public void EndGame(GameEndType gameEndType){
+            switch (gameEndType)
+            {
+                case GameEndType.WIN:
+                    resultText.SetText(WIN_RESULT);
+                    GetComponent<Image>().sprite = WinSprite;
+                    break;
+                case GameEndType.LOSE:
+                    resultText.SetText(LOST_RESULT);
+                    GetComponent<Image>().sprite = LoseSprite;
+                    break;
+                default:
+                    break;
             }
         }
     }

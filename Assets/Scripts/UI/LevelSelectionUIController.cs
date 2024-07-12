@@ -1,6 +1,8 @@
+using System;
 using Platformer.Main;
 using System.Collections.Generic;
-using UnityEngine;
+using Platformer.Game;
+using Object = UnityEngine.Object;
 
 namespace Platformer.UI
 {
@@ -10,33 +12,42 @@ namespace Platformer.UI
         private LevelButtonView levelButtonPrefab;
         private List<LevelButtonView> levelButtons;
         
+        //Action Events:
+        public static event Action<int> OnLevelSelected;
+        
         public LevelSelectionUIController(LevelSelectionUIView levelSelectionView, LevelButtonView levelButtonPrefab)
         {
-            this.levelSelectionView = levelSelectionView;
-            this.levelButtonPrefab = levelButtonPrefab;
-            levelSelectionView.SetController(this);
-            InitializeController();
+            InitializeController(levelSelectionView);
+            InitializeLevelButtons(levelButtonPrefab);
         }
 
-        private void InitializeController()
+        public void InitializeController(IUIView iuiView)
         {
-            levelButtons = new List<LevelButtonView>();
-            Hide();
+            levelSelectionView = iuiView as LevelSelectionUIView;
+            levelSelectionView.SetController(this);
         }
 
-        public void Show(int levelCount)
+        private void InitializeLevelButtons(LevelButtonView levelButtonPrefab)
+        {
+            this.levelButtonPrefab = levelButtonPrefab;
+            levelButtons = new List<LevelButtonView>();
+        }
+        public void CreateAndShowLevelSelection(int levelCount)
+        {
+            CreateLevelButtons(levelCount);
+            Show();
+        }
+        public void Show()
         {
             levelSelectionView.EnableView();
-            CreateLevelButtons(levelCount);
         }
 
         public void Hide()
         {
-            ResetLevelButtons();
             levelSelectionView.DisableView();
         }
 
-        private void ResetLevelButtons()
+        private void RemoveLevelButtons()
         {
             levelButtons.ForEach(button => Object.Destroy(button.gameObject));
             levelButtons.Clear();
@@ -52,11 +63,14 @@ namespace Platformer.UI
             }
         }
 
-        // To Learn more about Events and Observer Pattern, check out the course list here: https://outscal.com/courses
-        public void OnLevelSelected(int levelId)
+        public void LevelSelected(int levelId)
         {
-            GameService.Instance.EventService.OnLevelSelected.InvokeEvent(levelId);
+            OnLevelSelected?.Invoke(levelId);
+            CleanEventListeners();
+            RemoveLevelButtons();
             Hide();
         }
+
+        private void CleanEventListeners() => OnLevelSelected = null;
     }
 }
