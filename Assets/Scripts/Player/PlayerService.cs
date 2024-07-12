@@ -1,9 +1,7 @@
-using Platformer.AnimationSystem;
+using System;
 using Platformer.Cameras;
-using Platformer.Game;
 using Platformer.Main;
 using Platformer.UI;
-using Platformer.Utilities;
 using UnityEngine;
 
 namespace Platformer.Player
@@ -11,13 +9,10 @@ namespace Platformer.Player
     public class PlayerService
     {
         #region Service References
-        private AnimationService AnimationService => GameService.Instance.AnimationService;
-        private EventService EventService => GameService.Instance.EventService;
-        private UIService UIService => GameService.Instance.UIService;
         private CameraService CameraService => GameService.Instance.CameraService;
         #endregion
 
-
+        public static event Action<Vector3> OnPlayerMoved;
         
         private PlayerScriptableObject playerScriptableObject;
         
@@ -33,7 +28,6 @@ namespace Platformer.Player
         {
             // use the camera shake effect
             CameraService.ShakeCamera();
-            PlayTakeDamageAnimation(animator);
         }
         private void UnsubscribeToEvents() => LevelSelectionUIController.OnLevelSelected -= SpawnPlayer;
 
@@ -41,15 +35,19 @@ namespace Platformer.Player
 
         private void SpawnPlayer(int levelId)
         {
-            playerController = new PlayerController(playerScriptableObject);
+            playerController = new PlayerController(playerScriptableObject, this);
             UnsubscribeToEvents();
         }
 
         public void Update() => playerController?.Update();
 
+        //Invoking Events 
+        public void PlayerMoved(Vector3 newPosition) => OnPlayerMoved?.Invoke(newPosition);
+            
         ~PlayerService()
         {
             playerController = null;
         }
+        
     }
 }

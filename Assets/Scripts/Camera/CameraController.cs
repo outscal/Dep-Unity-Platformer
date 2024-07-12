@@ -19,6 +19,8 @@ namespace Platformer.Cameras
             CameraView.SetController(this);
         }
 
+        public void SetCameraBounds(CameraBounds cameraBounds) => CameraView.SetCameraBounds(cameraBounds);
+
         #region Camera Effects
         public void ShakeCamera() => CameraView.ShakeCamera(cameraScriptableObject.shakeMagnitude, cameraScriptableObject.shakeDuration);
 
@@ -31,7 +33,7 @@ namespace Platformer.Cameras
 
         public void OnCameraZoomInputReceived(ZoomType zoomType) => CameraView.Zoom(zoomType, cameraScriptableObject.cameraSizeIncrement, cameraScriptableObject.minSize, cameraScriptableObject.maxSize);
 
-        public void OnPlayerMoved(Vector3 playerPosition) => CameraView.FollowPlayer(playerPosition);
+        public void OnPlayerMoved(Vector3 playerPosition) => CameraView.PlayerMoved(playerPosition);
 
         public void BackgroundParallax(Transform[] sprites){
             foreach(var sprite in sprites){

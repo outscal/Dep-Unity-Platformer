@@ -12,9 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdeb08ae3f3b463f884b862ffcf155a4, type: 3}
   m_Name: LevelConfiguration
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 8019677801428785714, guid: a7eb3db55fcc35848a6e292e01a2e5c5, type: 3}
-  shakeDuration: 0.3
-  shakeMagnitude: 0.06
-  cameraSizeIncrement: 0.012
-  maxSize: 10
-  minSize: 2.5
+  levelConfig:
+  - {fileID: 11400000, guid: b4c19e9621dbe4a49954f313d982977d, type: 2}

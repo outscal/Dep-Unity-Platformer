@@ -10,17 +10,43 @@ namespace Platformer.Cameras{
         private CameraController cameraController;
         private Camera cameraComponent;
 
-        private Transform playerTransform => GameService.Instance.PlayerService.PlayerController.PlayerView.transform;
+        private Vector3 playerPosition;
 
         private Vector3 originalPosition;
 
+        private CameraBounds cameraBounds;
+
         public void SetController(CameraController cameraController){
             this.cameraController = cameraController;
-            InitilizeVariables();
+            InitilizeComponents();
         }
 
-        private void InitilizeVariables() => cameraComponent = GetComponent<Camera>();
+        public void SetCameraBounds(CameraBounds cameraBounds) => this.cameraBounds = cameraBounds;
 
+        private void InitilizeComponents() => cameraComponent = GetComponent<Camera>();
+
+        public void PlayerMoved(Vector3 newPosition)
+        {
+            playerPosition = newPosition;
+            FollowPlayer(playerPosition);
+        }
+
+        private void SetCameraPosition(Vector3 newPosition)
+        {
+            // Clamp the X position between left and right bounds
+            float clampedX = Mathf.Clamp(newPosition.x, 
+                cameraBounds.leftBound, 
+                cameraBounds.rightBound);
+
+            // Clamp the Y position between bottom and top bounds
+            float clampedY = Mathf.Clamp(newPosition.y, 
+                cameraBounds.bottomBound, 
+                cameraBounds.topBound);
+
+            // Set the new position with clamped values
+            transform.position = new Vector3(clampedX, clampedY, newPosition.z);
+        }
+        
         #region Camera Shake Effect
         public void ShakeCamera(float magnitude, float duration){
             originalPosition = transform.localPosition;
@@ -55,9 +81,9 @@ namespace Platformer.Cameras{
         #endregion
 
         #region Follow Player
-        public void FollowPlayer(Vector3 playerPosition) => transform.position = new Vector3(playerPosition.x, playerPosition.y, transform.position.z);
+        private void FollowPlayer(Vector3 playerPosition) =>  SetCameraPosition(new Vector3(playerPosition.x, playerPosition.y, transform.position.z));
         #endregion
-
+        
         #region Background Parallax Effect
         public void ParallaxEffect(Transform sprite)
         {
@@ -69,7 +95,7 @@ namespace Platformer.Cameras{
 
         private float CalculateParallaxFactor(Transform sprite)
         {
-            float distanceFromPlayer = sprite.position.z - playerTransform.position.z;
+            float distanceFromPlayer = sprite.position.z - playerPosition.z;
             float clippingPlane = transform.position.z + (distanceFromPlayer > 0 ? cameraComponent.farClipPlane : cameraComponent.nearClipPlane);
             return Mathf.Abs(distanceFromPlayer) / clippingPlane;
         }

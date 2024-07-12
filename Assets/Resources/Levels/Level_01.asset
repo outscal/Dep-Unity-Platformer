@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 1
   LevelPrefab: {fileID: 164671263956985873, guid: 15ab857426ce92a45a905c65035fae29, type: 3}
+  CameraBounds:
+    leftBound: -16
+    rightBound: 15
+    topBound: 2.4
+    bottomBound: 0

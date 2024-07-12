@@ -57,6 +57,7 @@ namespace Platformer.Player.Controllers
         {
             var movementVector = new Vector3(currentHorizontalInput, 0.0f, 0.0f).normalized;
             playerView.TranslatePlayer(currentSpeed * Time.deltaTime * movementVector);
+            owner.PlayerMoved(playerView.Position);
         }
         
 

@@ -23,7 +23,6 @@ namespace Platformer.Main
         // Scriptable Objects:
         [SerializeField] private PlayerScriptableObject playerScriptableObject;
         [SerializeField] private CameraScriptableObject cameraScriptableObject;
-        #endregion
         [SerializeField] private LevelConfiguration levelData;
 
         //Scene References:

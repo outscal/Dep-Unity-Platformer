@@ -1,13 +1,10 @@
 using System;
-using System.Threading.Tasks;
 using Platformer.InputSystem;
 using Platformer.Main;
 using Platformer.Game;
 using Platformer.UI;
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
-using Platformer.InputSystem;
 using Platformer.Player.Controllers;
 using Platformer.Player.Enumerations;
 using Platformer.Services;
@@ -20,7 +17,7 @@ namespace Platformer.Player
     {
         
         // References:
-        private PlayerService PlayerService => GameService.Instance.PlayerService;
+        private PlayerService owner;
         private UIService UIService => GameService.Instance.UIService;
         
         private PlayerView playerView;
@@ -39,6 +36,7 @@ namespace Platformer.Player
         
         //Action-Events
         public static event Action<GameEndType> OnGameEnd;
+        public static event Action<Vector3> OnPlayerMoved;
 
         public int CurrentHealth
         {
@@ -58,16 +56,17 @@ namespace Platformer.Player
             }
         }
         
-        public PlayerController(PlayerScriptableObject playerScriptableObject)
+        public PlayerController(PlayerScriptableObject playerScriptableObject, PlayerService owner)
         {
-            InitializeVariables(playerScriptableObject);
+            InitializeVariables(playerScriptableObject, owner);
             InitializeView();
             InitializeControllers();
             SubscribeToEvents();
         }
 
-        private void InitializeVariables(PlayerScriptableObject playerScriptableObject)
+        private void InitializeVariables(PlayerScriptableObject playerScriptableObject, PlayerService owner)
         {
+            this.owner = owner;
             this.playerScriptableObject = playerScriptableObject;
             CurrentCoins = 0;
             CurrentHealth = playerScriptableObject.maxHealth;
@@ -155,6 +154,7 @@ namespace Platformer.Player
         {
             UnsubscribeToEvents();
             animationController.PlayTriggerAnimation(PlayerTriggerAnimationType.DEATH);
+            GameService.Instance.CameraService.ShakeCamera();
             coroutineIdRespawn = CoroutineService.StartCoroutine(GameEndCoroutine());
         }
         
@@ -182,6 +182,9 @@ namespace Platformer.Player
         }
 
         private void CleanEventListeners() => OnGameEnd = null;
+        
+        //Informing Owner
+        public void PlayerMoved(Vector3 newPosition) => owner.PlayerMoved(newPosition);
         
         ~PlayerController()
         {

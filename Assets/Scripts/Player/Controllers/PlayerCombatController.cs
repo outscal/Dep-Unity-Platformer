@@ -1,3 +1,4 @@
+using Platformer.Main;
 using Platformer.Player.Enumerations;
 
 namespace Platformer.Player.Controllers
@@ -16,6 +17,7 @@ namespace Platformer.Player.Controllers
         public bool TakeDamage(int damageToInflict)
         {
             owner.CurrentHealth -= damageToInflict;
+            GameService.Instance.CameraService.ShakeCamera();
             if (owner.CurrentHealth <= 0)
             {
                 owner.CurrentHealth = 0;

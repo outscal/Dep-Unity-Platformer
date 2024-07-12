@@ -1,4 +1,5 @@
 using Platformer.Game;
+using Platformer.Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,7 +23,7 @@ namespace Platformer.UI
 
         public void Hide() => levelEndView.DisableView();
 
-        public void OnHomeButtonClicked() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        public void OnHomeButtonClicked() => GameService.Instance.LevelService.RestartLevel();
 
         public void OnQuitButtonClicked() => Application.Quit();
 

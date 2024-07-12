@@ -41,7 +41,7 @@ namespace Platformer.InputSystem
         {
             foreach (var mapping in keyMappings) {
                 if (Input.GetKeyDown(mapping.Key)) {
-                    InputService.PlayerTriggerInputReceived(mapping.Value);
+                    InputService.HandleTriggerInput(mapping.Value);
                 }
             }
         }

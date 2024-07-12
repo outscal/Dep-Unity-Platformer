@@ -1,3 +1,4 @@
+using Platformer.Cameras;
 using UnityEngine;
 
 namespace Platformer.Level
@@ -7,5 +8,6 @@ namespace Platformer.Level
     {
         public int ID;
         public LevelView LevelPrefab;
+        public CameraBounds CameraBounds;
     }
 }
