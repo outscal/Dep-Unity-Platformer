@@ -2,7 +2,7 @@ namespace Platformer.Player
 {
     public class PlayerService
     {
-        public PlayerController playerController { get; private set; }
+        private PlayerController playerController;
         
         public PlayerService(PlayerScriptableObject playerScriptableObject) => SpawnPlayer(playerScriptableObject);
 
