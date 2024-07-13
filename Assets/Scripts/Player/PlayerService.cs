@@ -9,11 +9,11 @@ namespace Platformer.Player
 {
     public class PlayerService
     {
-        
-        private PlayerScriptableObject playerScriptableObject;
-        
-        public PlayerController playerController { get; private set; }
-        public PlayerService(PlayerScriptableObject playerScriptableObject){
+        private PlayerController playerController;
+        private readonly PlayerScriptableObject playerScriptableObject;
+
+        public PlayerService(PlayerScriptableObject playerScriptableObject)
+        {
             this.playerScriptableObject = playerScriptableObject;
             SubscribeToEvents();
         }
@@ -22,8 +22,6 @@ namespace Platformer.Player
 
         private void UnsubscribeToEvents() => LevelSelectionUIController.OnLevelSelected -= SpawnPlayer;
 
-        public void TakeDamage(int damageToInflict) => playerController.TakeDamage(damageToInflict);
-
         private void SpawnPlayer(int levelId)
         {
             playerController = new PlayerController(playerScriptableObject);
@@ -31,10 +29,5 @@ namespace Platformer.Player
         }
 
         public void Update() => playerController?.Update();
-
-        ~PlayerService()
-        {
-            playerController = null;
-        }
     }
 }
