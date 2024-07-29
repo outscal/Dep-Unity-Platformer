@@ -1,9 +1,10 @@
 using Platformer.Main;
 using System;
 
-namespace Platformer.InputSystem{
-    public class InputService{
-
+namespace Platformer.InputSystem
+{
+    public class InputService
+    {
         private KeyboardInputHandler keyboardInputHandler;
 
         public static event Action<float> OnHorizontalAxisInputReceived;
