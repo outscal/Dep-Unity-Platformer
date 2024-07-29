@@ -112,15 +112,6 @@ namespace Platformer.Player.Controllers
         {
             owner.SetPlayerState(PlayerState.SLIDE);
             yield return new WaitForSeconds(playerScriptableObject.slidingTime * 1000);
-            
-            // TODO: Check if this is even needed or if we can just simply set the player state back to Idle.
-            ResetStateAfterSliding(currentHorizontalInput);
-        }
-
-        private void ResetStateAfterSliding(float currentHorizontalInput)
-        {
-            PlayerState newState = CanRun(currentHorizontalInput) ? PlayerState.RUNNING : PlayerState.IDLE;
-            owner.SetPlayerState(newState);
         }
         
         public bool CanRun(float currentHorizontalInput) => owner.GetPlayerState() != PlayerState.SLIDE && currentHorizontalInput != 0;
