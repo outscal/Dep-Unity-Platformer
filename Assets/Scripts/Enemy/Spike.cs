@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
-    private int damage = 10;
-    private void OnTriggerEnter2D(Collider2D other){
-        if (other.TryGetComponent<IDamagable>(out var damagableObject))
-        {
+    [SerializeField] private int damage = 10;
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.TryGetComponent<PlayerView>(out var damagableObject))
             damagableObject.TakeDamage(damage);
-        }
     }
 }
